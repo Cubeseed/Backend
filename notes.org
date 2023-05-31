@@ -9,7 +9,6 @@
   cd cubeseed
   django-admin startapp userauth
   python manage.py migrate
-  python manage.py createsuperuser --email admin@example.com --username admin
 #+end_src
 
 * run server
