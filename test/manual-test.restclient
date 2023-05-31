@@ -2,29 +2,63 @@
 
 :ip = localhost
 :port = 8000
-:base = http://:ip::port/
+:base = http://:ip::port
+:api = :base/api
 :email = admin@cubeseed.fake
 :password = password123
-:token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNjgzMDc5NzI0LCJleHAiOjE3Njk0Nzk3MjR9.0WTGhol2JYamjblrxmEsQ3BzRdUlDtadrMNqrBe_iRQ
+:token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjg1NTYzNTIxLCJpYXQiOjE2ODU1NjAwNTYsImp0aSI6IjZmNTUyNzVjMTk5OTRlNzQ4NzljM2VkNmNmMTk2NDk5IiwidXNlcl9pZCI6MX0.OU-4YnMFJqHYY7wH2pgJvXDOufVdlgZjyf2TyYVyS_I
+:refresh = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjg1NTYzNDkzLCJpYXQiOjE2ODU1NjAwNTYsImp0aSI6IjRmYmJjMWEyOGJlMTRiMGU4NzhiM2NhYWE2ZTE4NWIyIiwidXNlcl9pZCI6MX0.P0yq7mddTjU89Zl2ajZLLIve5_OMbd6J5J9RY0YwEdE
 :authHead = x-access-token: :token
 
-GET :base/users/
+#
+POST http://:ip::port/auth/token/
+Content-Type: application/json
+
+{"username":"admin", "password":"admin123"}
+
+#{
+#  "refresh": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6MTY4NTY0NjQ1NiwiaWF0IjoxNjg1NTYwMDU2LCJqdGkiOiIwMTliMTk3ODk3MWQ0ZjQ1OGE1ZGRkM2EzNzRiNjhhOSIsInVzZXJfaWQiOjF9.bV0sBvL0FQw891HZuYvchs8LIDK-NvTfkKe0puPNpYw",
+#  "access": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjg1NTYwMzU2LCJpYXQiOjE2ODU1NjAwNTYsImp0aSI6IjZiYWI5NmE3NjcyYjQwNDViMmI0ZWVhZDU3ODcyOGIwIiwidXNlcl9pZCI6MX0.2JIE1RROCSq6yF45WAKozkKSSW8dtv7g-Zr71dfATQ0"
+#}
+#
+
+#
+POST http://:ip::port/auth/token/refresh/
+Content-Type: application/json
+{"refresh": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6MTY4NTY0NjQ1NiwiaWF0IjoxNjg1NTYwMDU2LCJqdGkiOiIwMTliMTk3ODk3MWQ0ZjQ1OGE1ZGRkM2EzNzRiNjhhOSIsInVzZXJfaWQiOjF9.bV0sBvL0FQw891HZuYvchs8LIDK-NvTfkKe0puPNpYw"}
+
+#
+GET :api/users/
 Accept: application/json; indent=4
-Authorization: Basic YWRtaW46cGFzc3dvcmQxMjM=
+Authorization: Bearer :token
 
 #
 
-POST :base/auth/signup
+GET :api/groups/
+Accept: application/json; indent=4
+Authorization: Bearer :token
+
+#
+POST :api/register/
 Content-Type: application/json
 
-{ "email" : "superadmin@gmail.com", "password" : "asdf1234" }
+{
+        "username": "sebastian23",
+        "email" : "sebastian@gmail.com",
+        "password" : "admin123",
+        "groups" : [
+        "http://localhost:8000/api/groups/1/",
+        "http://localhost:8000/api/groups/2/",
+        "http://localhost:8000/api/groups/6/"
+        ]
+}
+
 #
 
-POST :base/auth/login
+POST http://localhost:8000/api-auth/login/
 Content-Type: application/json
-:authHead
 
-{ "email" : ":email", "password" : ":password" }
+{ "username" : "admin", "password" : "admin123" }
 #
 
 GET :base/users?email=admin@cubeseed.fake&approved=false

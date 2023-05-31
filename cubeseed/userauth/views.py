@@ -4,7 +4,6 @@ from django.contrib.auth.models import User, Group
 from rest_framework import viewsets
 from rest_framework import permissions
 from cubeseed.userauth.serializers import UserSerializer, GroupSerializer, RegisterUserSerializer
-from rest_framework.generics import CreateAPIView
 
 class UserViewSet(viewsets.ModelViewSet):
     """

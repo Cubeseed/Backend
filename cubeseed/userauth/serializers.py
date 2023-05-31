@@ -15,10 +15,16 @@ class RegisterUserSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = User
         fields = ['url', 'username', 'email', 'groups', 'password', 'is_active' ]
+        read_only_fields = [ 'url', 'is_active']
+        extra_kwargs = {'password': {'write_only': True, 'min_length': 8}}
 
     def create(self, validated_data):
-        user = User(**validated_data)
-        user.set_password(validated_data['password'])
-        user.is_active = False
+        user = User.objects.create_user(
+            username=validated_data["username"],
+            email = validated_data["email"],
+            password = validated_data['password'],
+            is_active = False,
+        )
+        user.groups.set(validated_data['groups'])
         user.save()
         return user
