@@ -1,0 +1,83 @@
+ -*- restclient -*-
+
+:ip = localhost
+:port = 8000
+:base = http://:ip::port/
+:email = admin@cubeseed.fake
+:password = password123
+:token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNjgzMDc5NzI0LCJleHAiOjE3Njk0Nzk3MjR9.0WTGhol2JYamjblrxmEsQ3BzRdUlDtadrMNqrBe_iRQ
+:authHead = x-access-token: :token
+
+GET :base/users/
+Accept: application/json; indent=4
+Authorization: Basic YWRtaW46cGFzc3dvcmQxMjM=
+
+#
+
+POST :base/auth/signup
+Content-Type: application/json
+
+{ "email" : "superadmin@gmail.com", "password" : "asdf1234" }
+#
+
+POST :base/auth/login
+Content-Type: application/json
+:authHead
+
+{ "email" : ":email", "password" : ":password" }
+#
+
+GET :base/users?email=admin@cubeseed.fake&approved=false
+:authHead
+#
+
+GET :base/users?approved=true
+:authHead
+#
+
+PUT :base/users/2
+:authHead
+Content-Type: application/json
+
+{ "approved": true }
+#
+
+###### new user with admin
+POST :base/auth/signup
+Content-Type: application/json
+
+{ "email" : "superadmin@gmail.com",
+  "password" : "admin123",
+  "roles" : ["admin"]
+  }
+#
+
+###### new user with some roles
+POST :base/auth/signup
+Content-Type: application/json
+
+{ "email" : "farmerbuyerprocessor@gmail.com",
+  "password" : "admin123",
+  "roles" : ["farmer", "buyer", "processor"]
+  }
+#
+
+###### new user without roles
+POST :base/auth/signup
+Content-Type: application/json
+
+{ "email" : "noroles@gmail.com",
+  "password" : "admin123"
+  }
+#
+
+
+###### new user with some roles and admin
+POST :base/auth/signup
+Content-Type: application/json
+
+{ "email" : "manytrades2@gmail.com",
+  "password" : "admin123",
+  "roles" : ["admin", "farmer", "buyer", "processor"]
+  }
+#
