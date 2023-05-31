@@ -3,7 +3,8 @@
 from django.contrib.auth.models import User, Group
 from rest_framework import viewsets
 from rest_framework import permissions
-from cubeseed.userauth.serializers import UserSerializer, GroupSerializer
+from cubeseed.userauth.serializers import UserSerializer, GroupSerializer, RegisterUserSerializer
+from rest_framework.generics import CreateAPIView
 
 class UserViewSet(viewsets.ModelViewSet):
     """
@@ -21,4 +22,9 @@ class GroupViewSet(viewsets.ModelViewSet):
     serializer_class = GroupSerializer
     permission_classes = [permissions.IsAuthenticated]
 
+class RegisterUserView(viewsets.ModelViewSet):
+    queryset = User.objects.all()
+    http_method_names = ['post']
+    permission_classes = [permissions.AllowAny]
+    serializer_class = UserSerializer
 
