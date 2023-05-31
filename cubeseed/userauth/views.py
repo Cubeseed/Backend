@@ -27,5 +27,5 @@ class RegisterUserView(viewsets.ModelViewSet):
     queryset = User.objects.all()
     http_method_names = ['post']
     permission_classes = [permissions.AllowAny]
-    serializer_class = UserSerializer
+    serializer_class = RegisterUserSerializer
 
