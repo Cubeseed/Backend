@@ -1,0 +1,118 @@
+* Gropus                                                        :open_to_all:
+** List groups
+ - *GET /api/groups/*
+ - *response*:
+#+begin_src json
+  HTTP 200 OK
+  Allow: GET
+  Content-Type: application/json
+  Vary: Accept
+
+  {
+    "count": 6,
+      "next": null,
+      "previous": null,
+      "results": [
+          {
+              "url": "http://localhost:8000/api/groups/1/",
+              "name": "farmer"
+          },
+          {
+              "url": "http://localhost:8000/api/groups/2/",
+              "name": "buyer"
+          },
+          {
+              "url": "http://localhost:8000/api/groups/3/",
+              "name": "investor"
+          },
+          {
+              "url": "http://localhost:8000/api/groups/4/",
+              "name": "input"
+          },
+          {
+              "url": "http://localhost:8000/api/groups/5/",
+              "name": "service"
+          },
+          {
+              "url": "http://localhost:8000/api/groups/6/",
+              "name": "processor"
+          }
+      ]
+  }
+#+end_src 
+** Group details
+ - *GET /api/groups/<id>*
+ - *response (id = 1)*:
+#+begin_src json
+  HTTP 200 OK
+  Allow: GET
+  Content-Type: application/json
+  Vary: Accept
+
+  {
+      "url": "http://localhost:8000/api/groups/1/",
+      "name": "farmer"
+  }
+#+end_src 
+   
+* Signup new user                                               :open_to_all:
+Create new user with given username, email, password and groups.
+If there was no user with the given email and the roles exist the user is created as waiting for approval.
+
+ - *POST /api/register/*
+ - *payload example*: This would be a farmer & investor, relative links work as well as absolute ones.
+#+begin_src json
+{
+    "username": "me",
+    "email": "me@mysite.com",
+    "groups": ["http://localhost:8000/api/groups/1/", "/api/groups/3/"],
+    "password": "me123456",
+    "is_active": false
+}
+#+end_src
+ - *response example*:
+#+begin_src json
+HTTP 201 Created
+Allow: POST
+Content-Type: application/json
+Location: http://localhost:8000/api/users/7/
+Vary: Accept
+
+{
+    "url": "http://localhost:8000/api/users/7/",
+    "username": "me",
+    "email": "me@mysite.com",
+    "groups": [
+        "http://localhost:8000/api/groups/1/",
+        "http://localhost:8000/api/groups/3/"
+    ],
+    "is_active": false
+}  
+#+end_src
+   
+* Authentication                                             :approved_users:
+
+
+ - *POST /auth/token/*
+ - *payload example*:
+#+begin_src json
+  {
+      "username": "admin",
+      "password": "admin123"
+  }
+#+end_src
+ - *response example*:
+   #+begin_src json
+     HTTP 200 OK
+     Allow: POST, OPTIONS
+     Content-Type: application/json
+     Vary: Accept
+
+     {
+         "refresh": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6MTY4NTczMjE4NSwiaWF0IjoxNjg1NjQ1Nzg1LCJqdGkiOiIxZTBkYTY1ODU0NWY0M2JjOTA0NDAyNzk5Y2JjOGZlMyIsInVzZXJfaWQiOjF9.NGI4VcORHX8qNxkBTMNjwQCmNoFg8um6SmlBPeGiBgc",
+         "access": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjg1NjQ2MDg1LCJpYXQiOjE2ODU2NDU3ODUsImp0aSI6ImE4ZWI3MWQ3NjkzOTQ0ZTE5NmY0YTcxYjQ0MzA1YTgzIiwidXNlcl9pZCI6MX0.-KQvzul7SrMfRFQkixpVNlUdB3S-7yCVhJ-6-x0wi8A"
+     }
+   #+end_src
+* Administrator                                                       :admin:
+
+** Accept reject user                                                 :admin:
