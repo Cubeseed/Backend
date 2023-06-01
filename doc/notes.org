@@ -1,5 +1,4 @@
 * setup project
-
 #+begin_src bash
   python3 -m venv env
   source env/bin/activate
@@ -12,7 +11,6 @@
 #+end_src
 
 * run server
-
 #+begin_src bash
   python manage.py runserver
 #+end_src
