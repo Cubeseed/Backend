@@ -1,4 +1,4 @@
-* Gropus                                                        :open_to_all:
+* Groups                                                        :open_to_all:
 ** List groups
  - *GET /api/groups/*
  - *response*:
