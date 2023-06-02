@@ -2,47 +2,51 @@
 ** List groups
  - *GET /api/groups/*
  - *response*:
-#+begin_src json
-  HTTP 200 OK
-  Allow: GET
-  Content-Type: application/json
-  Vary: Accept
+ #+begin_src json
+   HTTP 200 OK
+   Allow: GET
+   Content-Type: application/json
+   Vary: Accept
 
-  {
-    "count": 6,
-      "next": null,
-      "previous": null,
-      "results": [
-          {
-              "url": "http://localhost:8000/api/groups/1/",
-              "name": "farmer"
-          },
-          {
-              "url": "http://localhost:8000/api/groups/2/",
-              "name": "buyer"
-          },
-          {
-              "url": "http://localhost:8000/api/groups/3/",
-              "name": "investor"
-          },
-          {
-              "url": "http://localhost:8000/api/groups/4/",
-              "name": "input"
-          },
-          {
-              "url": "http://localhost:8000/api/groups/5/",
-              "name": "service"
-          },
-          {
-              "url": "http://localhost:8000/api/groups/6/",
-              "name": "processor"
-          }
-      ]
-  }
+   {
+       "count": 7,
+       "next": null,
+       "previous": null,
+       "results": [
+           {
+               "url": "http://localhost:8000/api/groups/1/",
+               "name": "moderator"
+           },
+           {
+               "url": "http://localhost:8000/api/groups/2/",
+               "name": "farmer"
+           },
+           {
+               "url": "http://localhost:8000/api/groups/3/",
+               "name": "buyer"
+           },
+           {
+               "url": "http://localhost:8000/api/groups/4/",
+               "name": "investor"
+           },
+           {
+               "url": "http://localhost:8000/api/groups/5/",
+               "name": "input"
+           },
+           {
+               "url": "http://localhost:8000/api/groups/6/",
+               "name": "service"
+           },
+           {
+               "url": "http://localhost:8000/api/groups/7/",
+               "name": "processor"
+           }
+       ]
+   }
 #+end_src 
 ** Group details
  - *GET /api/groups/<id>*
- - *response (id = 1)*:
+ - *response (id = 2)*:
 #+begin_src json
   HTTP 200 OK
   Allow: GET
@@ -50,7 +54,7 @@
   Vary: Accept
 
   {
-      "url": "http://localhost:8000/api/groups/1/",
+      "url": "http://localhost:8000/api/groups/2/",
       "name": "farmer"
   }
 #+end_src 
@@ -65,7 +69,7 @@ If there was no user with the given email and the roles exist the user is create
 {
     "username": "me",
     "email": "me@mysite.com",
-    "groups": ["http://localhost:8000/api/groups/1/", "/api/groups/3/"],
+    "groups": ["http://localhost:8000/api/groups/2/", "/api/groups/4/"],
     "password": "me123456",
     "is_active": false
 }
@@ -83,15 +87,20 @@ Vary: Accept
     "username": "me",
     "email": "me@mysite.com",
     "groups": [
-        "http://localhost:8000/api/groups/1/",
-        "http://localhost:8000/api/groups/3/"
+        "http://localhost:8000/api/groups/2/",
+        "http://localhost:8000/api/groups/4/"
     ],
     "is_active": false
 }  
 #+end_src
    
 * Authentication                                             :approved_users:
-
+Right now there are three types of authentication =Basic=, =Session= and =Token= authentication.
+The front-end *MUST* use =Token= authentication,
+the other two are only there for development and won't be available for production.
+While login front-end is not ready, if you are trying to integrate some other part of the
+front-end, you could use =Basic= authentication as it is really easy but keep in mind you
+will need to change it afterwards.
 
  - *POST /auth/token/*
  - *payload example*:
@@ -113,6 +122,7 @@ Vary: Accept
          "access": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjg1NjQ2MDg1LCJpYXQiOjE2ODU2NDU3ODUsImp0aSI6ImE4ZWI3MWQ3NjkzOTQ0ZTE5NmY0YTcxYjQ0MzA1YTgzIiwidXNlcl9pZCI6MX0.-KQvzul7SrMfRFQkixpVNlUdB3S-7yCVhJ-6-x0wi8A"
      }
    #+end_src
-* Administrator                                                       :admin:
 
-** Accept reject user                                                 :admin:
+* Moderator                                                           :moderator:
+
+** Accept reject user                                                 :moderator:

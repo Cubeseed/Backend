@@ -36,7 +36,6 @@ Authorization: Bearer :token
 
 GET :api/groups/
 Accept: application/json; indent=4
-Authorization: Bearer :token
 
 #
 POST :api/register/
