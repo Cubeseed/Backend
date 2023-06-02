@@ -1,5 +1,5 @@
 * Groups                                                        :open_to_all:
-** List groups
+** List groups                                                  :open_to_all:
  - *GET /api/groups/*
  - *response*:
  #+begin_src json
@@ -44,7 +44,7 @@
        ]
    }
 #+end_src 
-** Group details
+** Group details                                                :open_to_all:
  - *GET /api/groups/<id>*
  - *response (id = 2)*:
 #+begin_src json
@@ -94,7 +94,7 @@ Vary: Accept
 }  
 #+end_src
    
-* Authentication                                             :approved_users:
+* Authentication                                             :approved_user:
 Right now there are three types of authentication =Basic=, =Session= and =Token= authentication.
 The front-end *MUST* use =Token= authentication,
 the other two are only there for development and won't be available for production.
@@ -102,6 +102,25 @@ While login front-end is not ready, if you are trying to integrate some other pa
 front-end, you could use =Basic= authentication as it is really easy but keep in mind you
 will need to change it afterwards.
 
+** Token based authentication                                 :approved_user:
+There are two types of token "access" and "refresh".
+"access" token is used to authenticate in this API where required by adding the header:
+#+begin_example
+Authorization: Bearer <token>
+#+end_example
+
+The application must do a Token operation to get one of each.
+The "access" token is valid for a short period of time (for now 5 minutes) while
+the "refresh" token is valid for a reasonably long period of time (for now 1 day).
+
+When the "access" token expires the application must do a refresh operation using the
+"refresh" token to get a fresh "access" token without asking the user for credentials again.
+
+Once the "refresh" token expires, the application must do a Token operation again (meaning
+that it needs to ask again the user for credentials, if the duration of the "refresh" token
+is too short it can change, it is important that the application doesn't store the user password).
+
+*** Token
  - *POST /auth/token/*
  - *payload example*:
 #+begin_src json
@@ -118,11 +137,98 @@ will need to change it afterwards.
      Vary: Accept
 
      {
-         "refresh": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6MTY4NTczMjE4NSwiaWF0IjoxNjg1NjQ1Nzg1LCJqdGkiOiIxZTBkYTY1ODU0NWY0M2JjOTA0NDAyNzk5Y2JjOGZlMyIsInVzZXJfaWQiOjF9.NGI4VcORHX8qNxkBTMNjwQCmNoFg8um6SmlBPeGiBgc",
-         "access": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjg1NjQ2MDg1LCJpYXQiOjE2ODU2NDU3ODUsImp0aSI6ImE4ZWI3MWQ3NjkzOTQ0ZTE5NmY0YTcxYjQ0MzA1YTgzIiwidXNlcl9pZCI6MX0.-KQvzul7SrMfRFQkixpVNlUdB3S-7yCVhJ-6-x0wi8A"
+         "refresh": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6MTY4NTgxNTA5NSwiaWF0IjoxNjg1NzI4Njk1LCJqdGkiOiJhZDBjMDliMDE4MWU0MjhhOTY4ZGU3OWIxNTU4NzkyMiIsInVzZXJfaWQiOjF9.Su8llxHjgeXFyFCcBXeGEAq1S28hkg_wZJV1uX-qh-8",
+         "access": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjg1NzI4OTk1LCJpYXQiOjE2ODU3Mjg2OTUsImp0aSI6IjUzZGNkYjhhOWRlYTRkOGZhYzljOTIzMjAyNzI2ODY0IiwidXNlcl9pZCI6MX0.wAF5aqKVb-A6YBsIWiPIRDYhhNfiu-3YBsHu-fTHV7g"
      }
    #+end_src
 
-* Moderator                                                           :moderator:
+** Refresh                                                    :approved_user:
+  - *POST /auth/token/refresh/*
+  - *payload example*:
+    #+begin_src json
+      {
+        "refresh": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6MTY4NTgxNTA5NSwiaWF0IjoxNjg1NzI4Njk1LCJqdGkiOiJhZDBjMDliMDE4MWU0MjhhOTY4ZGU3OWIxNTU4NzkyMiIsInVzZXJfaWQiOjF9.Su8llxHjgeXFyFCcBXeGEAq1S28hkg_wZJV1uX-qh-8"
+      }
+    #+end_src
+  - *response example*:
+    #+begin_src json
+      HTTP 200 OK
+      Allow: POST, OPTIONS
+      Content-Type: application/json
+      Vary: Accept
 
-** Accept reject user                                                 :moderator:
+      {
+          "access": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjg1NzI5MTIyLCJpYXQiOjE2ODU3Mjg2OTUsImp0aSI6ImUyNjZlZjM0NjZhODRmMGI5MDI3ODI1ZDZjMDZkYWYwIiwidXNlcl9pZCI6MX0.CJpYkfljS5SPA1aGsn5kGbNUe1SqDsWLdH8XHqk0B08"
+      }
+    #+end_src
+    
+
+* List users                                                      :moderator:
+ - *GET /api/users/*:
+ - *response example*:
+   #+begin_src json
+     HTTP 200 OK
+     Allow: GET, POST, HEAD, OPTIONS
+     Content-Type: application/json
+     Vary: Accept
+
+     {
+         "count": 2,
+         "next": null,
+         "previous": null,
+         "results": [
+             {
+                 "url": "http://localhost:8000/api/users/2/",
+                 "username": "newuser",
+                 "email": "newuser@mail.com",
+                 "groups": [
+                     "http://localhost:8000/api/groups/2/",
+                     "http://localhost:8000/api/groups/7/"
+                 ],
+                 "is_active": false
+             },
+             {
+                 "url": "http://localhost:8000/api/users/1/",
+                 "username": "admin",
+                 "email": "superadmin@fake.com",
+                 "groups": [
+                     "http://localhost:8000/api/groups/1/",
+                     "http://localhost:8000/api/groups/2/",
+                     "http://localhost:8000/api/groups/3/",
+                     "http://localhost:8000/api/groups/4/",
+                     "http://localhost:8000/api/groups/5/",
+                     "http://localhost:8000/api/groups/6/",
+                     "http://localhost:8000/api/groups/7/"
+                 ],
+                 "is_active": true
+             }
+         ]
+     }
+   #+end_src
+
+* Accept user                                                     :moderator:
+
+ - *PATCH /api/users/<id>*
+ - *request example:*
+   #+begin_src json
+     Content-Type: application/json
+     Accept: application/json
+     Authorization: Bearer :token
+
+     {
+       "is_active": true
+     }
+   #+end_src
+ - *response example*:
+   #+begin_src json
+     {
+       "url": "http://localhost:8000/api/users/2/",
+       "username": "newuser",
+       "email": "newuser@mail.com",
+       "groups": [
+         "http://localhost:8000/api/groups/2/",
+         "http://localhost:8000/api/groups/7/"
+       ],
+       "is_active": true
+     }
+   #+end_src

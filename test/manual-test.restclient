@@ -6,8 +6,8 @@
 :api = :base/api
 :email = admin@cubeseed.fake
 :password = password123
-:token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjg1NTYzNTIxLCJpYXQiOjE2ODU1NjAwNTYsImp0aSI6IjZmNTUyNzVjMTk5OTRlNzQ4NzljM2VkNmNmMTk2NDk5IiwidXNlcl9pZCI6MX0.OU-4YnMFJqHYY7wH2pgJvXDOufVdlgZjyf2TyYVyS_I
-:refresh = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjg1NTYzNDkzLCJpYXQiOjE2ODU1NjAwNTYsImp0aSI6IjRmYmJjMWEyOGJlMTRiMGU4NzhiM2NhYWE2ZTE4NWIyIiwidXNlcl9pZCI6MX0.P0yq7mddTjU89Zl2ajZLLIve5_OMbd6J5J9RY0YwEdE
+:token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjg1NzI5OTU1LCJpYXQiOjE2ODU3Mjg2OTUsImp0aSI6ImY4ZTJmZjI4NWNhZjQxZDNhZWI0YWI1YTgyOTgzZTRlIiwidXNlcl9pZCI6MX0._nlssoaqlNAKEV1iYTdZeoH1XeekMJzmLCdeQb9EffU
+:refresh = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6MTY4NTgxNTA5NSwiaWF0IjoxNjg1NzI4Njk1LCJqdGkiOiJhZDBjMDliMDE4MWU0MjhhOTY4ZGU3OWIxNTU4NzkyMiIsInVzZXJfaWQiOjF9.Su8llxHjgeXFyFCcBXeGEAq1S28hkg_wZJV1uX-qh-8
 :authHead = x-access-token: :token
 
 #
@@ -25,7 +25,7 @@ Content-Type: application/json
 #
 POST http://:ip::port/auth/token/refresh/
 Content-Type: application/json
-{"refresh": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6MTY4NTY0NjQ1NiwiaWF0IjoxNjg1NTYwMDU2LCJqdGkiOiIwMTliMTk3ODk3MWQ0ZjQ1OGE1ZGRkM2EzNzRiNjhhOSIsInVzZXJfaWQiOjF9.bV0sBvL0FQw891HZuYvchs8LIDK-NvTfkKe0puPNpYw"}
+{"refresh": ":refresh"}
 
 #
 GET :api/users/
@@ -54,63 +54,12 @@ Content-Type: application/json
 
 #
 
-POST http://localhost:8000/api-auth/login/
+#
+PATCH :api/users/2/
 Content-Type: application/json
+Accept: application/json; indent=4
+Authorization: Bearer :token
 
-{ "username" : "admin", "password" : "admin123" }
-#
+{"is_active": true}
 
-GET :base/users?email=admin@cubeseed.fake&approved=false
-:authHead
-#
-
-GET :base/users?approved=true
-:authHead
-#
-
-PUT :base/users/2
-:authHead
-Content-Type: application/json
-
-{ "approved": true }
-#
-
-###### new user with admin
-POST :base/auth/signup
-Content-Type: application/json
-
-{ "email" : "superadmin@gmail.com",
-  "password" : "admin123",
-  "roles" : ["admin"]
-  }
-#
-
-###### new user with some roles
-POST :base/auth/signup
-Content-Type: application/json
-
-{ "email" : "farmerbuyerprocessor@gmail.com",
-  "password" : "admin123",
-  "roles" : ["farmer", "buyer", "processor"]
-  }
-#
-
-###### new user without roles
-POST :base/auth/signup
-Content-Type: application/json
-
-{ "email" : "noroles@gmail.com",
-  "password" : "admin123"
-  }
-#
-
-
-###### new user with some roles and admin
-POST :base/auth/signup
-Content-Type: application/json
-
-{ "email" : "manytrades2@gmail.com",
-  "password" : "admin123",
-  "roles" : ["admin", "farmer", "buyer", "processor"]
-  }
 #
