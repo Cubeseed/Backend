@@ -22,21 +22,27 @@
  - Photo
 
 * BusinessProfile
- - [[*User][User]] (Only one? or should be a list?)
- - Business details
-   + Name
-   + Email
-   + Telephone
-   + Category?
-   + Billing Address
-   + Shipping Address
-   + Custom Fields ? (what?)
- - Business Documents (all this sounds USA-ish, is country dependant, what are we targetting?)
-   + Business Image / Logo
+ - [[*User][User]]
+ - Approved?
+ - Name
+ - Email
+ - Telephone
+ - Category?
+ - Billing Address
+ - Shipping Address
+ - Business Image / Logo
+ - Business Documents (all this sounds USA-ish, is country dependant, what are we targetting? -> find info for nigeria)
    + Tax Id
    + EIN
    + SSN
-   + Official documents (what is this? Files uploaded by the user?)
+   + Official documents (stuff for moderator to check the business is legit)
      * File 1
      * File 2
+
+* Product
+ - Name
+
+* Notes
+ - Keep profile info private. So make a chat.
+ - Moderator approves business.
 
