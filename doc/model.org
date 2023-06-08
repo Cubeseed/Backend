@@ -1,0 +1,42 @@
+* User
+ - username (login name)
+ - email
+ - password
+ - [[*Group][List of groups]]
+
+* Group
+ - One of:
+   + MODERATOR
+   + FARMER
+   + BUYER
+   + INVESTOR
+   + INPUT
+   + SERVICE
+   + PROCESSOR
+ 
+* UserProfile
+ - [[*User][User]]
+ - Full Name
+ - Telephone
+ - Location
+ - Photo
+
+* BusinessProfile
+ - [[*User][User]] (Only one? or should be a list?)
+ - Business details
+   + Name
+   + Email
+   + Telephone
+   + Category?
+   + Billing Address
+   + Shipping Address
+   + Custom Fields ? (what?)
+ - Business Documents (all this sounds USA-ish, is country dependant, what are we targetting?)
+   + Business Image / Logo
+   + Tax Id
+   + EIN
+   + SSN
+   + Official documents (what is this? Files uploaded by the user?)
+     * File 1
+     * File 2
+
