@@ -20,6 +20,17 @@ Run with the following settings:
  - Host Port: =8000=
  - Container Port: =8000=
 
+** Run the database container (not needed for development)
+Look for the =postgres= image: [[https://hub.docker.com/_/postgres]].
+Run with the following settings:
+ - Name: whatever
+ - Host Port: =5432=
+ - Container Port: =5432=
+ - Environment:
+   + =POSTGRES_PASSWORD=cubeseedsecret=
+   + =POSTGRES_USER=cubeseed=
+   + =POSTGRES_DB=cubeseedapi=
+
 * Dev notes
 [[./doc/notes.org][general]]
 [[./doc/docker-notes.org][docker]]

@@ -1,0 +1,7 @@
+
+ - [[https://www.figma.com/file/chboN1pQ1XvemSK2UdZbHm/CUBESEED?node-id=0-1&t=L2blj0aK3qcZFPVC-0][figma designs]]
+ - [[https://www.figma.com/file/i0WkKH3fz9ahtkLx0jo3Ry/Cubeseed-USE-CASE?node-id=0-1&t=t66c8joBbNCWHsw1-0][figma use cases]]
+ - [[https://app.diagrams.net/#G1vB_J2Al59O_Fpy8BQ2ZZeXacyYvZ6l7Y][ERD]] (outdated & don't know who did it)
+ - [[https://docs.google.com/document/d/1otSVVp7G5-K1eNmDUV5-jHWlj8JHG9KH3xgwZGicbBg/edit][Front End Tech Stack]]
+ - [[https://trello.com/b/9bshrVnn/processor-storage-user-group][processor storage user group Trello]]
+ - [[https://docs.google.com/spreadsheets/d/1-Q80N2I6gM1F2Mz1fCbbbqY9uTzRFO39/edit#gid=18456172][People]]
