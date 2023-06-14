@@ -17,7 +17,8 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import include, path
 from rest_framework import routers
-from cubeseed.userauth import views
+from cubeseed.userauth import views as userauth_views
+from cubeseed.userprofile import views as userprofile_views
 
 from rest_framework_simplejwt.views import (
     TokenObtainPairView,
@@ -26,9 +27,10 @@ from rest_framework_simplejwt.views import (
 )
 
 router = routers.DefaultRouter()
-router.register(r'register', views.RegisterUserView)
-router.register(r'users', views.UserViewSet)
-router.register(r'groups', views.GroupViewSet)
+router.register(r'register', userauth_views.RegisterUserView)
+router.register(r'users', userauth_views.UserViewSet)
+router.register(r'groups', userauth_views.GroupViewSet)
+router.register(r'userprofile', userprofile_views.UserProfileViewSet)
 
 urlpatterns = [
     path('admin/', admin.site.urls),
