@@ -11,5 +11,8 @@ class UserProfileSerializer(serializers.ModelSerializer):
 class UserProfilePhotoSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserProfilePhoto
-        fields = ['url', 'picture', 'created_at', 'updated_at' ]
-        read_only_fields = [ 'url', 'picture', 'created_at', 'updated_at' ]
+        fields = ['url', 'user_profile', 'picture', 'created_at', 'updated_at' ]
+        read_only_fields = [ 'url', 'created_at', 'updated_at' ]
+        extra_kwargs = {
+            'picture': {'write_only': True}
+        }

@@ -19,15 +19,19 @@ class UserProfile(models.Model):
     
 
 def upload_user_profile_image(instance, filename):
-    image_name = "user_profile_images/%s" % (instance.user.id)
+    image_name = "user_profile_images/%s" % (instance.user_profile.user.id)
     default_storage.delete(image_name)
     return image_name
     
 class UserProfilePhoto(models.Model):
-    userProfile = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
+    user_profile = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
     picture = models.ImageField(upload_to=upload_user_profile_image, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)    
     
     def __str__(self):
-        return self.userProfile.user.username + " profile photo"
+        return self.user_profile.user.username + " profile photo"
+    
+    def delete(self):
+        self.picture.delete()
+        super().delete()
