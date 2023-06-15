@@ -16,9 +16,6 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import include, path
-from rest_framework import routers
-from cubeseed.userprofile.urls import router as userprofile_router
-from cubeseed.userauth.urls import router as userauth_router
 
 from rest_framework_simplejwt.views import (
     TokenObtainPairView,
@@ -26,15 +23,12 @@ from rest_framework_simplejwt.views import (
     TokenVerifyView,
 )
 
-router = routers.DefaultRouter()
-router.registry.extend(userprofile_router.registry)
-router.registry.extend(userauth_router.registry)
-
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
     path('auth/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('auth/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     path('auth/token/verify/', TokenVerifyView.as_view(), name='token_verify'),
-    path('api/', include(router.urls)),
+    path('api/', include('cubeseed.userauth.urls')),
+    path('api/', include('cubeseed.userprofile.urls')),
 ]
