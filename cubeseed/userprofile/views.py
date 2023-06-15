@@ -28,5 +28,5 @@ class UserProfilePhotoViewSet(viewsets.ModelViewSet):
             response['Content-Disposition'] = 'attachment; filename="%s"' % os.path.basename(user_profile_photo.picture.path)
             return response
         else:
-            super().retrieve(request, *args, **kwargs)
+            return super().retrieve(request, *args, **kwargs)
         
