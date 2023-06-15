@@ -3,5 +3,5 @@ from cubeseed.userprofile import views
 
 router = routers.DefaultRouter()
 
-router.register(r'userprofile', views.UserProfileViewSet)
-router.register(r'userprofile/photo', views.UserProfilePhotoViewSet)
+router.register(r'userprofile', views.UserProfileViewSet, basename='userprofile')
+router.register(r'userprofilephoto', views.UserProfilePhotoViewSet, basename='userprofilephoto')
