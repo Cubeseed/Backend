@@ -14,3 +14,8 @@
 #+begin_src bash
   python manage.py runserver
 #+end_src
+
+* curl upload image example using basic auth
+#+begin_src bash
+  curl -vvvv -X PATCH -F 'picture=@/path/image.jpg' http://admin:admin123@localhost:8000/api/userprofilephoto/5/
+#+end_src

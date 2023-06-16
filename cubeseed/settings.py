@@ -27,8 +27,23 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['localhost']
 
+# CORS_ORIGIN_WHITELIST = [
+#     'http://localhost:3000',
+# ]
+
+# CORS_ALLOWED_ORIGINS = [
+#     'http://localhost:3000',
+# ]
+# FIXME: this is good for development unacceptable for production
+
+# CORS_ALLOW_ALL_ORIGINS = True
+
 CORS_ORIGIN_ALLOW_ALL = True
 
+# CORS_ALLOW_CREDENTIALS = True
+# CORS_ALLOWED_ORIGIN_REGEXES = [
+#     'http://localhost:3000',
+#]
 
 # Application definition
 
@@ -41,6 +56,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'cubeseed.userauth',
+    'cubeseed.userprofile',
     'corsheaders',
 ]
 
@@ -138,3 +154,7 @@ REST_FRAMEWORK = {
         'rest_framework.authentication.SessionAuthentication',
     ]
 }
+
+# FIXME: this is a simplification for the MVP, should be using cloud storage.
+MEDIA_ROOT = BASE_DIR / 'media'
+MEDIA_URL = '/media/'
