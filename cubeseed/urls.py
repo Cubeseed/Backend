@@ -16,6 +16,9 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import include, path
+from rest_framework import routers
+from cubeseed.userauth.urls import register_routes as register_userauth_routes
+from cubeseed.userprofile.urls import register_routes as register_userprofile_routes
 
 from rest_framework_simplejwt.views import (
     TokenObtainPairView,
@@ -23,12 +26,15 @@ from rest_framework_simplejwt.views import (
     TokenVerifyView,
 )
 
+router = routers.DefaultRouter()
+register_userauth_routes(router)
+register_userprofile_routes(router)
+
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
-    path('auth/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
-    path('auth/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
-    path('auth/token/verify/', TokenVerifyView.as_view(), name='token_verify'),
-    path('api/', include('cubeseed.userauth.urls')),
-    path('api/', include('cubeseed.userprofile.urls')),
+    path('api/api-auth/', include('rest_framework.urls', namespace='rest_framework')),
+    path('api/auth/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
+    path('api/auth/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
+    path('api/auth/token/verify/', TokenVerifyView.as_view(), name='token_verify'),
+    path('api/', include(router.urls)),
 ]

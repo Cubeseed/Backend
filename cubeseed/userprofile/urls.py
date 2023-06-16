@@ -1,9 +1,9 @@
 from rest_framework import routers
 from cubeseed.userprofile import views
 
-router = routers.DefaultRouter()
+def register_routes(router):
+    router.register(r'userprofile', views.UserProfileViewSet)
+    router.register(r'userprofile/photo', views.UserProfilePhotoViewSet)
+    return router
 
-router.register(r'userprofile', views.UserProfileViewSet)
-router.register(r'userprofilephoto', views.UserProfilePhotoViewSet)
-
-urlpatterns = router.urls
+urlpatterns = register_routes(routers.DefaultRouter()).urls
