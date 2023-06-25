@@ -25,7 +25,8 @@ SECRET_KEY = 'django-insecure-iwai)rfl5ls2r=+i_37yl08zuf77qwmbexdx^q_g_r+ovgei-e
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['localhost']
+## FIXME: this is good for development unacceptable for production
+ALLOWED_HOSTS = ['*']
 
 # CORS_ORIGIN_WHITELIST = [
 #     'http://localhost:3000',
@@ -57,6 +58,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'cubeseed.userauth',
     'cubeseed.userprofile',
+    'drf_yasg',
     'corsheaders',
 ]
 
