@@ -60,6 +60,9 @@ INSTALLED_APPS = [
     'corsheaders',
 ]
 
+# configuring the unit testing python runner tool installed
+TEST_RUNNER = "redgreenunittest.django.runner.RedGreenDiscoverRunner"
+
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
@@ -152,9 +155,33 @@ REST_FRAMEWORK = {
         ### FIXME: this should be only valid for testing
         'rest_framework.authentication.BasicAuthentication',
         'rest_framework.authentication.SessionAuthentication',
+    ],
+    'TEST_REQUEST_DEFAULT_FORMAT': 'json',
+    'TEST_REQUEST_RENDERER_CLASSES': [
+        'rest_framework.renderers.JSONRenderer',
     ]
 }
 
 # FIXME: this is a simplification for the MVP, should be using cloud storage.
 MEDIA_ROOT = BASE_DIR / 'media'
 MEDIA_URL = '/media/'
+
+# FIXME: Configuring Logging on localfile, default level WARNING and ABOVE for development
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'file': {
+            'level': 'WARNING',
+            'class': 'logging.FileHandler',
+            'filename': 'logs/error.log',
+        },
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['file'],
+            'level': 'WARNING',
+            'propagate': True,
+        },
+    },
+}
