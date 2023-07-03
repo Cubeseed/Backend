@@ -1,5 +1,5 @@
-from cubeseed.userauth import views
 from rest_framework import routers
+from cubeseed.userauth import views
 
 
 def register_routes(router):

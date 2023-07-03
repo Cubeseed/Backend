@@ -1,6 +1,6 @@
 from django.db import models
 from django.core.files.storage import default_storage
-
+from django.conf import settings
 
 # User Profile Model for Cubeseed
 class UserProfile(models.Model):
@@ -11,7 +11,7 @@ class UserProfile(models.Model):
     state = models.CharField(max_length=50)
     country = models.CharField(max_length=50)
     zip_code = models.CharField(max_length=10)
-    user = models.ForeignKey("auth.User", on_delete=models.CASCADE)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -20,7 +20,7 @@ class UserProfile(models.Model):
 
 
 def upload_user_profile_image(instance, filename):
-    image_name = "user_profile_images/%s" % (instance.user_profile.user.id)
+    image_name = f"user_profile_images/{instance.user_profile.user.id}"
     default_storage.delete(image_name)
     return image_name
 

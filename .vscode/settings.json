@@ -13,5 +13,6 @@
         "pylint_django.checkers.migrations",
         "--django-settings-module=cubeseed.settings",
         "--max-line-length=120",
+        "--disable=missing-docstring"
     ]
 }
