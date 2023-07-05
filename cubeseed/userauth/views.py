@@ -27,6 +27,10 @@ class GroupViewSet(viewsets.ModelViewSet):
 
 
 class RegisterUserView(viewsets.ModelViewSet):
+    """
+    API endpoint that adds a new user to the database.
+    """
+
     queryset = get_user_model().objects.all()
     http_method_names = ["post"]
     permission_classes = [permissions.AllowAny]

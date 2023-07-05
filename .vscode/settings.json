@@ -1,6 +1,6 @@
 {
     "[python]": {
-        "editor.defaultFormatter": "ms-python.black-formatter"
+        "editor.defaultFormatter": "ms-python.python"
     },
     "python.formatting.provider": "none",
     "black-formatter.args": [
@@ -13,6 +13,9 @@
         "pylint_django.checkers.migrations",
         "--django-settings-module=cubeseed.settings",
         "--max-line-length=120",
-        "--disable=missing-docstring"
+        "--disable=missing-docstring",
+        "--disable=missing-module-docstring",
+        "--disable=missing-class-docstring",
+        "--disable=missing-function-docstring"
     ]
 }
