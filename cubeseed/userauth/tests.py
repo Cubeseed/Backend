@@ -1,21 +1,19 @@
-import logging
 from rest_framework.reverse import reverse
 from rest_framework import status
-from rest_framework.test import APITestCase, force_authenticate
+from rest_framework.test import APITestCase ,force_authenticate
 from django.contrib.auth.models import Group
 from django.contrib.auth import get_user_model
 #from cubeseed.userauth.serializers import UserSerializer, GroupSerializer, RegisterUserSerializer
-
-
-logger = logging.getLogger(__name__)
 
 class UserAuthAPITest(APITestCase):
     """
     contains the API test cases for User Auth
     """
     def setUp(self):
-        self.user = get_user_model().objects.create_user(username='testuser', email='test@example.com', password='testpassword')
+        self.user = get_user_model().objects.create_user(
+            username='testuser', email='test@example.com', password='testpassword')
         self.group = Group.objects.create(name='Test Group')
+        self.client = ''
 
     def test_register_user(self):
         """
@@ -36,7 +34,6 @@ class UserAuthAPITest(APITestCase):
 
         # Verify that the user is created in the database
         self.assertEqual(get_user_model().objects.count(), 2)
-        logger.debug('Successfully added a new user into database')
 
     def test_register_user_with_invalid_data(self):
         """
@@ -75,26 +72,29 @@ class UserAuthAPITest(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
         self.assertEqual(response.results['username'], self.user.username)
-        logger.debug('Successfully fetched all users')
 
 
 
-# class UserSerializerTestCase(APITestCase):
-#     def setUp(self):
-#         self.user_data = {
-#             'username': 'testuser',
-#             'email': 'testuser@example.com',
-#             'password': 'testpassword',
-#             'groups': [1, 2],
-#             'is_active': False,
-#         }
-#         self.serializer = UserSerializer(data=self.user_data)
+# class RegisterUserSerializerTestCase(APITestCase):
+#     def test_create_user(self):
+#         serializer = RegisterUserSerializer(data={
+#             'username': 'newuser',
+#             'email': 'newuser@example.com',
+#             'groups': [],
+#             'password': 'newpassword'
+#         })
+#         serializer.is_valid()
+#         user = serializer.save()
 
-#     def test_serializer_valid(self):
-#         self.assertTrue(self.serializer.is_valid())
+#         self.assertEqual(User.objects.count(), 1)  # Verify that a new user is created
+#         self.assertEqual(user.username, 'newuser')
+#         self.assertFalse(user.is_active)
 
-#     def test_serializer_create(self):
-#         user = self.serializer.create(self.user_data)
-#         self.assertEqual(user.username, 'testuser')
-#         self.assertEqual(user.email, 'testuser@example.com')
-#         self.assertEqual(user.is_active, False)
+#     def test_create_user_invalid_data(self):
+#         serializer = RegisterUserSerializer(data={
+#             'username': 'newuser',
+#             'email': '',  # Invalid email format
+#             'password': 'weak'
+#         })
+#         self.assertFalse(serializer.is_valid())
+#         self.assertIn('email', serializer.errors)  # Verify that the email field has an error

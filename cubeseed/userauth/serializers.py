@@ -4,18 +4,27 @@ from rest_framework import serializers
 
 
 class UserSerializer(serializers.HyperlinkedModelSerializer):
+    """
+        serializer for fetching users
+    """
     class Meta:
         model = get_user_model()
         fields = ["url", "username", "email", "groups", "is_active"]
 
 
 class GroupSerializer(serializers.HyperlinkedModelSerializer):
+    """
+        serializer for creating user group
+    """
     class Meta:
         model = Group
         fields = ["url", "name"]
 
 
 class RegisterUserSerializer(serializers.HyperlinkedModelSerializer):
+    """
+        serializer for creating a new user
+    """
     class Meta:
         model = get_user_model()
         fields = ["url", "username", "email", "groups", "password", "is_active"]
