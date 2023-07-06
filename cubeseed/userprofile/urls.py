@@ -4,7 +4,7 @@ from cubeseed.userprofile import views
 
 def register_routes(router):
     router.register(r"userprofile", views.UserProfileViewSet)
-    router.register(r"userprofile/photo", views.UserProfilePhotoViewSet)
+    router.register(r"userprofilephoto", views.UserProfilePhotoViewSet)
     return router
 
 
