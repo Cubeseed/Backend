@@ -15,7 +15,7 @@ SERVICE = "service"
 PROCESSOR = "processor"
 
 
-def create_initial_data():
+def create_initial_data(apps, schema_editor):
     """Create groups and superuser"""
     group_names = [
         MODERATOR,
@@ -37,7 +37,7 @@ def create_initial_data():
     ).groups.set(groups)
 
 
-def add_permissions(apps):
+def add_permissions(apps, schema_editor):
     """
     make sure default permissions are created, see
     https://stackoverflow.com/questions/38822273/how-to-add-a-permission-to-a-user-group-during-a-django-migration
@@ -61,6 +61,6 @@ class Migration(migrations.Migration):
     dependencies = []
 
     operations = [
-        migrations.RunPython(create_initial_data),
-        migrations.RunPython(add_permissions),
+        migrations.RunPython(create_initial_data, migrations.RunPython.noop),
+        migrations.RunPython(add_permissions, migrations.RunPython.noop),
     ]
