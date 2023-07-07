@@ -17,6 +17,7 @@ class UserProfileSerializer(serializers.ModelSerializer):
             "state",
             "country",
             "zip_code",
+            "about_me",
             "created_at",
             "updated_at",
         ]

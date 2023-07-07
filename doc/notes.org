@@ -1,20 +1,23 @@
-* setup project
+* setup 
 #+begin_src bash
-  python3 -m venv env
-  source env/bin/activate
-  pip install django
-  pip install djangorestframework
-  pip install django-cors-headers
-  pip install djangorestframework-simplejwt
-  django-admin startproject cubeseed .
-  cd cubeseed
-  django-admin startapp userauth
+    python3 -m venv env
+    source env/bin/activate
+    pip install -r requirements.txt
+#+end_src
+
+* migrate database
+#+begin_src bash
   python manage.py migrate
 #+end_src
 
 * run server
 #+begin_src bash
   python manage.py runserver
+#+end_src
+
+* create migrations
+#+begin_src bash
+  python manage.py makemigrations
 #+end_src
 
 * curl upload image example using basic auth

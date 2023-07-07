@@ -11,6 +11,7 @@ class UserProfile(models.Model):
     state = models.CharField(max_length=50)
     country = models.CharField(max_length=50)
     zip_code = models.CharField(max_length=10)
+    about_me = models.TextField(blank=True)
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -37,3 +38,4 @@ class UserProfilePhoto(models.Model):
     def delete(self):
         self.picture.delete()
         super().delete()
+
