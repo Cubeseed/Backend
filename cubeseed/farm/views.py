@@ -1,3 +1,11 @@
-from django.shortcuts import render
+"""Farm views"""
+from rest_framework import viewsets, permissions
+from .models import Farm
+from .serializers import FarmSerializer
 
-# Create your views here.
+
+class FarmViewSet(viewsets.ModelViewSet):
+    queryset = Farm.objects.all()
+    serializer_class = FarmSerializer
+    permission_classes = [permissions.DjangoModelPermissions]
+    http_method_names = ["get", "post", "put", "patch"]
