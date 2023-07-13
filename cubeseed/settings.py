@@ -154,7 +154,7 @@ REST_FRAMEWORK = {
     "PAGE_SIZE": 10,
     "DEFAULT_AUTHENTICATION_CLASSES": [
         "rest_framework_simplejwt.authentication.JWTAuthentication",
-        # this should be only valid for testing
+        ## FIX ME this should be only valid for testing
         'rest_framework.authentication.BasicAuthentication',
         'rest_framework.authentication.SessionAuthentication',
     ],
@@ -164,26 +164,6 @@ REST_FRAMEWORK = {
     ]
 }
 
-# this is a simplification for the MVP, should be using cloud storage.
+## FIX ME this is a simplification for the MVP, should be using cloud storage.
 MEDIA_ROOT = BASE_DIR / "media"
 MEDIA_URL = "/media/"
-
-#Configuring Logging on localfile, default level WARNING and ABOVE for development
-# LOGGING = {
-#     'version': 1,
-#     'disable_existing_loggers': False,
-#     'handlers': {
-#         'file': {
-#             'level': 'WARNING',
-#             'class': 'logging.FileHandler',
-#             'filename': 'logs/error.log',
-#         },
-#     },
-#     'loggers': {
-#         'django': {
-#             'handlers': ['file'],
-#             'level': 'WARNING',
-#             'propagate': True,
-#         },
-#     },
-# }
