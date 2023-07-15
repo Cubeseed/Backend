@@ -1,26 +1,25 @@
 from rest_framework.reverse import reverse
 from rest_framework import status
 from rest_framework.test import APITestCase
-from rest_framework_simplejwt.tokens import RefreshToken
-from django.contrib.auth.models import Group
-from django.contrib.auth import get_user_model
+from django.contrib.auth.models import User, Permission
 
-User = get_user_model()
 
 class UserAuthAPITest(APITestCase):
     """
     contains the API test cases for User Auth
     """
     def setUp(self):
-        self.url = reverse('user-list')
-        # self.group = Group.objects.create(name='market')
-
-    def authenticate(self):
-         User.objects.create_user(
+        self.user = User.objects.create_user(
             username='testuser',
             password='testpassword'
         )
-         
+        self.url = reverse('user-detail', kwargs={'pk': self.user.pk})
+
+    def authenticate(self):
+         permission_change = Permission.objects.get(codename='change_user')
+         permission_delete = Permission.objects.get(codename='delete_user')
+         self.user.user_permissions.add(permission_change, permission_delete)
+
          response = self.client.post(reverse('token_obtain_pair'),{
              'username':'testuser',
             'password':'testpassword'
@@ -33,9 +32,10 @@ class UserAuthAPITest(APITestCase):
         Test to get all the users in the db
         """
         self.authenticate()
-        response = self.client.get(self.url, format='json')
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        response = self.client.get(reverse('user-list'), format='json')
 
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        # count all the users including admin
         self.assertEqual(User.objects.count(), 2)
 
     def test_register_user(self):
@@ -54,7 +54,6 @@ class UserAuthAPITest(APITestCase):
         response = self.client.post(reverse("register-list"), data, format='json')
 
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-
         self.assertEqual(response.data["username"], data["username"])
 
     def test_register_user_with_invalid_data(self):
@@ -72,17 +71,41 @@ class UserAuthAPITest(APITestCase):
         response = self.client.post(reverse("register-list"), invalid_data, format='json')
 
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-
         # Verify that the user is not created in the database
-        self.assertEqual(get_user_model().objects.count(), 1)
+        self.assertEqual(User.objects.count(), 2)
 
-    #     # Verify that the response contains an error for the 'email' field
-    #     # self.assertIn('email', response.data)
 
     def test_list_groups(self):
         self.authenticate()
 
         response = self.client.get(reverse('group-list'), format='json')
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        # returns the number of groups original created in the migration folder
+        self.assertEqual(response.data['count'], 7)
+
+    def test_get_user(self):
+        self.authenticate()
+
+        
+        response = self.client.get(self.url, format='json')
+
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
-        self.assertEqual(response.data['count'], 7)
+    def test_edit_user(self):
+        self.authenticate()
+
+        updated_data = {
+            "username": "testuser2"
+        }
+        response = self.client.put(self.url, updated_data, format='json')
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data['username'], updated_data['username'])
+
+    def test_delete_user(self):
+        self.authenticate()
+
+        response = self.client.delete(self.url,  format='json')
+
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)

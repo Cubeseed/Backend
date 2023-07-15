@@ -14,8 +14,5 @@
         "--django-settings-module=cubeseed.settings",
         "--max-line-length=120",
         "--disable=missing-docstring",
-        "--disable=missing-module-docstring",
-        "--disable=missing-class-docstring",
-        "--disable=missing-function-docstring"
     ]
 }
