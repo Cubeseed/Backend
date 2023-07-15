@@ -25,7 +25,7 @@ SECRET_KEY = "django-insecure-iwai)rfl5ls2r=+i_37yl08zuf77qwmbexdx^q_g_r+ovgei-e
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-## FIXME: this is good for development unacceptable for production
+# this is good for development unacceptable for production
 ALLOWED_HOSTS = ["*"]
 
 # CORS_ORIGIN_WHITELIST = [
@@ -35,7 +35,7 @@ ALLOWED_HOSTS = ["*"]
 # CORS_ALLOWED_ORIGINS = [
 #     'http://localhost:3000',
 # ]
-# FIXME: this is good for development unacceptable for production
+# this is good for development unacceptable for production
 
 # CORS_ALLOW_ALL_ORIGINS = True
 
@@ -61,6 +61,9 @@ INSTALLED_APPS = [
     "drf_yasg",
     "corsheaders",
 ]
+
+# configuring the unit testing python runner tool installed
+TEST_RUNNER = "redgreenunittest.django.runner.RedGreenDiscoverRunner"
 
 MIDDLEWARE = [
     "corsheaders.middleware.CorsMiddleware",
@@ -151,12 +154,16 @@ REST_FRAMEWORK = {
     "PAGE_SIZE": 10,
     "DEFAULT_AUTHENTICATION_CLASSES": [
         "rest_framework_simplejwt.authentication.JWTAuthentication",
-        ### FIXME: this should be only valid for testing
-        "rest_framework.authentication.BasicAuthentication",
-        "rest_framework.authentication.SessionAuthentication",
+        ## FIX ME this should be only valid for testing
+        'rest_framework.authentication.BasicAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
     ],
+    'TEST_REQUEST_DEFAULT_FORMAT': 'json',
+    'TEST_REQUEST_RENDERER_CLASSES': [
+        'rest_framework.renderers.JSONRenderer',
+    ]
 }
 
-# FIXME: this is a simplification for the MVP, should be using cloud storage.
+## FIX ME this is a simplification for the MVP, should be using cloud storage.
 MEDIA_ROOT = BASE_DIR / "media"
 MEDIA_URL = "/media/"

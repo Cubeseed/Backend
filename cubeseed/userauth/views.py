@@ -17,7 +17,7 @@ class UserViewSet(viewsets.ModelViewSet):
 
 class GroupViewSet(viewsets.ModelViewSet):
     """
-    API endpoint that allows groups to be viewed or edited.
+    API endpoint that allows groups to be viewed.
     """
 
     queryset = Group.objects.all()
@@ -27,6 +27,10 @@ class GroupViewSet(viewsets.ModelViewSet):
 
 
 class RegisterUserView(viewsets.ModelViewSet):
+    """
+    API endpoint that registers a user.
+    """
+
     queryset = get_user_model().objects.all()
     http_method_names = ["post"]
     permission_classes = [permissions.AllowAny]
