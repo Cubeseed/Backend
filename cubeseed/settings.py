@@ -25,7 +25,7 @@ SECRET_KEY = "django-insecure-iwai)rfl5ls2r=+i_37yl08zuf77qwmbexdx^q_g_r+ovgei-e
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-# this is good for development unacceptable for production
+## FIXME: this is good for development unacceptable for production
 ALLOWED_HOSTS = ["*"]
 
 # CORS_ORIGIN_WHITELIST = [
@@ -35,7 +35,7 @@ ALLOWED_HOSTS = ["*"]
 # CORS_ALLOWED_ORIGINS = [
 #     'http://localhost:3000',
 # ]
-# this is good for development unacceptable for production
+# FIXME: this is good for development unacceptable for production
 
 # CORS_ALLOW_ALL_ORIGINS = True
 
@@ -154,7 +154,7 @@ REST_FRAMEWORK = {
     "PAGE_SIZE": 10,
     "DEFAULT_AUTHENTICATION_CLASSES": [
         "rest_framework_simplejwt.authentication.JWTAuthentication",
-        ## FIX ME this should be only valid for testing
+        ### FIXME: this should be only valid for testing
         'rest_framework.authentication.BasicAuthentication',
         'rest_framework.authentication.SessionAuthentication',
     ],
@@ -164,6 +164,6 @@ REST_FRAMEWORK = {
     ]
 }
 
-## FIX ME this is a simplification for the MVP, should be using cloud storage.
+# FIXME: this is a simplification for the MVP, should be using cloud storage.
 MEDIA_ROOT = BASE_DIR / "media"
 MEDIA_URL = "/media/"
