@@ -1,6 +1,6 @@
 ## Overview
 
-This repository contains the Backend endpoint for CubeSeed
+This repository contains the Backend API endpoint for CubeSeed
 
 ## Requirements
 
