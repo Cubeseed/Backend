@@ -55,36 +55,44 @@ You need the following tools to set up the project:
 
 ## How To Use Docker
 
-If you have docker installed and know how to use it from the command line:
+If you have docker installed and know how to run it from the command line:
 
 ```bash
 docker run -it -dp 8000:8000 sebastiangh/cubeseed
 ```
 
-** Install docker
- - [[https://docs.docker.com/desktop/install/windows-install/][Windows]]
- - [[https://docs.docker.com/desktop/install/mac-install/][Mac]]
- - [[https://docs.docker.com/engine/install/ubuntu/][Ubuntu]]
+### Install docker
+ - [Windows](https://docs.docker.com/desktop/install/windows-install/)
+ - [Mac](https://docs.docker.com/desktop/install/mac-install/)
+ - [Ubuntu](https://docs.docker.com/engine/install/ubuntu/)
 
-** [https://docs.docker.com/get-started/run-docker-hub-images/][Follow this to run docker images]]
+[Guide on how to run docker images](https://docs.docker.com/get-started/run-docker-hub-images/)
 
-** Run project container
+### Run project container
 Look for the =sebastiangh/cubeseed= image: [[https://hub.docker.com/r/sebastiangh/cubeseed]]
 Run with the following settings:
- - Name: whatever
+ - Name: Any name
  - Host Port: =8000=
  - Container Port: =8000=
 
-** Run the database container (not needed for development)
-Look for the =postgres= image: [[https://hub.docker.com/_/postgres]].
+### Run the database container (not needed for development)
+Look for the postgres image: https://hub.docker.com/_/postgres.
 Run with the following settings:
  - Name: whatever
  - Host Port: =5432=
  - Container Port: =5432=
  - Environment:
-   + =POSTGRES_PASSWORD=cubeseedsecret=
-   + =POSTGRES_USER=cubeseed=
-   + =POSTGRES_DB=cubeseedapi=
+   + POSTGRES_PASSWORD=cubeseedsecret=
+   + POSTGRES_USER=cubeseed=
+   + POSTGRES_DB=cubeseedapi=
+
+### How to build and push
+```bash
+  docker build -t cubeseed . -f docker/Dockerfile
+  # tag not necessary if already done before
+  docker tag cubeseed sebastiangh/cubeseed
+  docker push sebastiangh/cubeseed
+```
 
 ## Contributing
 All new features, enhancements, bug fixes must be added as an issue before opening a PR.
