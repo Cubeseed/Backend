@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from cubeseed.coursecertificate.models import CourseCertificate
+from cubeseed.coursecertificate.models import CourseCertificateFile
 from cubeseed.userprofile.serializers import UserProfileSerializer
 
 
@@ -8,7 +8,7 @@ class CourseCertificateSerializer(serializers.ModelSerializer):
     user = UserProfileSerializer()
 
     class Meta:
-        model = CourseCertificate
+        model = CourseCertificateFile
         fields = [
             "name",
             "review_status",

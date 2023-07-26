@@ -1,4 +1,4 @@
 from django.contrib import admin
-from cubeseed.coursecertificate.models import CourseCertificate
+from cubeseed.coursecertificate.models import CourseCertificateFile
 
-admin.site.register(CourseCertificate)
+admin.site.register(CourseCertificateFile)
