@@ -2,7 +2,9 @@ from django.contrib.auth.models import Group
 from django.contrib.auth import get_user_model
 from rest_framework import viewsets
 from rest_framework import permissions
-from cubeseed.userauth.serializers import UserSerializer, GroupSerializer, RegisterUserSerializer
+from cubeseed.userauth.serializers import UserSerializer, GroupSerializer, RegisterUserSerializer, CourseSerializer
+
+from Backend.cubeseed.userauth.models import Course
 
 
 class UserViewSet(viewsets.ModelViewSet):
@@ -35,3 +37,10 @@ class RegisterUserView(viewsets.ModelViewSet):
     http_method_names = ["post"]
     permission_classes = [permissions.AllowAny]
     serializer_class = RegisterUserSerializer
+
+
+class RegisterCourseView(viewsets.ModelViewSet):
+    queryset = Course.objects.all()
+    http_method_names = ['post']
+    permission_classes = [permissions.AllowAny]
+    serializer_class = CourseSerializer

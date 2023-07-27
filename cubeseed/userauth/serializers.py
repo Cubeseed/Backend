@@ -2,6 +2,8 @@ from django.contrib.auth.models import Group
 from django.contrib.auth import get_user_model
 from rest_framework import serializers
 
+from Backend.cubeseed.userauth.models import Course
+
 
 class UserSerializer(serializers.HyperlinkedModelSerializer):
     """
@@ -41,3 +43,19 @@ class RegisterUserSerializer(serializers.HyperlinkedModelSerializer):
         user.groups.set(validated_data["groups"])
         user.save()
         return user
+
+    class CourseSerializer(serializers.HyperlinkedModelSerializer):
+        class Meta:
+            model = Course
+            fields = ['link', 'title', 'description', 'date_created', 'updated']
+
+        def create(self, validated_data):
+            course = Course.objects.create_user(
+                link=validated_data["link"],
+                title=validated_data["username"],
+                description=validated_data['description'],
+                date_created=validated_data["date_created"],
+                updated=validated_data["updated"],
+            )
+            course.save()
+            return course

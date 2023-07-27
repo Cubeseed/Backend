@@ -2,6 +2,8 @@ from rest_framework import serializers
 from cubeseed.userprofile.models import UserProfile, UserProfilePhoto
 
 
+
+
 class UserProfileSerializer(serializers.ModelSerializer):
     user = serializers.HiddenField(default=serializers.CurrentUserDefault())
 
@@ -17,6 +19,8 @@ class UserProfileSerializer(serializers.ModelSerializer):
             "state",
             "country",
             "zip_code",
+            'assigned_code',
+            ' upload_certificate',
             "about_me",
             "created_at",
             "updated_at",
@@ -30,3 +34,5 @@ class UserProfilePhotoSerializer(serializers.ModelSerializer):
         fields = ["url", "user_profile", "picture", "created_at", "updated_at"]
         read_only_fields = ["url", "created_at", "updated_at"]
         extra_kwargs = {"picture": {"write_only": True}}
+
+
