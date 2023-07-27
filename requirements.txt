@@ -33,6 +33,7 @@ python-magic==0.4.27
 pytz==2023.3
 PyYAML==6.0
 requests==2.31.0
+redgreenunittest==0.1.1
 simplejson==3.19.1
 sqlparse==0.4.4
 swagger-spec-validator==3.0.3
