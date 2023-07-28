@@ -53,6 +53,12 @@ You need the following tools to set up the project:
 
 8. Access the live development server at [localhost:8000/swagger](http://localhost:8000/swagger/).
 
+## Run Test
+
+```bash
+    python manage.py test
+```
+
 ## How To Use Docker
 
 If you have docker installed and know how to run it from the command line:
