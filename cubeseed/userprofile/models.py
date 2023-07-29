@@ -39,3 +39,12 @@ class UserProfilePhoto(models.Model):
         self.picture.delete()
         super().delete()
 
+class FarmerProfile(models.Model):
+    REVIEW_STATUSES = (
+        ('P', 'PENDING'),
+        ('R', 'REJECTED'),
+        ('A', 'APPROVED')
+    )
+    review_status = models.CharField(max_length=1, choices=REVIEW_STATUSES)
+    reviewed_by = models.OneToOneField(UserProfile, null=True, blank=True, on_delete=models.SET_NULL, related_name="reviewed_farmers")
+    user_profile = models.OneToOneField(UserProfile, on_delete=models.CASCADE)
