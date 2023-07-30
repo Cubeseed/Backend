@@ -30,6 +30,7 @@ class CourseCertificateFile(FileDescriptor):
     reviewed_date = models.DateField(null=True, blank=True)
     farmer_profile = models.ForeignKey(FarmerProfile, on_delete=models.CASCADE)
     certificate = models.FileField(upload_to=upload_certificate)
+    # need a reference to the actual course this certificate is for once there is a model for course
 
     def __str__(self):
         return self.farmer_profile.user_profile.full_name + " - " + self.name + " - " + self.get_review_status_display()
