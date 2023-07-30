@@ -58,6 +58,7 @@ INSTALLED_APPS = [
     "rest_framework",
     "cubeseed.userauth",
     "cubeseed.userprofile",
+    "cubeseed.filedescriptor",
     "drf_yasg",
     "corsheaders",
 ]
