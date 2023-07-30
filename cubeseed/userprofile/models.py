@@ -45,6 +45,6 @@ class FarmerProfile(models.Model):
         ('R', 'REJECTED'),
         ('A', 'APPROVED')
     )
-    review_status = models.CharField(max_length=1, choices=REVIEW_STATUSES)
+    review_status = models.CharField(max_length=1, choices=REVIEW_STATUSES, default='P')
     reviewed_by = models.OneToOneField(UserProfile, null=True, blank=True, on_delete=models.SET_NULL, related_name="reviewed_farmers")
     user_profile = models.OneToOneField(UserProfile, on_delete=models.CASCADE)

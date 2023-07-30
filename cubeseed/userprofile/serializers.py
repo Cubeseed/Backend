@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from cubeseed.userprofile.models import UserProfile, UserProfilePhoto
+from cubeseed.userprofile.models import UserProfile, UserProfilePhoto, FarmerProfile
 
 
 class UserProfileSerializer(serializers.ModelSerializer):
@@ -30,3 +30,10 @@ class UserProfilePhotoSerializer(serializers.ModelSerializer):
         fields = ["url", "user_profile", "picture", "created_at", "updated_at"]
         read_only_fields = ["url", "created_at", "updated_at"]
         extra_kwargs = {"picture": {"write_only": True}}
+
+
+class FarmerProfileSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = FarmerProfile
+        fields = ["user_profile", "review_status"]

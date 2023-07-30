@@ -3,8 +3,8 @@ from django.http import HttpResponse
 from rest_framework import viewsets
 from rest_framework import permissions
 import magic
-from cubeseed.userprofile.serializers import UserProfilePhotoSerializer, UserProfileSerializer
-from cubeseed.userprofile.models import UserProfile, UserProfilePhoto
+from cubeseed.userprofile.serializers import UserProfilePhotoSerializer, UserProfileSerializer, FarmerProfileSerializer
+from cubeseed.userprofile.models import UserProfile, UserProfilePhoto, FarmerProfile
 
 
 class UserProfileViewSet(viewsets.ModelViewSet):
@@ -32,3 +32,9 @@ class UserProfilePhotoViewSet(viewsets.ModelViewSet):
             return response
         else:
             return super().retrieve(request, *args, **kwargs)
+
+class FarmerProfileViewSet(viewsets.ModelViewSet):
+    queryset = FarmerProfile.objects.all()
+    serializer_class = FarmerProfileSerializer
+    permission_classes = [permissions.DjangoModelPermissions]
+    http_method_names = ["get", "post", "put", "patch"]
