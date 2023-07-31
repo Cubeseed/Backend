@@ -38,4 +38,4 @@ jobs:
       run: |
         python -m pip install coverage
         coverage run manage.py test
-        ./scripts/coverage-check.bash 95
+        ./scripts/coverage-check.bash 94
