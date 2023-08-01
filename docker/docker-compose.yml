@@ -1,0 +1,23 @@
+version: "3.9"
+
+services:
+  cubeseed:
+    container_name: cubeseed
+    build: .
+    ports:
+      - "8000:8000"
+  
+  db:
+    container_name: db
+    image: postgres:12
+    environment:
+      - POSTGRES_PASSWORD=cubeseedsecret
+      - POSTGRES_USER=cubeseed
+      - POSTGRES_DB=cubeseedapis
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+volumes:
+  pgdata: {}
