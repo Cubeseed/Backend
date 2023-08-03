@@ -46,7 +46,7 @@ jobs:
         with:
           context: .
           file: ./docker/Dockerfile
-          build-args: BUILD_BRANCH=${{ github.head_ref || github.ref_name }},ALLOWED_HOSTS=ec2-16-171-43-115.eu-north-1.compute.amazonaws.com
+          build-args: BUILD_BRANCH=${{ github.head_ref || github.ref_name }} ALLOWED_HOSTS=ec2-16-171-43-115.eu-north-1.compute.amazonaws.com
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
