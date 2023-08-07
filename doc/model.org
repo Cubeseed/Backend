@@ -1,0 +1,48 @@
+* User
+ - username (login name)
+ - email
+ - password
+ - [[*Group][List of groups]]
+
+* Group
+ - One of:
+   + MODERATOR
+   + FARMER
+   + BUYER
+   + INVESTOR
+   + INPUT
+   + SERVICE
+   + PROCESSOR
+ 
+* UserProfile
+ - [[*User][User]]
+ - Full Name
+ - Telephone
+ - Location
+ - Photo
+
+* BusinessProfile
+ - [[*User][User]]
+ - Approved?
+ - Name
+ - Email
+ - Telephone
+ - Category?
+ - Billing Address
+ - Shipping Address
+ - Business Image / Logo
+ - Business Documents (all this sounds USA-ish, is country dependant, what are we targetting? -> find info for nigeria)
+   + Tax Id
+   + EIN
+   + SSN
+   + Official documents (stuff for moderator to check the business is legit)
+     * File 1
+     * File 2
+
+* Product
+ - Name
+
+* Notes
+ - Keep profile info private. So make a chat.
+ - Moderator approves business.
+

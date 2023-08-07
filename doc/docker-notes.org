@@ -1,0 +1,11 @@
+* how to build and push
+#+begin_src bash
+  docker build -t cubeseed . -f docker/Dockerfile
+  # tag not necessary if already done before
+  docker tag cubeseed sebastiangh/cubeseed
+  docker push sebastiangh/cubeseed
+#+end_src
+* run
+#+begin_src bash
+  docker run -it -dp 8000:8000 sebastiangh/cubeseed
+#+end_src
