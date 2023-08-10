@@ -2,9 +2,9 @@
 
 FROM python:3
 
-LABEL org.opencontainers.image.source https://github.com/Cubeseed/Backend
-LABEL org.opencontainers.image.description "Cubeseed API"
-LABEL org.opencontainers.image.licenses FIXME
+LABEL org.opencontainers.image.source="https://github.com/Cubeseed/Backend"
+LABEL org.opencontainers.image.description="Cubeseed API"
+LABEL org.opencontainers.image.licenses="FIXME"
 
 WORKDIR /app
 ARG BUILD_BRANCH=main
