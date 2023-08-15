@@ -38,5 +38,5 @@ jobs:
           file: ./docker/Dockerfile
           build-args: |
             BUILD_BRANCH=${{ github.head_ref || github.ref_name }}
-            ALLOWED_HOSTS=ec2-16-171-43-115.eu-north-1.compute.amazonaws.com
+            ALLOWED_HOSTS='ec2-16-171-43-115.eu-north-1.compute.amazonaws.com','localhost'
           push: true
