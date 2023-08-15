@@ -31,6 +31,11 @@ jobs:
           registry: ${{ env.REGISTRY }}
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Extract metadata (tags, labels) for Docker
+        id: meta
+        uses: docker/metadata-action@v4
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
       - name: Build and push Docker image
         uses: docker/build-push-action@v4
         with:
@@ -40,4 +45,4 @@ jobs:
             BUILD_BRANCH=${{ github.head_ref || github.ref_name }}
             ALLOWED_HOSTS='ec2-16-171-43-115.eu-north-1.compute.amazonaws.com','localhost'
           push: true
-          tags: cubeseed/backend:${{ github.head_ref || github.ref_name }}
+          tags: ${{ steps.meta.outputs.tags }}
