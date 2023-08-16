@@ -36,9 +36,6 @@ jobs:
         uses: docker/metadata-action@v4
         with:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
-      - name: Create a version tag
-        run: |
-          echo "VERSIONTAG=$(git describe)" >> $GITHUB_ENV
       - name: Build and push Docker image
         uses: docker/build-push-action@v4
         with:
@@ -47,6 +44,6 @@ jobs:
           build-args: |
             BUILD_BRANCH=${{ github.head_ref || github.ref_name }}
             ALLOWED_HOSTS='ec2-16-171-43-115.eu-north-1.compute.amazonaws.com','localhost'
-            VERSION=${{ env.VERSIONTAG }}.${{ github.run_id }}.${{ github.run_number }}.${{ github.run_attempt }}
+            VERSION=${{ github.ref_name }}.${{ github.run_id }}.${{ github.run_number }}.${{ github.run_attempt }}
           push: true
           tags: ${{ steps.meta.outputs.tags }}
