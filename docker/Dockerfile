@@ -13,7 +13,7 @@ LABEL org.opencontainers.image.version=${VERSION}
 
 WORKDIR /app
 RUN git clone -b ${BUILD_BRANCH} https://github.com/Cubeseed/Backend.git /app
-RUN sed -i "s/ALLOWED_HOSTS = \[.*\]/ALLOWED_HOSTS = \['${ALLOWED_HOSTS}'\]/g" cubeseed/settings.py
+RUN sed -i "s/ALLOWED_HOSTS = \[.*\]/ALLOWED_HOSTS = \[${ALLOWED_HOSTS}\]/g" cubeseed/settings.py
 RUN cat cubeseed/settings.py
 RUN pip install --upgrade pip
 RUN pip install -r requirements.txt
