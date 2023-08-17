@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
 from pathlib import Path
+import subprocess
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -167,3 +168,5 @@ REST_FRAMEWORK = {
 # FIXME: this is a simplification for the MVP, should be using cloud storage.
 MEDIA_ROOT = BASE_DIR / "media"
 MEDIA_URL = "/media/"
+
+VERSION = subprocess.check_output(["git", "describe", "--tags", "--always"], cwd=BASE_DIR).decode("utf-8").strip()
