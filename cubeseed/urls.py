@@ -26,6 +26,7 @@ from rest_framework_simplejwt.views import (
 )
 from cubeseed.userauth.urls import register_routes as register_userauth_routes
 from cubeseed.userprofile.urls import register_routes as register_userprofile_routes
+from cubeseed.userauth.views import VersionView
 
 SchemaView = get_schema_view(
     openapi.Info(
@@ -54,4 +55,6 @@ urlpatterns = [
     path("api/auth/token/refresh/", TokenRefreshView.as_view(), name="token_refresh"),
     path("api/auth/token/verify/", TokenVerifyView.as_view(), name="token_verify"),
     path("api/", include(router.urls)),
+    path("api/version", VersionView.as_view()),
+
 ]
