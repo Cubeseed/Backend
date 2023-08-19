@@ -3,7 +3,9 @@ version: "3.9"
 services:
   cubeseed:
     container_name: cubeseed
-    build: .
+    build:
+      dockerfile: docker/Dockerfile.local
+      context: ..
     ports:
       - "8000:8000"
   
