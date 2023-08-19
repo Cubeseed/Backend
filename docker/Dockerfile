@@ -12,8 +12,7 @@ LABEL org.opencontainers.image.licenses=FIXME
 LABEL org.opencontainers.image.version=${VERSION}
 
 WORKDIR /app
-COPY . /app
-#RUN git clone -b ${BUILD_BRANCH} https://github.com/Cubeseed/Backend.git /app
+RUN git clone -b ${BUILD_BRANCH} https://github.com/Cubeseed/Backend.git /app
 RUN sed -i "s/ALLOWED_HOSTS = \[.*\]/ALLOWED_HOSTS = \[${ALLOWED_HOSTS}\]/g" cubeseed/settings.py
 RUN sed -i "s|VERSION = .*$|VERSION = '${VERSION}'|g" cubeseed/settings.py
 RUN cat cubeseed/settings.py
