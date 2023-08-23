@@ -6,7 +6,7 @@ from cubeseed.farm import views
 def register_routes(router):
     router.register(r"userprofile", views.UserProfileViewSet)
     router.register(r"userprofilephoto", views.UserProfilePhotoViewSet)
-    router.register(r"farmprofile", views.FarmViewSet)
+    router.register(r"farmerprofile", views.FarmerProfileViewSet)
     return router
 
 
