@@ -1,16 +1,13 @@
 from django.db import models
 from django.core.files.storage import default_storage
 from django.conf import settings
+from cubeseed.address.models import Address
 
 # User Profile Model for Cubeseed
 class UserProfile(models.Model):
     full_name = models.CharField(max_length=100)
     phone_number = models.CharField(max_length=20)
-    address = models.CharField(max_length=100)
-    city = models.CharField(max_length=100)
-    state = models.CharField(max_length=50)
-    country = models.CharField(max_length=50)
-    zip_code = models.CharField(max_length=10)
+    address = models.ForeignKey(Address, on_delete=models.CASCADE)
     about_me = models.TextField(blank=True)
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
