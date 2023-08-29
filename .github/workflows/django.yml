@@ -38,4 +38,11 @@ jobs:
       run: |
         python -m pip install coverage
         coverage run manage.py test
-        ./scripts/coverage-check.bash 94
+        coverage report --fail-under=94
+    - name: upload coverage
+      uses: actions/upload-pages-artifact@v1
+      with:
+        path: './htmlcov/'
+    - name: deploy coverage to Github Pages
+      uses: actions/deploy-pages@v2
+      id: coverage_deployment
