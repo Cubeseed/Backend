@@ -7,5 +7,5 @@ from .serializers import AddressSerializer
 class AddressViewSet(viewsets.ModelViewSet):
     queryset = Address.objects.all()
     serializer_class = AddressSerializer
-    permission_classes = [permissions.DjangoModelPermissions]
+    permission_classes = [permissions.IsAuthenticated]
     http_method_names = ["get", "post", "put", "patch"]
