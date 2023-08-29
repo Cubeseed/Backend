@@ -39,6 +39,7 @@ jobs:
         python -m pip install coverage
         coverage run manage.py test
         coverage report --fail-under=94
+        coverage report html
     - name: upload coverage
       uses: actions/upload-pages-artifact@v1
       with:
