@@ -3,4 +3,4 @@ from django.apps import AppConfig
 
 class BusinessprofileConfig(AppConfig):
     default_auto_field = "django.db.models.BigAutoField"
-    name = "businessprofile"
+    name = "cubeseed.businessprofile"
