@@ -3,6 +3,7 @@ from django.core.files.storage import default_storage
 from django.conf import settings
 from cubeseed.address.models import Address
 
+
 # User Profile Model for Cubeseed
 class UserProfile(models.Model):
     full_name = models.CharField(max_length=100)
@@ -36,12 +37,11 @@ class UserProfilePhoto(models.Model):
         self.picture.delete()
         super().delete()
 
+
 class FarmerProfile(models.Model):
-    REVIEW_STATUSES = (
-        ('P', 'PENDING'),
-        ('R', 'REJECTED'),
-        ('A', 'APPROVED')
+    REVIEW_STATUSES = (("P", "PENDING"), ("R", "REJECTED"), ("A", "APPROVED"))
+    review_status = models.CharField(max_length=1, choices=REVIEW_STATUSES, default="P")
+    reviewed_by = models.OneToOneField(
+        UserProfile, null=True, blank=True, on_delete=models.SET_NULL, related_name="reviewed_farmers"
     )
-    review_status = models.CharField(max_length=1, choices=REVIEW_STATUSES, default='P')
-    reviewed_by = models.OneToOneField(UserProfile, null=True, blank=True, on_delete=models.SET_NULL, related_name="reviewed_farmers")
     user_profile = models.OneToOneField(UserProfile, on_delete=models.CASCADE)

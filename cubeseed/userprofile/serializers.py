@@ -13,10 +13,6 @@ class UserProfileSerializer(serializers.ModelSerializer):
             "full_name",
             "phone_number",
             "address",
-            "city",
-            "state",
-            "country",
-            "zip_code",
             "about_me",
             "created_at",
             "updated_at",
@@ -33,7 +29,6 @@ class UserProfilePhotoSerializer(serializers.ModelSerializer):
 
 
 class FarmerProfileSerializer(serializers.ModelSerializer):
-
     class Meta:
         model = FarmerProfile
         fields = ["user_profile", "review_status"]

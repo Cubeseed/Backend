@@ -1,3 +1,11 @@
-from django.shortcuts import render
+from rest_framework import viewsets
+from rest_framework import permissions
+from .models import Address
+from .serializers import AddressSerializer
 
-# Create your views here.
+
+class AddressViewSet(viewsets.ModelViewSet):
+    queryset = Address.objects.all()
+    serializer_class = AddressSerializer
+    permission_classes = [permissions.DjangoModelPermissions]
+    http_method_names = ["get", "post", "put", "patch"]
