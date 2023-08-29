@@ -36,7 +36,7 @@ jobs:
         python manage.py test
     - name: Get tests coverage
       run: |
-        python -m pip install coverage
+        python -m pip install coverage Pygments
         coverage run manage.py test
         coverage report --fail-under=94
         coverage report html
