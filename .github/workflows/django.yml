@@ -50,3 +50,9 @@ jobs:
     - name: deploy coverage to Github Pages
       uses: actions/deploy-pages@v2
       id: coverage_deployment
+    - name: deploy coverage as artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: coverage artifact
+        path: './htmlcov/'
+    
