@@ -60,6 +60,7 @@ INSTALLED_APPS = [
     "cubeseed.userauth",
     "cubeseed.userprofile",
     "cubeseed.filedescriptor",
+    "cubeseed.address",
     "cubeseed.businessprofile",
     "drf_yasg",
     "corsheaders",
@@ -172,3 +173,6 @@ MEDIA_ROOT = BASE_DIR / "media"
 MEDIA_URL = "/media/"
 
 VERSION = subprocess.check_output(["git", "describe", "--tags", "--always"], cwd=BASE_DIR).decode("utf-8").strip()
+
+# Simplify address lookup by restricting to given countries
+COUNTRY_CODES = ["NG"]

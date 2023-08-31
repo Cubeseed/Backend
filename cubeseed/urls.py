@@ -27,6 +27,7 @@ from rest_framework_simplejwt.views import (
 from cubeseed.userauth.urls import register_routes as register_userauth_routes
 from cubeseed.userprofile.urls import register_routes as register_userprofile_routes
 from cubeseed.userauth.views import VersionView
+from cubeseed.address.views import AddressViewSet
 from cubeseed.businessprofile.urls import register_routes as register_businessprofile_routes
 
 SchemaView = get_schema_view(
@@ -46,6 +47,7 @@ router = routers.DefaultRouter()
 register_userauth_routes(router)
 register_userprofile_routes(router)
 register_businessprofile_routes(router)
+router.register(r"address", AddressViewSet)
 
 urlpatterns = [
     path("admin/", admin.site.urls),

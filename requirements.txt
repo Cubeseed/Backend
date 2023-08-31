@@ -11,6 +11,8 @@ django-cors-headers==4.0.0
 djangorestframework==3.14.0
 djangorestframework-simplejwt==5.2.2
 drf-yasg==1.21.6
+geographiclib==2.0
+geopy==2.4.0
 idna==3.4
 inflection==0.5.1
 isort==5.12.0
