@@ -1,21 +1,22 @@
-from django.test import TestCase
+from rest_framework.test import APITestCase
 from django.urls import reverse
 from rest_framework.test import APIClient
 from rest_framework import status
 from rest_framework.authtoken.models import Token
 from django.contrib.auth import get_user_model
 from .models import BusinessProfile
+from rest_framework_simplejwt.tokens import RefreshToken
 
-class BusinessProfileAPITestCase(TestCase):
+class BusinessProfileAPITestCase(APITestCase):
     def setUp(self):
-        self.client = APIClient()
-
-        # Create a user
         User = get_user_model()
-        self.user = User.objects.create_user(username="testuser", password="testuserpassword")
-        self.token, _ = Token.objects.get_or_create(user=self.user)
-        self.token_value = self.token.key
-        self.auth_header = f"Token {self.token_value}"
+        self.user = User.objects.create_user(username="testuser", password="testpassword")
+
+        # Generate the token and add it to the auth header
+        refresh = RefreshToken.for_user(self.user)
+        self.token_value = str(refresh.access_token)
+        self.auth_header = f"Bearer {self.token_value}"
+
 
         # Create a BusinessProfile associated with the user
         self.business_profile = BusinessProfile.objects.create(
