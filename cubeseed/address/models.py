@@ -1,5 +1,7 @@
+import logging
 from django.db import models
 from geopy.geocoders import Nominatim
+from geopy.exc import GeocoderTimedOut
 from cubeseed.settings import COUNTRY_CODES
 
 
@@ -29,22 +31,25 @@ class Address(models.Model):
         return location
 
     def save(self, *args, **kwargs):
-        location = self.resolve_location(
-            ", ".join([self.address, self.locality, self.administrative_area, self.postal_code])
-        )
-        if location is None:
-            # try excluding locality
-            location = self.resolve_location(", ".join([self.address, self.administrative_area, self.postal_code]))
-        if location is None:
-            # try excluding administrative area
-            location = self.resolve_location(", ".join([self.address, self.postal_code]))
-        if location is None:
-            # try excluding postal code
-            location = self.resolve_location(", ".join([self.address, self.postal_code]))
+        try:
+            location = self.resolve_location(
+                ", ".join([self.address, self.locality, self.administrative_area, self.postal_code])
+            )
+            if location is None:
+                # try excluding locality
+                location = self.resolve_location(", ".join([self.address, self.administrative_area, self.postal_code]))
+            if location is None:
+                # try excluding administrative area
+                location = self.resolve_location(", ".join([self.address, self.postal_code]))
+            if location is None:
+                # try excluding postal code
+                location = self.resolve_location(", ".join([self.address, self.postal_code]))
 
-        if location is not None:
-            self.osm_checked = True
-            self.osm_longitude = location.longitude
-            self.osm_latitude = location.latitude
+            if location is not None:
+                self.osm_checked = True
+                self.osm_longitude = location.longitude
+                self.osm_latitude = location.latitude
+        except GeocoderTimedOut:
+            logging.getLogger(__name__).warning("Nominatim geocode timed out.")
 
         super().save(*args, **kwargs)
