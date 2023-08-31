@@ -57,9 +57,11 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "rest_framework",
+    "rest_framework.authtoken",
     "cubeseed.userauth",
     "cubeseed.userprofile",
     "cubeseed.filedescriptor",
+    "cubeseed.businessprofile",
     "drf_yasg",
     "corsheaders",
 ]
@@ -159,6 +161,7 @@ REST_FRAMEWORK = {
         ### FIXME: this should be only valid for testing
         "rest_framework.authentication.BasicAuthentication",
         "rest_framework.authentication.SessionAuthentication",
+        'rest_framework.authentication.TokenAuthentication' # To send a testing token
     ],
     "TEST_REQUEST_DEFAULT_FORMAT": "json",
     "TEST_REQUEST_RENDERER_CLASSES": [

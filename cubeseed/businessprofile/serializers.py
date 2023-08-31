@@ -7,9 +7,5 @@ class BusinessProfileSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = BusinessProfile
-        fields = [
-            "url",
-            "user",
-            "business_name",
-        ]
+        fields = "__all__"
         read_only_fields = ["url", "user", "created_at", "updated_at"]
