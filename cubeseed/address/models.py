@@ -14,7 +14,7 @@ class Address(models.Model):
     administrative_area = models.CharField(max_length=100, blank=True, verbose_name="State, Province or Region name")
     country = models.CharField(max_length=2, default="NG", verbose_name="Country 2 character ISO code. Defaults to NG")
     postal_code = models.CharField(max_length=10, blank=True, verbose_name="Postal code")
-    osm_checked = models.BooleanField(default=False, verbose_name="Checked by Open Street Map API")
+    osm_checked = models.BooleanField(default=False, verbose_name="Checked by Open Street Map API", help_text="Indicates whether or not the location was checked by OSM.")
     osm_longitude = models.FloatField(null=True)
     osm_latitude = models.FloatField(null=True)
     created_at = models.DateTimeField(auto_now_add=True)
