@@ -61,6 +61,7 @@ INSTALLED_APPS = [
     "cubeseed.userprofile",
     "cubeseed.filedescriptor",
     "cubeseed.address",
+    "cubeseed.businessprofile",
     "drf_yasg",
     "corsheaders",
 ]
@@ -159,7 +160,7 @@ REST_FRAMEWORK = {
         "rest_framework_simplejwt.authentication.JWTAuthentication",
         ### FIXME: this should be only valid for testing
         "rest_framework.authentication.BasicAuthentication",
-        "rest_framework.authentication.SessionAuthentication",
+        "rest_framework.authentication.SessionAuthentication"
     ],
     "TEST_REQUEST_DEFAULT_FORMAT": "json",
     "TEST_REQUEST_RENDERER_CLASSES": [
