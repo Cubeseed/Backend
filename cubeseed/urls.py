@@ -27,6 +27,7 @@ from rest_framework_simplejwt.views import (
 from cubeseed.userauth.urls import register_routes as register_userauth_routes
 from cubeseed.userprofile.urls import register_routes as register_userprofile_routes
 from cubeseed.userauth.views import VersionView
+from cubeseed.businessprofile.urls import register_routes as register_businessprofile_routes
 
 SchemaView = get_schema_view(
     openapi.Info(
@@ -44,6 +45,7 @@ SchemaView = get_schema_view(
 router = routers.DefaultRouter()
 register_userauth_routes(router)
 register_userprofile_routes(router)
+register_businessprofile_routes(router)
 
 urlpatterns = [
     path("admin/", admin.site.urls),
@@ -55,5 +57,5 @@ urlpatterns = [
     path("api/auth/token/refresh/", TokenRefreshView.as_view(), name="token_refresh"),
     path("api/auth/token/verify/", TokenVerifyView.as_view(), name="token_verify"),
     path("api/", include(router.urls)),
-    path("api/version", VersionView.as_view()),
+    path("api/version", VersionView.as_view())
 ]
