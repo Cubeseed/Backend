@@ -30,6 +30,7 @@ from cubeseed.userauth.views import VersionView
 from cubeseed.address.views import AddressViewSet
 from cubeseed.businessprofile.urls import register_routes as register_businessprofile_routes
 from cubeseed.commodity.urls import register_routes as register_commodity_routes
+from cubeseed.cluster.urls import register_routes as register_cluster_routes
 
 SchemaView = get_schema_view(
     openapi.Info(
@@ -50,6 +51,7 @@ register_userprofile_routes(router)
 register_businessprofile_routes(router)
 router.register(r"address", AddressViewSet)
 register_commodity_routes(router)
+register_cluster_routes(router)
 
 urlpatterns = [
     path("admin/", admin.site.urls),

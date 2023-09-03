@@ -63,6 +63,7 @@ INSTALLED_APPS = [
     "cubeseed.address",
     "cubeseed.businessprofile",
     "cubeseed.commodity",
+    "cubeseed.cluster",
     "drf_yasg",
     "corsheaders",
 ]
