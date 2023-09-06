@@ -3,6 +3,7 @@ from .models import Cluster
 from rest_framework import viewsets
 from rest_framework import permissions
 from .serializers import ClusterSerializer
+from cubeseed.farm.serializers import FarmSerializer
 
 # Create your views here.
 class ClusterViewSet(viewsets.ModelViewSet):
