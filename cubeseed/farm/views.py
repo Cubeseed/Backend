@@ -1,7 +1,7 @@
 """Farm views"""
 from rest_framework import viewsets, permissions
 from .models import Farm
-from .serializers import FarmSerializer
+from .serializers import FarmSerializer, AssignFarmToClusterSerializer
 
 
 class FarmViewSet(viewsets.ModelViewSet):
@@ -24,3 +24,14 @@ class FarmViewSet(viewsets.ModelViewSet):
                 return {"cluster_id": self.kwargs["cluster_pk"]}
 
         
+class AssignFarmToClusterViewSet(viewsets.ModelViewSet):
+    queryset = Farm.objects.all()
+    serializer_class = AssignFarmToClusterSerializer
+    permission_classes = [permissions.DjangoModelPermissions]
+    http_method_names = ["post"]
+
+    def get_serializer_context(self):
+        if not getattr(self, 'swagger_fake_view', False):
+            if self.kwargs.get('farm_pk'):
+                return {"farm_id": self.kwargs["farm_pk"]}
+

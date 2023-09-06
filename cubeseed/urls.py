@@ -35,7 +35,7 @@ from cubeseed.businessprofile.urls import register_routes as register_businesspr
 from cubeseed.commodity.urls import register_routes as register_commodity_routes
 from cubeseed.cluster.urls import register_routes as register_cluster_routes
 
-from cubeseed.farm.views import FarmViewSet
+from cubeseed.farm.views import FarmViewSet, AssignFarmToClusterViewSet
 
 SchemaView = get_schema_view(
     openapi.Info(
@@ -57,13 +57,16 @@ register_businessprofile_routes(router)
 register_commodity_routes(router)
 router.register(r"address", AddressViewSet)
 register_cluster_routes(router)
+# Route for assigning a farm to a cluster
 router.register(r"farm", FarmViewSet, basename="farm")
+router.register(r"farm/(?P<farm_pk>\d+)/cluster", AssignFarmToClusterViewSet)
 
-# Nested Routes
+
+
+# Nested Routes for farms in a cluster
+# {cluster/{cluster_pk}/farm/}
 cluster_router = drf_nested_routers.NestedDefaultRouter(router, r"cluster", lookup="cluster")
 cluster_router.register(r"farm", FarmViewSet, basename="cluster-farm")
-
-
 
 
 urlpatterns = [

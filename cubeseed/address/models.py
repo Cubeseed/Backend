@@ -43,7 +43,7 @@ class Address(models.Model):
                 location = self.resolve_location(", ".join([self.address, self.postal_code]))
             if location is None:
                 # try excluding postal code
-                location = self.resolve_location(", ".join([self.address, self.postal_code]))
+                location = self.resolve_location(", ".join([self.address]))
 
             if location is not None:
                 self.osm_checked = True
