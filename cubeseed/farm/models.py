@@ -13,7 +13,7 @@ class Farm(models.Model):
     name = models.CharField(max_length=100)
     size = models.DecimalField(max_digits=10, decimal_places=2, verbose_name="Size in Hectares")
     # The field below will be changed back to OneToOneField
-    farm_address = models.ForeignKey(Address, on_delete=models.CASCADE, null=True)
+    farm_address = models.OneToOneField(Address, on_delete=models.CASCADE, null=True)
     # A farm can exist without a cluster, hence it
     # is set to null upon deletion of a cluster
     cluster = models.ForeignKey(Cluster, on_delete=models.SET_NULL, null=True, related_name="farms", default=None)
