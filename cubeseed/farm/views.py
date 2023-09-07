@@ -4,14 +4,20 @@ from rest_framework.decorators import action
 from geopy.geocoders import Nominatim
 from django.http import HttpResponse
 from .models import Farm, Cluster, Commodity
-from .serializers import FarmSerializer
+from .serializers import FarmSerializerGet, FarmSerializerPost
 
 
 class FarmViewSet(viewsets.ModelViewSet):
-    # queryset = Farm.objects.all()
-    serializer_class = FarmSerializer
+    serializer_class_post = FarmSerializerPost
+    serializer_class_get = FarmSerializerGet
     permission_classes = [permissions.DjangoModelPermissions]
     http_method_names = ["get", "post", "put", "patch"]
+
+    def get_serializer_class(self):
+        if self.request.method == 'POST':
+            return self.serializer_class_post
+        elif self.request.method == 'GET':
+            return self.serializer_class_get
 
     def get_queryset(self):
         if getattr(self, 'swagger_fake_view', False):

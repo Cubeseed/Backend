@@ -1,9 +1,9 @@
 from rest_framework import serializers
 from .models import Cluster
-from cubeseed.farm.serializers import FarmSerializer
+from cubeseed.farm.serializers import FarmSerializerGet
 
 class ClusterSerializer(serializers.ModelSerializer):
-    farms = FarmSerializer(many=True, read_only=True)
+    farms = FarmSerializerGet(many=True, read_only=True)
     class Meta:
         model = Cluster
         fields = [

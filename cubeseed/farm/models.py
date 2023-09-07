@@ -13,6 +13,6 @@ class Farm(models.Model):
     farm_address = models.ForeignKey(Address, on_delete=models.CASCADE, null=True)
     # A farm can exist without a cluster, hence it
     # is set to null upon deletion of a cluster
-    cluster = models.ForeignKey(Cluster, on_delete=models.SET_NULL, null=True, related_name="farms")
+    cluster = models.ForeignKey(Cluster, on_delete=models.SET_NULL, null=True, related_name="farms", default=None)
     commodity = models.ForeignKey(Commodity, on_delete=models.SET_NULL, null=True, related_name="farms")
 
