@@ -8,7 +8,7 @@ from .serializers import CommoditySerializer
 
 class CommodityViewSet(viewsets.ModelViewSet):
     """
-    API endpoint for creating, editing, and viewing a commodity
+    ViewSet for creating, editing, and viewing a commodity
     """
     queryset = Commodity.objects.all()
     serializer_class = CommoditySerializer

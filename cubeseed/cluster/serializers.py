@@ -3,6 +3,9 @@ from .models import Cluster
 from cubeseed.farm.serializers import FarmSerializerGet
 
 class ClusterSerializer(serializers.ModelSerializer):
+    """
+    Serializer for Cluster
+    """
     farms = FarmSerializerGet(many=True, read_only=True)
     class Meta:
         model = Cluster

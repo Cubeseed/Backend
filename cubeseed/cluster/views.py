@@ -7,7 +7,7 @@ from .serializers import ClusterSerializer
 # Create your views here.
 class ClusterViewSet(viewsets.ModelViewSet):
     """
-    API endpoint for creating, editing, and viewing a cluster
+    ViewSet for creating, editing, and viewing a cluster
     """
     queryset = Cluster.objects.all()
     serializer_class = ClusterSerializer
