@@ -13,6 +13,7 @@ class AddressSerializer(serializers.ModelSerializer):
             "administrative_area",
             "country",
             "postal_code",
+            "local_government_area",
             "osm_checked",
             "osm_longitude",
             "osm_latitude",
