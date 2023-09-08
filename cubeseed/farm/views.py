@@ -171,3 +171,55 @@ class FarmViewSet(viewsets.ModelViewSet):
                 farm.save()
                 return HttpResponse("Farm successfully assigned to cluster", status=200)
 
+
+class FarmInClusterViewSet(viewsets.ModelViewSet):
+    """
+    ViewSet for creating, editing, and viewing a farm
+    """
+    serializer_class_post = FarmSerializerPost
+    serializer_class_get = FarmSerializerGet
+    permission_classes = [permissions.DjangoModelPermissions]
+    http_method_names = ["get", "post", "put", "patch"]
+
+    def get_serializer_class(self):
+        """
+        Provides a different serializer class for different
+        request methods
+        """
+        if self.request.method == 'POST':
+            return self.serializer_class_post
+        elif self.request.method == 'GET':
+            return self.serializer_class_get
+
+    def get_queryset(self):
+        """
+        A custom implementation of the get_queryset method that checks if 
+        a cluster_pk is provided as a keyword argument and returns a queryset 
+        of farms filtered by the cluster_pk. If no cluster_pk is provided, all
+        farms are returned.
+
+        Returns: 
+        Farm QuerySet
+            A queryset of farms filtered by the cluster_pk or all farms or None
+        """
+        # If the view is called from the swagger UI, return an empty queryset
+        # this will avoid error related to cluster_pk not being provided
+        if getattr(self, 'swagger_fake_view', False):
+            # queryset just for schema generation metadata
+            return Farm.objects.none()
+        if self.kwargs.get('cluster_pk'):
+            return Farm.objects.filter(cluster_id=self.kwargs["cluster_pk"])
+        return Farm.objects.all()
+
+    def get_serializer_context(self):
+        """
+        Passes a context dictionary that contains the cluster_id to the serializer class,
+        to be used in the create method
+
+        Returns: 
+        Dictionary
+            A dictionary containing the cluster_id
+        """
+        if not getattr(self, 'swagger_fake_view', False):
+            if self.kwargs.get('cluster_pk'):
+                return {"cluster_id": self.kwargs["cluster_pk"]}
