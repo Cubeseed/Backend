@@ -12,4 +12,4 @@ class Cluster(models.Model):
     commodity = models.ForeignKey(Commodity, on_delete=models.SET_NULL, null=True)
 
     def __str__(self):
-        return self.clustername
+        return self.cluster_name
