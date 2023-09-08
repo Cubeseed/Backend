@@ -131,8 +131,8 @@ class FarmViewSet(viewsets.ModelViewSet):
         cluster = Cluster.objects.create(cluster_name=cluster_name, local_government_name=farm_local_government_name, commodity=farm_commodity)
         return cluster
     
-    @action(detail=True)
-    def cluster(self, request, pk=None):
+    @action(detail=True, methods=['get'])
+    def assign_cluster(self, request, pk=None):
         """
         Custom action that will be called when the endpoint /farms/{pk}/cluster is called
 

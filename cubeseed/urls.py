@@ -57,11 +57,7 @@ register_businessprofile_routes(router)
 register_commodity_routes(router)
 router.register(r"address", AddressViewSet)
 register_cluster_routes(router)
-# Route for assigning a farm to a cluster
 router.register(r"farm", FarmViewSet, basename="farm")
-router.register(r"farm/(?P<farm_pk>\d+)/cluster", FarmViewSet, basename="farm")
-
-
 
 # Nested Routes for farms in a cluster
 # {cluster/{cluster_pk}/farm/}
