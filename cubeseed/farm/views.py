@@ -146,7 +146,8 @@ class FarmViewSet(viewsets.ModelViewSet):
             farm = Farm.objects.get(id=farm_id)
 
             # Retrieve the LGA name or County of the farm
-            farm_local_government_name = self.extract_lga_of_farm(farm)
+            # farm_local_government_name = self.extract_lga_of_farm(farm)
+            farm_local_government_name = farm.farm_address.local_government_area
             
             if farm_local_government_name is None:
                 return HttpResponse("LGA of farm could not be extracted", status=400)
