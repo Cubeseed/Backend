@@ -7,7 +7,9 @@ This repository contains the Backend API endpoint for CubeSeed
 You need the following tools to set up the project:
 - Django
 - Django Rest Framework
-- Python
+- Python3
+- Celery
+- Rabbitmq Server
 
 ## Set up locally
 
@@ -52,6 +54,14 @@ You need the following tools to set up the project:
 ```
 
 8. Access the live development server at [localhost:8000/swagger](http://localhost:8000/swagger/).
+
+## RUN RabbitMQ Server and Celery
+```
+sudo apt install rabbitmq-server
+sudo apt install celery
+sudo systemctl start rabbitmq-server
+celery -A cubeseed worker --loglevel=info
+```
 
 ## Run Test
 
