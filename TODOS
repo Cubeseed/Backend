@@ -1,0 +1,14 @@
+URGENT:
+    I want approval messages and notifications
+    TODO:
+        ✘ Precondition: Farmer’s email is already verified so that he can be notified of his registration progress. @created(23-09-05 21:58) @started(23-09-05 21:58) @cancelled(23-09-05 22:48) @wasted(50m6s)
+        
+        ☐ Create template email notifications for success and failure @created(23-09-05 21:58)
+        
+        ☐ Configure task worker for sending email notification in background @created(23-09-05 21:58)
+        
+        ☐ Display notification in app accompanying success or failure of the process @created(23-09-05 21:58)
+        
+        ☐ Add necessary information in system logs @created(23-09-05 21:58)
+
+celery -A your_project_name worker --loglevel=info // Run celery worker in terminal
