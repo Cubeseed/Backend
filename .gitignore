@@ -1,7 +1,10 @@
 /env/
+.env
+.*/
+*.sqlite3
 /media/
-/db.sqlite3
 *~
 **/__pycache__/
 logs/
 thunder-tests
+TODOS
