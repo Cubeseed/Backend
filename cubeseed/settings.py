@@ -10,18 +10,24 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
+import os
 from pathlib import Path
+import logging
 import subprocess
+from dotenv import load_dotenv
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+load_dotenv(BASE_DIR / ".env")
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "django-insecure-iwai)rfl5ls2r=+i_37yl08zuf77qwmbexdx^q_g_r+ovgei-e"
+SECRET_KEY = (
+    "django-insecure-iwai)rfl5ls2r=+i_37yl08zuf77qwmbexdx^q_g_r+ovgei-e"
+)
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -64,6 +70,8 @@ INSTALLED_APPS = [
     "cubeseed.businessprofile",
     "drf_yasg",
     "corsheaders",
+    "celery",
+    "mail_notifications",
 ]
 
 # configuring the unit testing python runner tool installed
@@ -85,7 +93,7 @@ ROOT_URLCONF = "cubeseed.urls"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [],
+        "DIRS": [os.path.join(BASE_DIR, "templates")],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
@@ -160,7 +168,7 @@ REST_FRAMEWORK = {
         "rest_framework_simplejwt.authentication.JWTAuthentication",
         ### FIXME: this should be only valid for testing
         "rest_framework.authentication.BasicAuthentication",
-        "rest_framework.authentication.SessionAuthentication"
+        "rest_framework.authentication.SessionAuthentication",
     ],
     "TEST_REQUEST_DEFAULT_FORMAT": "json",
     "TEST_REQUEST_RENDERER_CLASSES": [
@@ -172,7 +180,53 @@ REST_FRAMEWORK = {
 MEDIA_ROOT = BASE_DIR / "media"
 MEDIA_URL = "/media/"
 
-VERSION = subprocess.check_output(["git", "describe", "--tags", "--always"], cwd=BASE_DIR).decode("utf-8").strip()
+VERSION = (
+    subprocess.check_output(
+        ["git", "describe", "--tags", "--always"], cwd=BASE_DIR
+    )
+    .decode("utf-8")
+    .strip()
+)
 
 # Simplify address lookup by restricting to given countries
 COUNTRY_CODES = ["NG"]
+
+CELERY_BROKER_URL = os.getenv(
+    "CELERY_BROKER_URL", "amqp://guest:guest@localhost:5672"
+)
+CELERY_RESULT_BACKEND = os.getenv(
+    "CELERY_RESULT_BACKEND", "db+sqlite:///results.sqlite3"
+)
+CELERY_ACCEPT_CONTENT = ["json"]
+CELERY_TASK_SERIALIZER = "json"
+
+# Email configuration
+EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+EMAIL_HOST = os.getenv("EMAIL_HOST", "smtp.gmail.com")
+EMAIL_USE_TLS = True
+EMAIL_PORT = os.getenv("EMAIL_PORT", 587)
+EMAIL_HOST_USER = os.getenv("EMAIL_HOST_USER")
+EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_PASSWORD")
+
+# Celery logging
+LOGGING = {
+    "version": 1,
+    "disable_existing_loggers": False,
+    "formatters": {
+        "standard": {
+            "format": "%(asctime)s [%(levelname)s] %(name)s: %(message)s"
+        },
+    },
+    "handlers": {
+        "file": {
+            "level": "INFO",
+            "class": "logging.FileHandler",
+            "filename": os.path.join(BASE_DIR, "celery.log"),
+            "formatter": "standard",
+        },
+    },
+    "root": {
+        "handlers": ["file"],
+        "level": "INFO",
+    },
+}
