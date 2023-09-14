@@ -21,7 +21,7 @@ class FarmViewSet(viewsets.ModelViewSet):
         Provides a different serializer class for different
         request methods
         """
-        if self.request.method == 'POST':
+        if self.request.method == 'POST' or self.request.method == 'PUT' or self.request.method == 'PATCH':
             return self.serializer_class_post
         elif self.request.method == 'GET':
             return self.serializer_class_get
@@ -186,7 +186,7 @@ class FarmInClusterViewSet(viewsets.ModelViewSet):
         Provides a different serializer class for different
         request methods
         """
-        if self.request.method == 'POST':
+        if self.request.method == 'POST' or self.request.method == 'PUT' or self.request.method == 'PATCH':
             return self.serializer_class_post
         elif self.request.method == 'GET':
             return self.serializer_class_get
