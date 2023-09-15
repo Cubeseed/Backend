@@ -1,5 +1,5 @@
 from rest_framework.test import APITestCase
-from .models import courseVerification
+from .models import CourseVerification
 from django.contrib.auth import get_user_model
 from rest_framework_simplejwt.tokens import RefreshToken
 from django.core.files.uploadedfile import SimpleUploadedFile
@@ -32,7 +32,7 @@ class courseVerificationTestCase(APITestCase):
         }
         response = self.client.post(url, data, format="multipart", HTTP_AUTHORIZATION=self.auth_header)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        self.assertEqual(courseVerification.objects.count(), 1)
+        self.assertEqual(CourseVerification.objects.count(), 1)
 
     def test_invalid_certificate_extension(self):
         # create a certificate with invalid extension
@@ -50,7 +50,7 @@ class courseVerificationTestCase(APITestCase):
 
         respose = self.client.post(url, data, format="multipart", HTTP_AUTHORIZATION=self.auth_header)
         self.assertEqual(respose.status_code, status.HTTP_400_BAD_REQUEST)
-        self.assertEqual(courseVerification.objects.count(), 0)
+        self.assertEqual(CourseVerification.objects.count(), 0)
 
     def test_valid_certificate_extension(self):
         # create a certificate with valid extension
@@ -68,4 +68,4 @@ class courseVerificationTestCase(APITestCase):
 
         respose = self.client.post(url, data, format="multipart", HTTP_AUTHORIZATION=self.auth_header)
         self.assertEqual(respose.status_code, status.HTTP_201_CREATED)
-        self.assertEqual(courseVerification.objects.count(), 1)
+        self.assertEqual(CourseVerification.objects.count(), 1)

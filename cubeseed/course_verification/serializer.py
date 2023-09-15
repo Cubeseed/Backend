@@ -1,8 +1,8 @@
 from rest_framework import serializers
-from .models import courseVerification
+from .models import CourseVerification
 
 
 class CourseVerificationSerializer(serializers.ModelSerializer):
     class Meta:
-        model = courseVerification
+        model = CourseVerification
         fields = '__all__'

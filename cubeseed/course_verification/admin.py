@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import courseVerification
+from .models import CourseVerification
 
 # Register your models here.
-admin.site.register(courseVerification)
+admin.site.register(CourseVerification)
