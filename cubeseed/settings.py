@@ -62,6 +62,8 @@ INSTALLED_APPS = [
     "cubeseed.filedescriptor",
     "cubeseed.address",
     "cubeseed.businessprofile",
+    "cubeseed.course",
+    "cubeseed.course_verification",
     "drf_yasg",
     "corsheaders",
 ]
@@ -165,6 +167,7 @@ REST_FRAMEWORK = {
     "TEST_REQUEST_DEFAULT_FORMAT": "json",
     "TEST_REQUEST_RENDERER_CLASSES": [
         "rest_framework.renderers.JSONRenderer",
+        "rest_framework.renderers.MultiPartRenderer" # To handle file uploads(for multipart format support) when testing
     ],
 }
 
