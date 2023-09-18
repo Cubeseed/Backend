@@ -7,6 +7,7 @@ from rest_framework.reverse import reverse
 from cubeseed.commodity.models import Commodity
 from cubeseed.address.models import Address
 from cubeseed.businessprofile.models import BusinessProfile
+from cubeseed.cluster.models import Cluster
 from rest_framework import status
 from .models import Farm
 
@@ -20,13 +21,6 @@ class FarmAPITest(APITestCase):
         self.user.groups.add(Group.objects.get(name="farmer"))
         self.user.save()
         self.url = reverse("user-detail", kwargs={"pk": self.user.pk})
-
-        # self.user_unauthorized = User.objects.create_user(username="testuser", password="testpassword")
-        # self.user_unauthorized.is_active = True
-        # self.user_unauthorized.groups.add(Group.objects.get(name="farmer"))
-        # self.user_unauthorized.save()
-
-
 
         # Create Commodities
         self.commodity_maize = Commodity.objects.create(commodity_name="Maize")
@@ -47,6 +41,7 @@ class FarmAPITest(APITestCase):
         )
         self.address_eti_osa.save()
 
+        # Create Address 2
         self.address_eti_osa_2 = Address.objects.create(
             address="2 Walter Carrington Crescent",
             address_detail="",
@@ -58,6 +53,7 @@ class FarmAPITest(APITestCase):
         )
         self.address_eti_osa_2.save()
 
+        # Create Address 3
         self.address_municipal_area_council = Address.objects.create(
             address="1075 Diplomatic Drive",
             address_detail="",
@@ -173,7 +169,7 @@ class FarmAPITest(APITestCase):
     # using an unauthenticated or unauthorized user
     def test_unsuccessful_farm_creation_using_unaauthenticated_or_unauthorized_user(self):
         """
-        Tests that farms fails to be created
+        Tests that farms fails to be created using
         an unauthenticated or unauthorized user
         """
         farms = [
@@ -198,7 +194,7 @@ class FarmAPITest(APITestCase):
             self.assertEqual(
                 response.status_code,
                 status.HTTP_401_UNAUTHORIZED,
-                msg=f"Failed to create farm: ${response.data} : ${self.user} : for farm: ${farm}",
+                msg=f"Unauthenticated user is not recieving a 401 status when creating a farm",
             )
 
         self.authenticate()
@@ -207,16 +203,15 @@ class FarmAPITest(APITestCase):
             self.assertEqual(
                 response.status_code,
                 status.HTTP_403_FORBIDDEN,
-                msg=f"Failed to create farm: ${response.data} : ${self.user} : for farm: ${farm}",
+                msg=f"Unauthorized user is not recieving a 403 status when creating a farm",
             )
 
     # Test if a farm can be updated successfully
     # using put and an authenticated and authorized user
     def test_successful_farm_update_using_put_authenticated_and_authorized_user(self):
         """
-        Tests that a farm can be updated
-        successfully using an authenticated
-        and authorized user
+        Tests that a farm can be updated successfully 
+        using put and an authenticated and authorized user
         """
         updated_farm = {
                 "business_profile": self.johns_business_profile.id,
@@ -238,18 +233,18 @@ class FarmAPITest(APITestCase):
         self.assertEqual(
             response.status_code,
             status.HTTP_200_OK,
-            msg=f"Failed to update farm: ${response.data} : ${self.user} : for farm: ${updated_farm}",
+            msg=f"Failed to update farm: ${response.data} : ${self.user} : for farm: ${self.farm}",
         )
 
         self.assertEqual(response.data["name"], updated_farm["name"])
         self.assertEqual(response.data["commodity"], updated_farm["commodity"])
 
 
-    # Test if a farm fails to be updted successfully
+    # Test if a farm fails to be updated successfully
     # using put and an unauthenticated or unauthorized user
     def test_unsuccessful_farm_update_using_put_unauthenticated_or_unauthorized_user(self):
         """
-        Tests if a farm fails to be updted successfully
+        Tests if a farm fails to be updated successfully
         using put and an unauthenticated or unauthorized user
         """
         updated_farm = {
@@ -265,7 +260,7 @@ class FarmAPITest(APITestCase):
         self.assertEqual(
             response.status_code,
             status.HTTP_401_UNAUTHORIZED,
-            msg=f"Failed to update farm: ${response.data} : ${self.user} : for farm: ${updated_farm}",
+            msg=f"Unauthenticated user is not recieving a 401 status when updating a farm using put",
         )
 
         # Authenticate the user but don't give them permission to change farm
@@ -275,7 +270,7 @@ class FarmAPITest(APITestCase):
         self.assertEqual(
             response.status_code,
             status.HTTP_403_FORBIDDEN,
-            msg=f"Failed to update farm: ${response.data} : ${self.user} : for farm: ${updated_farm}",
+            msg=f"Unauthorized user is not recieving a 403 status when updating a farm using put",
         )
 
     # Test if a farm can be updated successfully
@@ -301,7 +296,7 @@ class FarmAPITest(APITestCase):
         self.assertEqual(
             response.status_code,
             status.HTTP_200_OK,
-            msg=f"Failed to update farm: ${response.data} : ${self.user} : for farm: ${updated_farm}",
+            msg=f"Failed to update farm: ${response.data} : ${self.user} : for farm: ${self.farm}",
         )
 
         self.assertEqual(response.data["name"], updated_farm["name"])
@@ -312,7 +307,7 @@ class FarmAPITest(APITestCase):
     # using patch and an unauthenticated or unauthorized user
     def test_unsuccessful_farm_update_using_patch_unauthenticated_and_unauthorized_user(self):
         """
-        Test if a farm fails to be updted successfully
+        Test if a farm fails to be updated successfully
         using patch and an unauthenticated or unauthorized user
         """
         updated_farm = {
@@ -325,7 +320,7 @@ class FarmAPITest(APITestCase):
         self.assertEqual(
             response.status_code,
             status.HTTP_401_UNAUTHORIZED,
-            msg=f"Failed to update farm: ${response.data} : ${self.user} : for farm: ${updated_farm}",
+            msg=f"Unauthenticated user is not recieving a 401 status when updating a farm using patch",
         )
 
         # Authenticate the user but don't give them permission to change farm
@@ -335,7 +330,7 @@ class FarmAPITest(APITestCase):
         self.assertEqual(
             response.status_code,
             status.HTTP_403_FORBIDDEN,
-            msg=f"Failed to update farm: ${response.data} : ${self.user} : for farm: ${updated_farm}",
+            msg=f"Unauthorized user is not recieving a 403 status when updating a farm using patch",
         )
 
     # Test if a list of farms can be retrieved successfully
@@ -362,33 +357,28 @@ class FarmAPITest(APITestCase):
 
     # Test if a list of farms fails to be retrieved 
     # successfully using an unauthenticated user
-    # unautherized users are not checked since any 
-    # user can view a list of farms
+    # unauthorized users are not checked since any 
+    # authenticated user can view a list of farms
     def test_unsuccessful_farm_list_retrieval_using_unauthenticated_user(self):
         """
         Test if a list of farms fails to be retrieved 
-        successfully using an unauthenticated or unauthorized 
-        user
+        successfully using an unauthenticated user
         """
         response = self.client.get(reverse("farm-list"), format="json")
 
         self.assertEqual(
             response.status_code,
             status.HTTP_401_UNAUTHORIZED,
-            msg=f"Failed to retrieve farms: ${response.data} : ${self.user}",
+            msg=f"Unauthenticated user is not recieving a 401 status when viewing list of farms",
         )
 
-    # Tests if details of a single farm can be retrieved
+    # Tests if details of a single farm can be retrieved successfully
     # using an authenticated user
     def test_successful_farm_details_retrieval_using_authenticated_user(self):
         """
-        Tests if details of a single farm can be retrieved
-        using an authenticated and authorized user
+        Tests if details of a single farm can be retrieved successfully
+        using an authenticated user
         """
-        # Add required permissions
-        # Permission to view farm
-        # view_farm_permission = Permission.objects.get(name="Can view farm")
-        # self.user.user_permissions.add(view_farm_permission)
 
         self.authenticate()
         response = self.client.get(reverse("farm-detail", kwargs={"pk": self.farm.id}), format="json")
@@ -400,35 +390,141 @@ class FarmAPITest(APITestCase):
         )
 
     # Test if details of a single farm fails to be
-    # retrieved using an unauthenticated user
+    # retrieved successfully using an unauthenticated user
     def test_unsuccessful_farm_detail_retrieval_using_unauthenticated_user(self):
         """
         Test if details of a single farm fails to be
-        retrieved using an unauthenticated user
+        retrieved successfully using an unauthenticated user
         """
         response = self.client.get(reverse("farm-detail", kwargs={"pk": self.farm.id}), format="json")
 
         self.assertEqual(
             response.status_code,
             status.HTTP_401_UNAUTHORIZED,
-            msg=f"Failed to retrieve farm: ${response.data} : ${self.user} : for farm: ${self.farm}", 
+            msg=f"Unauthenticated user is not recieving a 401 status when viewing details of a farm", 
         )
 
-    # # Test if a farm can successfull be assigned to a cluster
-    # def test_assing_farm_to_cluster(self):
-    #     self.authenticate()
-    #     response = self.client.get(reverse("farm-assign-cluster", kwargs={"pk": self.farm.id}), format="json")
+    # Test if a farm can successfully be assigned to new a cluster using
+    # an authenticated user
+    def test_assign_farm_to_new_cluster_auth_user(self):
+        """
+        Test if a farm can successfully be assigned to a new cluster
+        using an auth user.
+        The cluster has to be created based on the details (farm and 
+        local goverment area) of the farm
+        """
+        # Make sure the cluster does not exist initially
+        # Try and find the cluster, if it does not exist set cluster to None
+        try:
+            cluster = Cluster.objects.get(cluster_name="{} {} cluster".format(self.farm.farm_address.local_government_area, self.farm.commodity.commodity_name))
+        except Cluster.DoesNotExist:
+            cluster = None
 
-    #     self.assertEqual(
-    #         response.status_code,
-    #         status.HTTP_200_OK,
-    #         msg=f"Failed to assign farm to cluster ${response}", 
-    #     )
+            self.assertEqual(
+                cluster,
+                None,
+                msg=f"Cluster exists",
+            )
 
-    #     self.assertEqual(
-    #         self.farm.cluster.cluster_name,
-    #         "{} {} cluster".format(self.farm.farm_address.local_government_area, self.farm.commodity.commodity_name),
-    #         msg=f"Failed to assign farm to cluster",
-    #     )
+        self.authenticate()
+        response = self.client.get(reverse("farm-assign-cluster", kwargs={"pk": self.farm.id}), format="json")
 
-    #     # Check if the cluster has been created
+        self.assertEqual(
+            response.status_code,
+            status.HTTP_200_OK,
+            msg=f"Failed to assign farm to cluster ${response}", 
+        )
+        self.farm.refresh_from_db()
+        self.assertEqual(
+            self.farm.cluster.cluster_name,
+            "{} {} cluster".format(self.farm.farm_address.local_government_area, self.farm.commodity.commodity_name),
+            msg=f"Failed to assign farm to cluster",
+        )
+
+        # Check if the cluster has been created
+        self.assertEqual(
+            Cluster.objects.get(cluster_name="{} {} cluster".format(self.farm.farm_address.local_government_area, self.farm.commodity.commodity_name)).cluster_name,
+            "{} {} cluster".format(self.farm.farm_address.local_government_area, self.farm.commodity.commodity_name),
+            msg=f"Failed to create a new cluster",
+        )
+
+    # Test if a farm fails to be successfully be assigned to new a cluster using
+    # an unauthenticated user
+    def test_unsuccessful_assign_farm_to_new_cluster_unauth_user(self):
+        """
+        Test if a farm fails to be successfully be assigned to new a cluster using
+        an unauthenticated user.
+        """
+        # Make sure the cluster does not exist initially
+        # Try and find the cluster, if it does not exist set cluster to None
+        try:
+            cluster = Cluster.objects.get(cluster_name="{} {} cluster".format(self.farm.farm_address.local_government_area, self.farm.commodity.commodity_name))
+        except Cluster.DoesNotExist:
+            cluster = None
+
+            self.assertEqual(
+                cluster,
+                None,
+                msg=f"Cluster exists",
+            )
+
+        response = self.client.get(reverse("farm-assign-cluster", kwargs={"pk": self.farm.id}), format="json")
+
+        self.assertEqual(
+            response.status_code,
+            status.HTTP_401_UNAUTHORIZED,
+            msg=f"Unauthenticated user is not recieving a 401 status when assigning a farm to a cluster", 
+        )
+
+    # Test if a farm can successfully be assigned to an existing cluster
+    # using an authenticated user
+    def test_assign_farm_to_existing_cluster_auth_user(self):
+        """
+        Test if a farm can successfully be assigned to an existing cluster
+        using an authenticated user
+        """
+        # Create a cluster
+        cluster = Cluster.objects.create(
+            cluster_name="{} {} cluster".format(self.farm.farm_address.local_government_area, self.farm.commodity.commodity_name),
+            local_government_name=self.farm.farm_address.local_government_area,
+            commodity=self.farm.commodity
+        )
+        cluster.save()
+
+        self.authenticate()
+        response = self.client.get(reverse("farm-assign-cluster", kwargs={"pk": self.farm.id}), format="json")
+
+        self.assertEqual(
+            response.status_code,
+            status.HTTP_200_OK,
+            msg=f"Failed to assign farm to cluster ${response}", 
+        )
+        self.farm.refresh_from_db()
+        self.assertEqual(
+            self.farm.cluster.cluster_name,
+            "{} {} cluster".format(self.farm.farm_address.local_government_area, self.farm.commodity.commodity_name),
+            msg=f"Failed to assign farm to cluster",
+        )
+
+    # Test if a farm fails to be successfully assigned to an existing cluster
+    # using an unauthenticated user
+    def test_assign_farm_to_existing_cluster_unauth_user(self):
+        """
+        Test if a farm fails to be successfully assigned to an existing cluster
+        using an unauthenticated user
+        """
+        # Create a cluster
+        cluster = Cluster.objects.create(
+            cluster_name="{} {} cluster".format(self.farm.farm_address.local_government_area, self.farm.commodity.commodity_name),
+            local_government_name=self.farm.farm_address.local_government_area,
+            commodity=self.farm.commodity
+        )
+        cluster.save()
+
+        response = self.client.get(reverse("farm-assign-cluster", kwargs={"pk": self.farm.id}), format="json")
+
+        self.assertEqual(
+            response.status_code,
+            status.HTTP_401_UNAUTHORIZED,
+            msg=f"Unauthenticated user is not recieving a 401 status when assigning a farm to a cluster", 
+        )
