@@ -52,6 +52,7 @@ class AddressAPITest(APITestCase):
                 "administrative_area": "Lagos",
                 "country": "NG",
                 "postal_code": "",
+                "local_government_area": "Eti Osa",
             },
             {
                 "address": "1075 Diplomatic Drive",
@@ -60,6 +61,7 @@ class AddressAPITest(APITestCase):
                 "administrative_area": "Abuja",
                 "country": "NG",
                 "postal_code": "900103",
+                "local_government_area": "Municipal Area Council",
             },
             {
                 "address": "2 Walter Carrington Crescent",
@@ -68,6 +70,7 @@ class AddressAPITest(APITestCase):
                 "administrative_area": "Lagos",
                 "country": "NG",
                 "postal_code": "",
+                "local_government_area": "Eti Osa",
             },
         ]
         self.authenticate()

@@ -16,7 +16,10 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import include, path, re_path
+
 from rest_framework import routers, permissions
+from rest_framework_nested import routers as drf_nested_routers
+
 from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
 from rest_framework_simplejwt.views import (
@@ -29,8 +32,15 @@ from cubeseed.userprofile.urls import register_routes as register_userprofile_ro
 from cubeseed.userauth.views import VersionView
 from cubeseed.address.views import AddressViewSet
 from cubeseed.businessprofile.urls import register_routes as register_businessprofile_routes
+
+from cubeseed.commodity.urls import register_routes as register_commodity_routes
+from cubeseed.cluster.urls import register_routes as register_cluster_routes
+
+from cubeseed.farm.views import FarmViewSet, FarmInClusterViewSet
+
 from cubeseed.course.urls import register_routes as register_course_routes
 from cubeseed.course_verification.urls import register_routes as register_course_verification_routes
+
 
 SchemaView = get_schema_view(
     openapi.Info(
@@ -49,10 +59,22 @@ router = routers.DefaultRouter()
 register_userauth_routes(router)
 register_userprofile_routes(router)
 register_businessprofile_routes(router)
+
+register_commodity_routes(router)
+
 register_course_routes(router)
 register_course_verification_routes(router)
 
+
 router.register(r"address", AddressViewSet)
+register_cluster_routes(router)
+router.register(r"farm", FarmViewSet, basename="farm")
+
+# Nested Routes for farms in a cluster
+# {cluster/{cluster_pk}/farm/}
+cluster_router = drf_nested_routers.NestedDefaultRouter(router, r"cluster", lookup="cluster")
+cluster_router.register(r"farm", FarmInClusterViewSet, basename="cluster-farm")
+
 
 urlpatterns = [
     path("admin/", admin.site.urls),
@@ -64,5 +86,6 @@ urlpatterns = [
     path("api/auth/token/refresh/", TokenRefreshView.as_view(), name="token_refresh"),
     path("api/auth/token/verify/", TokenVerifyView.as_view(), name="token_verify"),
     path("api/", include(router.urls)),
+    path("api/", include(cluster_router.urls)),
     path("api/version", VersionView.as_view())
 ]
