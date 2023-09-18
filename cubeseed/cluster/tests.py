@@ -298,34 +298,34 @@ class ClusterAPITest(APITestCase):
 
 
 
+# Create a Mock of the resolve_location method found
+# in the Address model.
+# This prevents the geocode function from being 
+# called multiple times.
+mock_resolve_location = Mock()
+
+def side_effect(address):
+    class Location:
+        def __init__(self, latitude, longitude):
+            self.longitude = longitude
+            self.latitude = latitude
+    if address == "979 Saka Jojo Street, Victoria, Lagos, ":
+        location = Location(6.4275875, 3.4126698)
+        return location
+    elif address == "2 Walter Carrington Crescent, Victoria Island, Lagos, ":
+        location = Location(6.44069015, 3.4066570357293076)
+        return location
+    elif address == "1075 Diplomatic Drive, Central District Area, Abuja, 900103":
+        location = Location(9.0403859, 7.4768889)
+        return location
+    else:
+        return None
+
 
 class FarmsInClusterAPITest(APITestCase):
     """
     Tests for nested routes (farms in a cluster)
     """
-
-    # Create a Mock of the resolve_location method found
-    # in the Address model.
-    # This prevents the geocode function from being 
-    # called multiple times.
-    mock_resolve_location = Mock()
-
-    def side_effect(address):
-        class Location:
-            def __init__(self, latitude, longitude):
-                self.longitude = longitude
-                self.latitude = latitude
-        if address == "979 Saka Jojo Street, Victoria, Lagos, ":
-            location = Location(6.4275875, 3.4126698)
-            return location
-        elif address == "2 Walter Carrington Crescent, Victoria Island, Lagos, ":
-            location = Location(6.44069015, 3.4066570357293076)
-            return location
-        elif address == "1075 Diplomatic Drive, Central District Area, Abuja, 900103":
-            location = Location(9.0403859, 7.4768889)
-            return location
-        else:
-            return None
     
     @patch.object(Address, "resolve_location", side_effect=side_effect)
     def setUp(self, mock_resolve_location) -> None:
