@@ -1,6 +1,9 @@
-from django.db import models
-from django.contrib.auth.models import User
 import uuid
+# pylint: disable=imported-auth-user
+from django.contrib.auth.models import User
+
+from django.db import models
+
 
 # For creating the purchase order
 class PurchaseOrder(models.Model):
@@ -16,7 +19,7 @@ class PurchaseOrder(models.Model):
     accepted_by = models.ForeignKey(User, null=True, blank=True, on_delete=models.SET_NULL)
 
     def __str__(self):
-        return self.name
+        return f"{self.name}"
 
 
 class OpenedPurchaseOrder(models.Model):
