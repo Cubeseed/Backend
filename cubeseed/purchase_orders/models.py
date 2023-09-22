@@ -16,7 +16,11 @@ class PurchaseOrder(models.Model):
     price = models.DecimalField(max_digits=10, decimal_places=2)
     buyer_name = models.CharField(max_length=255)
     terms_and_conditions = models.TextField()
-    accepted_by = models.ForeignKey(User, null=True, blank=True, on_delete=models.SET_NULL)
+    status = models.CharField(max_length=20, choices=(
+                                                      ("pending", "Pending"),
+                                                      ("accepted", "Accepted"),
+                                                      ("rejected", "Rejected")), default="pending")
+    accepted_by = models.ForeignKey(User, null=True, blank=True, on_delete=models.SET_NULL, related_name="accepted_orders")
 
     def __str__(self):
         return f"{self.name}"
