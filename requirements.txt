@@ -50,3 +50,4 @@ typing_extensions==4.6.2
 uritemplate==4.1.1
 urllib3==2.0.3
 wrapt==1.15.0
+drf-nested-routers==0.93.4
