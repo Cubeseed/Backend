@@ -17,6 +17,7 @@ class Address(models.Model):
     osm_checked = models.BooleanField(default=False, verbose_name="Checked by Open Street Map API", help_text="Indicates whether or not the location was checked by OSM.")
     osm_longitude = models.FloatField(null=True)
     osm_latitude = models.FloatField(null=True)
+    local_government_area = models.CharField(max_length=50, blank=False, verbose_name="Local Government Area")
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -43,7 +44,7 @@ class Address(models.Model):
                 location = self.resolve_location(", ".join([self.address, self.postal_code]))
             if location is None:
                 # try excluding postal code
-                location = self.resolve_location(", ".join([self.address, self.postal_code]))
+                location = self.resolve_location(", ".join([self.address]))
 
             if location is not None:
                 self.osm_checked = True
