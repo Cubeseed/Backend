@@ -30,9 +30,7 @@ load_dotenv(BASE_DIR / ".env")
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = (
-    "django-insecure-iwai)rfl5ls2r=+i_37yl08zuf77qwmbexdx^q_g_r+ovgei-e"
-)
+SECRET_KEY = "django-insecure-iwai)rfl5ls2r=+i_37yl08zuf77qwmbexdx^q_g_r+ovgei-e"
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -68,6 +66,8 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "rest_framework",
+    "celery",
+    "cubeseed.notifications",
     "cubeseed.userauth",
     "cubeseed.userprofile",
     "cubeseed.filedescriptor",
@@ -82,8 +82,6 @@ INSTALLED_APPS = [
     "cubeseed.farm_planner",
     "drf_yasg",
     "corsheaders",
-    "celery",
-    "mail_notifications",
 ]
 
 # configuring the unit testing python runner tool installed
@@ -185,7 +183,7 @@ REST_FRAMEWORK = {
     "TEST_REQUEST_DEFAULT_FORMAT": "json",
     "TEST_REQUEST_RENDERER_CLASSES": [
         "rest_framework.renderers.JSONRenderer",
-        "rest_framework.renderers.MultiPartRenderer" # To handle file uploads(for multipart format support) when testing
+        "rest_framework.renderers.MultiPartRenderer",  # To handle file uploads(for multipart format support) when testing
     ],
 }
 
@@ -229,26 +227,3 @@ EMAIL_USE_TLS = True
 EMAIL_PORT = os.getenv("EMAIL_PORT", 587)
 EMAIL_HOST_USER = os.getenv("EMAIL_HOST_USER")
 EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_PASSWORD")
-
-# Celery logging
-LOGGING = {
-    "version": 1,
-    "disable_existing_loggers": False,
-    "formatters": {
-        "standard": {
-            "format": "%(asctime)s [%(levelname)s] %(name)s: %(message)s"
-        },
-    },
-    "handlers": {
-        "file": {
-            "level": "INFO",
-            "class": "logging.FileHandler",
-            "filename": os.path.join(BASE_DIR, "celery.log"),
-            "formatter": "standard",
-        },
-    },
-    "root": {
-        "handlers": ["file"],
-        "level": "INFO",
-    },
-}
