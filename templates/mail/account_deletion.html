@@ -1,0 +1,10 @@
+{% extends 'mail/base.html' %} 
+{% block content %}
+    <p>Hello {{ user.first_name }},</p>
+    <p>
+        Sad to see you leave the cubeseed community.
+        You can export your data using the link below following GDPR guidelines.
+    </p>
+    <p>Best,</p>
+    <p>Cubeseed Team</p>
+{% endblock %}
