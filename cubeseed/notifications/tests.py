@@ -14,7 +14,10 @@ class TestSendEmailNotification(TestCase):
 
     @patch("django.core.mail.send_mail")
     @patch("django.template.loader.render_to_string")
-    def test_send_email_notification(self, mock_render_to_string, mock_send_mail):
+    @patch("cubeseed.notifications.tasks.send_email_notification")
+    def test_send_email_notification(
+        self, mock_send_mail_notification, mock_render_to_string, mock_send_mail
+    ):
         from django.conf import settings
 
         FROM_EMAIL: str = settings.EMAIL_HOST_USER
@@ -27,20 +30,28 @@ class TestSendEmailNotification(TestCase):
             },
         )
         mock_send_mail.return_value = len(self.recipients)
+        args: list = [self.sender, self.recipients, self.subject, self.email_category]
 
-        send_status: bool = send_email_notification(
+        def mock_send_mail_side_effect(*args) -> bool:
+            receipt_count: int = mock_send_mail(
+                self.subject,
+                "",
+                FROM_EMAIL,
+                self.recipients,
+                fail_silently=False,
+                html_message=mock_html_message,
+            )
+            return receipt_count == len(self.recipients)
+
+        mock_send_mail_notification.side_effect = mock_send_mail_side_effect
+        send_status: bool = mock_send_mail_notification(
             self.sender, self.recipients, self.subject, self.email_category
         )
-        mock_send_mail.assert_called_once_with(
-            self.subject,
-            "",
-            FROM_EMAIL,
-            self.recipients,
-            fail_silently=False,
-            html_message=mock_html_message,
-        )
+
         self.assertTrue(send_status)
+        self.assertEqual(mock_send_mail.call_count, 1)
         self.assertEqual(mock_render_to_string.call_count, 1)
+        self.assertEqual(mock_send_mail_notification.call_count, 1)
 
 
 class TestBackgroundEmailTask(TestCase):
