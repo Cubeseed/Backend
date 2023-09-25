@@ -67,6 +67,7 @@ INSTALLED_APPS = [
     "cubeseed.cluster",
     "cubeseed.course",
     "cubeseed.course_verification",
+    "cubeseed.purchase_orders",
     "drf_yasg",
     "corsheaders",
 ]
