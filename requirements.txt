@@ -44,5 +44,12 @@ tomli==2.0.1
 tomlkit==0.11.8
 typing_extensions==4.6.2
 uritemplate==4.1.1
-urllib3==2.0.3
+# urllib3 version changed from 2.0.3 to 1.26.16
+# inorder to satisfy the requirement of the dependency
+# botocore 1.31.53 which requires urllib3<1.27,>=1.25.4
+urllib3==1.26.16 
 wrapt==1.15.0
+drf-nested-routers==0.93.4
+boto3==1.28.52 
+django-storages==1.14    
+django-environ==0.11.2  

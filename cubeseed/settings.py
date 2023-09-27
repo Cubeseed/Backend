@@ -45,6 +45,7 @@ REST_FRAMEWORK["DEFAULT_AUTHENTICATION_CLASSES"].append(
 REST_FRAMEWORK["TEST_REQUEST_DEFAULT_FORMAT"] = "json"
 REST_FRAMEWORK["TEST_REQUEST_RENDERER_CLASSES"] = [
     "rest_framework.renderers.JSONRenderer",
+    "rest_framework.renderers.MultiPartRenderer", # To handle file uploads(for multipart format support) when testing
 ]
 
 CSRF_COOKIE_SECURE = False

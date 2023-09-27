@@ -1,6 +1,12 @@
 from pathlib import Path
 import os
 import subprocess
+from pathlib import Path
+import subprocess
+import environ
+
+env = environ.Env()
+env.read_env()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -28,6 +34,12 @@ INSTALLED_APPS = [
     "cubeseed.filedescriptor",
     "cubeseed.address",
     "cubeseed.businessprofile",
+    "cubeseed.farm",
+    "cubeseed.commodity",
+    "cubeseed.cluster",
+    "cubeseed.course",
+    "cubeseed.course_verification",
+    "cubeseed.purchase_orders",
     "corsheaders",
 ]
 
@@ -132,3 +144,22 @@ DATABASES = {
         'PORT': '5432',
     }
 }
+
+# S3 BUCKET CONFIGURATION
+
+# Set USE_S3 to True in the .env file if 
+# you want to use AWS S3 for storing media files (Production)
+# Otherwise, media files will be stored locally (Development)
+USE_S3 = env.bool("USE_S3", False)
+if USE_S3:
+    # AWS S3 CONFIGURATION
+    AWS_ACCESS_KEY_ID = env("AWS_ACCESS_KEY_ID")
+    AWS_SECRET_ACCESS_KEY = env("AWS_SECRET_ACCESS_KEY")
+    AWS_STORAGE_BUCKET_NAME = env("AWS_STORAGE_BUCKET_NAME")
+    AWS_S3_REGION_NAME = env("AWS_S3_REGION_NAME")
+    AWS_S3_SIGNATURE_VERSION = env("AWS_S3_SIGNATURE_NAME")
+    DEFAULT_FILE_STORAGE = env("DEFAULT_FILE_STORAGE")
+else:
+    DEFAULT_FILE_STORAGE = "django.core.files.storage.FileSystemStorage"
+    MEDIA_ROOT = BASE_DIR / "media"
+    MEDIA_URL = "/media/"

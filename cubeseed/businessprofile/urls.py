@@ -6,4 +6,4 @@ def register_routes(router):
 
     return router
 
-urlpatters = register_routes(routers.DefaultRouter()).urls
+urlpatterns = register_routes(routers.DefaultRouter()).urls
