@@ -50,3 +50,7 @@ REST_FRAMEWORK["TEST_REQUEST_RENDERER_CLASSES"] = [
 
 CSRF_COOKIE_SECURE = False
 SESSION_COOKIE_SECURE = False
+
+DEFAULT_FILE_STORAGE = "django.core.files.storage.FileSystemStorage"
+MEDIA_ROOT = BASE_DIR / "media"
+MEDIA_URL = "/media/"

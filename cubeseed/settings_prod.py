@@ -1,7 +1,4 @@
 from pathlib import Path
-import os
-import subprocess
-from pathlib import Path
 import subprocess
 import environ
 
@@ -13,7 +10,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = "django-insecure-iwai)rfl5ls2r=+i_37yl08zuf77qwmbexdx^q_g_r+ovgei-e"
-SECRET_KEY = os.getenv("SECRET_KEY", SECRET_KEY)
+SECRET_KEY = env.str("SECRET_KEY", SECRET_KEY)
 
 ALLOWED_HOSTS = ["ec2-16-171-43-115.eu-north-1.compute.amazonaws.com"]
 
@@ -122,10 +119,6 @@ REST_FRAMEWORK = {
     ],
 }
 
-# FIXME: this is a simplification for the MVP, should be using cloud storage.
-MEDIA_ROOT = BASE_DIR / "media"
-MEDIA_URL = "/media/"
-
 VERSION = subprocess.check_output(["git", "describe", "--tags", "--always"], cwd=BASE_DIR).decode("utf-8").strip()
 
 # Simplify address lookup by restricting to given countries
@@ -135,31 +128,21 @@ CSRF_COOKIE_SECURE = True
 SESSION_COOKIE_SECURE = True
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': os.getenv('DB_NAME', 'cubeseedapi'), 
-        'USER': os.getenv('DB_USER', 'cubeseed'),
-        'PASSWORD': os.getenv('DB_PASS', 'cubeseedsecret'),
-        'HOST': '127.0.0.1', 
-        'PORT': '5432',
+    "default": {
+        "ENGINE": "django.db.backends.postgresql",
+        "NAME": env.str("DB_NAME", "cubeseedapi"),
+        "USER": env.str("DB_USER", "cubeseed"),
+        "PASSWORD": env.str("DB_PASS", "cubeseedsecret"),
+        "HOST": "127.0.0.1",
+        "PORT": "5432",
     }
 }
 
 # S3 BUCKET CONFIGURATION
-
-# Set USE_S3 to True in the .env file if 
-# you want to use AWS S3 for storing media files (Production)
-# Otherwise, media files will be stored locally (Development)
-USE_S3 = env.bool("USE_S3", False)
-if USE_S3:
-    # AWS S3 CONFIGURATION
-    AWS_ACCESS_KEY_ID = env("AWS_ACCESS_KEY_ID")
-    AWS_SECRET_ACCESS_KEY = env("AWS_SECRET_ACCESS_KEY")
-    AWS_STORAGE_BUCKET_NAME = env("AWS_STORAGE_BUCKET_NAME")
-    AWS_S3_REGION_NAME = env("AWS_S3_REGION_NAME")
-    AWS_S3_SIGNATURE_VERSION = env("AWS_S3_SIGNATURE_NAME")
-    DEFAULT_FILE_STORAGE = env("DEFAULT_FILE_STORAGE")
-else:
-    DEFAULT_FILE_STORAGE = "django.core.files.storage.FileSystemStorage"
-    MEDIA_ROOT = BASE_DIR / "media"
-    MEDIA_URL = "/media/"
+# AWS S3 CONFIGURATION
+AWS_ACCESS_KEY_ID = env.str("AWS_ACCESS_KEY_ID", "")
+AWS_SECRET_ACCESS_KEY = env.str("AWS_SECRET_ACCESS_KEY", "")
+AWS_STORAGE_BUCKET_NAME = env.str("AWS_STORAGE_BUCKET_NAME", "")
+AWS_S3_REGION_NAME = env.str("AWS_S3_REGION_NAME", "")
+AWS_S3_SIGNATURE_VERSION = env.str("AWS_S3_SIGNATURE_NAME", "")
+DEFAULT_FILE_STORAGE = "storages.backends.s3boto3.S3Boto3Storage"
