@@ -55,6 +55,7 @@ CORS_ORIGIN_ALLOW_ALL = True
 # Application definition
 
 INSTALLED_APPS = [
+    "daphne",
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
@@ -75,6 +76,8 @@ INSTALLED_APPS = [
     "cubeseed.purchase_orders",
     "drf_yasg",
     "corsheaders",
+    "channels",
+    "cubeseed.room",
 ]
 
 # configuring the unit testing python runner tool installed
@@ -110,6 +113,18 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = "cubeseed.wsgi.application"
+ASGI_APPLICATION = "cubeseed.asgi.application"
+
+# Setup channel layers
+CHANNEL_LAYERS = {
+    'default': {
+        # For development
+        'BACKEND': 'channels.layers.InMemoryChannelLayer'
+        # For production
+        # Use redis
+        # 'BACKEND': 'channels_redis.core.RedisChannelLayer',
+    }
+}
 
 
 # Database

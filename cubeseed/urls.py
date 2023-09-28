@@ -43,6 +43,9 @@ from cubeseed.course_verification.urls import register_routes as register_course
 
 from cubeseed.purchase_orders.urls import register_routes as register_purchase_orders_routes
 
+# from cubeseed.room.urls import register_routes as register_room_routes
+from cubeseed.room import views
+
 
 SchemaView = get_schema_view(
     openapi.Info(
@@ -73,6 +76,8 @@ router.register(r"address", AddressViewSet)
 register_cluster_routes(router)
 router.register(r"farm", FarmViewSet, basename="farm")
 
+# register_room_routes(router)
+
 # Nested Routes for farms in a cluster
 # {cluster/{cluster_pk}/farm/}
 cluster_router = drf_nested_routers.NestedDefaultRouter(router, r"cluster", lookup="cluster")
@@ -90,5 +95,6 @@ urlpatterns = [
     path("api/auth/token/verify/", TokenVerifyView.as_view(), name="token_verify"),
     path("api/", include(router.urls)),
     path("api/", include(cluster_router.urls)),
-    path("api/version", VersionView.as_view())
+    path("api/version", VersionView.as_view()),
+    path("api/rooms/", include("cubeseed.room.urls")),
 ]

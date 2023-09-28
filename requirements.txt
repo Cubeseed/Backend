@@ -51,4 +51,5 @@ wrapt==1.15.0
 drf-nested-routers==0.93.4
 boto3==1.28.52 
 django-storages==1.14    
-django-environ==0.11.2  
+django-environ==0.11.2
+channels[daphne]==4.0.0

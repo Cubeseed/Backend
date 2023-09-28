@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<head>
+    <title>Rooms</title>
+</head>
+<body>
+    <h1>Rooms</h1>
+    <div>
+        {% for room in rooms %}
+            <div>
+                <!-- <a href="/room/{{ room.id }}">{{ room.name }}</a> -->
+                <h2>{{ room.name }}</h2>
+                <a href="{% url 'room' room.slug %}">Join</a>
+            </div> 
+        {% endfor %}
+    </div>
+</body>
