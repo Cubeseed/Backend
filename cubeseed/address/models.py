@@ -27,7 +27,7 @@ class Address(models.Model):
         )
 
     def resolve_location(self, address):
-        geolocator = Nominatim(user_agent="cubeseed-backend")
+        geolocator = Nominatim(user_agent="cubeseed-backend", scheme="http")
         location = geolocator.geocode(address, country_codes=COUNTRY_CODES)
         return location
 
