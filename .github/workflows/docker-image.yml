@@ -57,4 +57,4 @@ jobs:
             VERSION=${{ github.ref_name }}.${{ github.run_id }}.${{ github.run_number }}.${{ github.run_attempt }}
             DJANGO_SETTINGS_MODULE=cubeseed.settings
           push: true
-          tags: ${{ steps.meta.outputs.tags }}:dev
+          tags: ${{ steps.meta.outputs.tags }}-dev
