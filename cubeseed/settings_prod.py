@@ -119,7 +119,9 @@ REST_FRAMEWORK = {
     ],
 }
 
-VERSION = subprocess.check_output(["git", "describe", "--tags", "--always"], cwd=BASE_DIR).decode("utf-8").strip()
+VERSION = env.str("VERSION", "")
+if VERSION == "":
+    VERSION = subprocess.check_output(["git", "describe", "--tags", "--always"], cwd=BASE_DIR).decode("utf-8").strip()
 
 # Simplify address lookup by restricting to given countries
 COUNTRY_CODES = ["NG"]
