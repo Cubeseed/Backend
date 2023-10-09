@@ -16,14 +16,23 @@ from channels.routing import ProtocolTypeRouter, URLRouter
 
 from cubeseed.room import routing
 
+from channels.security.websocket import AllowedHostsOriginValidator
+
+# Custom Middleware
+# from cubeseed.room.middleware import TokenAuthMiddleware
+from cubeseed.room.middleware import JwtAuthMiddlewareStack
+
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'cubeseed.settings')
 
 # application = get_asgi_application()
 application = ProtocolTypeRouter({
     "http": get_asgi_application(),
-    "websocket": AuthMiddlewareStack(
-        URLRouter(
-            routing.websocket_urlpatterns
+    "websocket": AllowedHostsOriginValidator(
+        JwtAuthMiddlewareStack(
+            URLRouter(
+                routing.websocket_urlpatterns
+            )
         )
     )
 })
+

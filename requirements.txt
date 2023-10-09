@@ -53,3 +53,4 @@ boto3==1.28.52
 django-storages==1.14    
 django-environ==0.11.2
 channels[daphne]==4.0.0
+channels-redis==4.1.0   

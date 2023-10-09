@@ -38,9 +38,9 @@ ALLOWED_HOSTS = ["*"]
 #     'http://localhost:3000',
 # ]
 
-# CORS_ALLOWED_ORIGINS = [
-#     'http://localhost:3000',
-# ]
+CORS_ALLOWED_ORIGINS = [
+    'http://localhost:3000',
+]
 # FIXME: this is good for development unacceptable for production
 
 # CORS_ALLOW_ALL_ORIGINS = True
@@ -78,6 +78,7 @@ INSTALLED_APPS = [
     "corsheaders",
     "channels",
     "cubeseed.room",
+    'rest_framework.authtoken',
 ]
 
 # configuring the unit testing python runner tool installed
@@ -119,13 +120,15 @@ ASGI_APPLICATION = "cubeseed.asgi.application"
 CHANNEL_LAYERS = {
     'default': {
         # For development
-        'BACKEND': 'channels.layers.InMemoryChannelLayer'
+        # 'BACKEND': 'channels.layers.InMemoryChannelLayer'
         # For production
         # Use redis
-        # 'BACKEND': 'channels_redis.core.RedisChannelLayer',
+        'BACKEND': 'channels_redis.core.RedisChannelLayer',
+        'CONFIG': {
+            'hosts': [(env('REDIS_HOST'), env.int('REDIS_PORT'))],
+        },
     }
 }
-
 
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases

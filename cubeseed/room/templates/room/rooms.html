@@ -7,9 +7,8 @@
     <div>
         {% for room in rooms %}
             <div>
-                <!-- <a href="/room/{{ room.id }}">{{ room.name }}</a> -->
-                <h2>{{ room.name }}</h2>
-                <a href="{% url 'room' room.slug %}">Join</a>
+                <h2>{{ room.username }}</h2>
+                <a href="{% url 'room' room.username %}">Join</a>
             </div> 
         {% endfor %}
     </div>
