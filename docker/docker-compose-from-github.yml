@@ -1,0 +1,44 @@
+version: "3.9"
+
+services:
+  cubeseed:
+    container_name: cubeseed-backend
+    image: ghcr.io/cubeseed/backend:latest
+    command: manage.py runserver 0.0.0.0:8000
+    environment:
+      - DB_NAME=${DB_NAME}
+      - DB_USER=${DB_USER}
+      - DB_PASS=${DB_PASS}
+      - DB_HOST=db
+    ports:
+      - "8000:8000"
+    depends_on:
+      - migration
+
+  migration:
+    container_name: cubeseed-backend-migration
+    image: ghcr.io/cubeseed/backend:latest
+    command: manage.py migrate
+    environment:
+      - DB_NAME=${DB_NAME}
+      - DB_USER=${DB_USER}
+      - DB_PASS=${DB_PASS}
+      - DB_HOST=db
+    depends_on:
+      - db
+
+  db:
+    container_name: cubeseed-backend-db
+    image: postgres:12
+    restart: always
+    environment:
+      - POSTGRES_PASSWORD=cubeseedsecret
+      - POSTGRES_USER=cubeseed
+      - POSTGRES_DB=cubeseedapis
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+volumes:
+  pgdata: {}
