@@ -5,7 +5,7 @@ services:
     container_name: cubeseed
     build:
       dockerfile: docker/Dockerfile.local
-      context: ..
+      context: .
     ports:
       - "8000:8000"
   
