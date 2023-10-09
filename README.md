@@ -72,32 +72,19 @@ docker run -it -dp 8000:8000 sebastiangh/cubeseed
  - [Mac](https://docs.docker.com/desktop/install/mac-install/)
  - [Ubuntu](https://docs.docker.com/engine/install/ubuntu/)
 
-[Guide on how to run docker images](https://docs.docker.com/get-started/run-docker-hub-images/)
-
-### Run project container
-Look for the =sebastiangh/cubeseed= image: [[https://hub.docker.com/r/sebastiangh/cubeseed]]
-Run with the following settings:
- - Name: Any name
- - Host Port: =8000=
- - Container Port: =8000=
-
-### Run the database container (not needed for development)
-Look for the postgres image: https://hub.docker.com/_/postgres.
-Run with the following settings:
- - Name: whatever
- - Host Port: =5432=
- - Container Port: =5432=
- - Environment:
-   + POSTGRES_PASSWORD=cubeseedsecret=
-   + POSTGRES_USER=cubeseed=
-   + POSTGRES_DB=cubeseedapi=
-
 ### How to build and push
+
 ```bash
   docker build -t cubeseed . -f docker/Dockerfile
   # tag not necessary if already done before
   docker tag cubeseed sebastiangh/cubeseed
   docker push sebastiangh/cubeseed
+```
+
+### Run project container
+
+```bash
+    docker-compose up
 ```
 
 ## Contributing
