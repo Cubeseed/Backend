@@ -3,12 +3,17 @@ version: "3.9"
 services:
   cubeseed:
     container_name: cubeseed-backend
-    image: cubeseed
+    image: ${DJANGO_SETTINGS_MODULE}
     build:
-      dockerfile: docker/Dockerfile.local
-      context: .
+      dockerfile: docker/Dockerfile
+      context: ..
       args:
-        - DJANGO_SETTINGS_MODULE=cubeseed.settings
+        - DJANGO_SETTINGS_MODULE=${DJANGO_SETTINGS_MODULE}
+    environment:
+      - DB_NAME=${DB_NAME}
+      - DB_USER=${DB_USER}
+      - DB_PASS=${DB_PASS}
+      - DB_HOST=db
     command: manage.py runserver 0.0.0.0:8000
     ports:
       - "8000:8000"
@@ -17,12 +22,17 @@ services:
 
   migration:
     container_name: cubeseed-backend-migration
-    image: cubeseed
+    image: ${DJANGO_SETTINGS_MODULE}
     build:
-      dockerfile: docker/Dockerfile.local
-      context: .
+      dockerfile: docker/Dockerfile
+      context: ..
       args:
-        - DJANGO_SETTINGS_MODULE=cubeseed.settings
+        - DJANGO_SETTINGS_MODULE=${DJANGO_SETTINGS_MODULE}
+    environment:
+      - DB_NAME=${DB_NAME}
+      - DB_USER=${DB_USER}
+      - DB_PASS=${DB_PASS}
+      - DB_HOST=db
     command: manage.py migrate
     depends_on:
       - db
@@ -32,9 +42,9 @@ services:
     image: postgres:12
     restart: always
     environment:
-      - POSTGRES_PASSWORD=cubeseedsecret
-      - POSTGRES_USER=cubeseed
-      - POSTGRES_DB=cubeseedapis
+      - POSTGRES_PASSWORD=${DB_PASS}
+      - POSTGRES_USER=${DB_USER}
+      - POSTGRES_DB=${DB_NAME}
     ports:
       - "5432:5432"
     volumes:
