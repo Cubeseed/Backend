@@ -42,6 +42,7 @@ from cubeseed.course.urls import register_routes as register_course_routes
 from cubeseed.course_verification.urls import register_routes as register_course_verification_routes
 
 from cubeseed.purchase_orders.urls import register_routes as register_purchase_orders_routes
+from cubeseed.farm_planner.urls import register_routes as register_farm_planner_routes
 
 # from cubeseed.room.urls import register_routes as register_room_routes
 from cubeseed.room import views
@@ -70,6 +71,7 @@ register_commodity_routes(router)
 register_course_routes(router)
 register_course_verification_routes(router)
 register_purchase_orders_routes(router)
+register_farm_planner_routes(router)
 
 
 router.register(r"address", AddressViewSet)

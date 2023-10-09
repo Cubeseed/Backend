@@ -74,6 +74,7 @@ INSTALLED_APPS = [
     "cubeseed.course",
     "cubeseed.course_verification",
     "cubeseed.purchase_orders",
+    "cubeseed.farm_planner",
     "drf_yasg",
     "corsheaders",
     "channels",
