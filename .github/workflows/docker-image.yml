@@ -54,7 +54,7 @@ jobs:
           file: ./docker/Dockerfile
           build-args: |
             BUILD_BRANCH=${{ github.head_ref || github.ref_name }}
-            VERSION=${{ github.ref_name }}.${{ github.run_id }}.${{ github.run_number }}.${{ github.run_attempt }}
+            VERSION=${{ github.ref_name }}.${{ github.run_id }}.${{ github.run_number }}.${{ github.run_attempt }}-dev
             DJANGO_SETTINGS_MODULE=cubeseed.settings
           push: true
           tags: ${{ steps.meta.outputs.tags }}-dev
