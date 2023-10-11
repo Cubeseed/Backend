@@ -1,6 +1,9 @@
+amqp==5.1.1
 asgiref==3.7.2
 astroid==2.15.5
 attrs==23.1.0
+black==23.9.1
+celery==5.3.4
 certifi==2023.5.7
 charset-normalizer==3.1.0
 coreapi==2.3.3
@@ -31,12 +34,14 @@ pylint==2.17.4
 pylint-django==2.5.3
 pylint-plugin-utils==0.8.2
 pyrsistent==0.19.3
+python-environ==0.4.54
 python-magic==0.4.27
 pytz==2023.3
 PyYAML==6.0
-requests==2.31.0
 redgreenunittest==0.1.1
+requests==2.31.0
 simplejson==3.19.1
+SQLAlchemy==2.0.20
 sqlparse==0.4.4
 swagger-spec-validator==3.0.3
 tomli==2.0.1

@@ -10,17 +10,20 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
-from pathlib import Path
+import logging
+import os
 import subprocess
+from pathlib import Path
+
 import environ
-
-env = environ.Env()
-env.read_env()
-
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+ENV_FILE = os.path.join(BASE_DIR, ".env")
+
+env = environ.Env()
+env.read_env(ENV_FILE)
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
@@ -62,6 +65,8 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "rest_framework",
+    "celery",
+    "cubeseed.notifications",
     "cubeseed.userauth",
     "cubeseed.userprofile",
     "cubeseed.filedescriptor",
@@ -97,7 +102,7 @@ ROOT_URLCONF = "cubeseed.urls"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [],
+        "DIRS": [os.path.join(BASE_DIR, "templates")],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
@@ -172,12 +177,12 @@ REST_FRAMEWORK = {
         "rest_framework_simplejwt.authentication.JWTAuthentication",
         ### FIXME: this should be only valid for testing
         "rest_framework.authentication.BasicAuthentication",
-        "rest_framework.authentication.SessionAuthentication"
+        "rest_framework.authentication.SessionAuthentication",
     ],
     "TEST_REQUEST_DEFAULT_FORMAT": "json",
     "TEST_REQUEST_RENDERER_CLASSES": [
         "rest_framework.renderers.JSONRenderer",
-        "rest_framework.renderers.MultiPartRenderer" # To handle file uploads(for multipart format support) when testing
+        "rest_framework.renderers.MultiPartRenderer",  # To handle file uploads(for multipart format support) when testing
     ],
 }
 
@@ -205,3 +210,21 @@ else:
     DEFAULT_FILE_STORAGE = "django.core.files.storage.FileSystemStorage"
     MEDIA_ROOT = BASE_DIR / "media"
     MEDIA_URL = "/media/"
+
+# Celery configuration
+CELERY_BROKER_URL = env.str(
+    "CELERY_BROKER_URL", "amqp://guest:guest@localhost:5672"
+)
+CELERY_RESULT_BACKEND = env.str(
+    "CELERY_RESULT_BACKEND", "db+sqlite:///results.sqlite3"
+)
+CELERY_ACCEPT_CONTENT = ["json"]
+CELERY_TASK_SERIALIZER = "json"
+
+# Email configuration
+EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+EMAIL_HOST = env.str("EMAIL_HOST", "smtp.gmail.com")
+EMAIL_USE_TLS = env.bool('EMAIL_USE_TLS', True)
+EMAIL_PORT = env.int("EMAIL_PORT", 587)
+EMAIL_HOST_USER = env.str("EMAIL_HOST_USER")
+EMAIL_HOST_PASSWORD = env.str("EMAIL_HOST_PASSWORD")

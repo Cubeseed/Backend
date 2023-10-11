@@ -1,0 +1,13 @@
+{% extends 'mail/base.html' %} 
+{% block content %}
+    <p>Hello {{ user.first_name }},</p>
+    <p>
+    Unfortunately your documents have been rejected and we are unable to
+    proceed with the next steps in the application.
+    </p>
+    <p>
+    Kindly upload new documents or send a support request to {{ support_email }}
+    </p>
+    <p>Best,</p>
+    <p>Cubeseed Team</p>
+{% endblock %}

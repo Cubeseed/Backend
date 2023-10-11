@@ -1,8 +1,15 @@
+# Environment file
 .env
-/env/
+# Hidden directories (includes virtual environments).
+.*/
+env/
+# Miscellaneous
+*.sqlite3
 /media/
-/db.sqlite3
 *~
 **/__pycache__/
 logs/
+*.log
+*.log.*
 thunder-tests
+TODOS
