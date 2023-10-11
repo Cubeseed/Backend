@@ -87,9 +87,9 @@ celery -A cubeseed worker --loglevel=info
 4. Set up and Activate your virtual environment
 
 ```bash
-    python3 -m venv env
-    source env/bin/activate - # For Mac/Linux
-    env\Scripts\activate - # For Windows
+    python3 -m venv .venv
+    source .venv/bin/activate - # For Mac/Linux
+    .venv\Scripts\activate - # For Windows
 ```
 
 5. Install all project dependencies. 
