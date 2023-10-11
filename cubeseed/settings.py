@@ -10,16 +10,20 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
-import os
-from pathlib import Path
 import logging
+import os
 import subprocess
-from dotenv import load_dotenv
+from pathlib import Path
+
+import environ
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-load_dotenv(BASE_DIR / ".env")
+ENV_FILE = os.path.join(BASE_DIR, ".env")
+
+env = environ.Env()
+env.read_env(ENV_FILE)
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
@@ -73,6 +77,8 @@ INSTALLED_APPS = [
     "cubeseed.cluster",
     "cubeseed.course",
     "cubeseed.course_verification",
+    "cubeseed.purchase_orders",
+    "cubeseed.farm_planner",
     "drf_yasg",
     "corsheaders",
 ]
@@ -180,21 +186,36 @@ REST_FRAMEWORK = {
     ],
 }
 
-# FIXME: this is a simplification for the MVP, should be using cloud storage.
-MEDIA_ROOT = BASE_DIR / "media"
-MEDIA_URL = "/media/"
-
-VERSION = (
-    subprocess.check_output(["git", "describe", "--tags", "--always"], cwd=BASE_DIR)
-    .decode("utf-8")
-    .strip()
-)
+VERSION = subprocess.check_output(["git", "describe", "--tags", "--always"], cwd=BASE_DIR).decode("utf-8").strip()
 
 # Simplify address lookup by restricting to given countries
 COUNTRY_CODES = ["NG"]
 
-CELERY_BROKER_URL = os.getenv("CELERY_BROKER_URL", "amqp://guest:guest@localhost:5672")
-CELERY_RESULT_BACKEND = os.getenv(
+
+# S3 BUCKET CONFIGURATION
+
+# Set USE_S3 to True in the .env file if 
+# you want to use AWS S3 for storing media files (Production)
+# Otherwise, media files will be stored locally (Development)
+USE_S3 = env.bool("USE_S3", False)
+if USE_S3:
+    # AWS S3 CONFIGURATION
+    AWS_ACCESS_KEY_ID = env("AWS_ACCESS_KEY_ID")
+    AWS_SECRET_ACCESS_KEY = env("AWS_SECRET_ACCESS_KEY")
+    AWS_STORAGE_BUCKET_NAME = env("AWS_STORAGE_BUCKET_NAME")
+    AWS_S3_REGION_NAME = env("AWS_S3_REGION_NAME")
+    AWS_S3_SIGNATURE_VERSION = env("AWS_S3_SIGNATURE_NAME")
+    DEFAULT_FILE_STORAGE = env("DEFAULT_FILE_STORAGE")
+else:
+    DEFAULT_FILE_STORAGE = "django.core.files.storage.FileSystemStorage"
+    MEDIA_ROOT = BASE_DIR / "media"
+    MEDIA_URL = "/media/"
+
+# Celery configuration
+CELERY_BROKER_URL = env.str(
+    "CELERY_BROKER_URL", "amqp://guest:guest@localhost:5672"
+)
+CELERY_RESULT_BACKEND = env.str(
     "CELERY_RESULT_BACKEND", "db+sqlite:///results.sqlite3"
 )
 CELERY_ACCEPT_CONTENT = ["json"]
@@ -202,8 +223,8 @@ CELERY_TASK_SERIALIZER = "json"
 
 # Email configuration
 EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
-EMAIL_HOST = os.getenv("EMAIL_HOST", "smtp.gmail.com")
-EMAIL_USE_TLS = True
-EMAIL_PORT = os.getenv("EMAIL_PORT", 587)
-EMAIL_HOST_USER = os.getenv("EMAIL_HOST_USER")
-EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_PASSWORD")
+EMAIL_HOST = env.str("EMAIL_HOST", "smtp.gmail.com")
+EMAIL_USE_TLS = env.bool('EMAIL_USE_TLS', True)
+EMAIL_PORT = env.int("EMAIL_PORT", 587)
+EMAIL_HOST_USER = env.str("EMAIL_HOST_USER")
+EMAIL_HOST_PASSWORD = env.str("EMAIL_HOST_PASSWORD")

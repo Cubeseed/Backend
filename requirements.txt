@@ -34,7 +34,7 @@ pylint==2.17.4
 pylint-django==2.5.3
 pylint-plugin-utils==0.8.2
 pyrsistent==0.19.3
-python-dotenv==1.0.0
+python-environ==0.4.54
 python-magic==0.4.27
 pytz==2023.3
 PyYAML==6.0
@@ -48,6 +48,12 @@ tomli==2.0.1
 tomlkit==0.11.8
 typing_extensions==4.6.2
 uritemplate==4.1.1
-urllib3==2.0.3
+# urllib3 version changed from 2.0.3 to 1.26.16
+# inorder to satisfy the requirement of the dependency
+# botocore 1.31.53 which requires urllib3<1.27,>=1.25.4
+urllib3==1.26.16 
 wrapt==1.15.0
 drf-nested-routers==0.93.4
+boto3==1.28.52 
+django-storages==1.14    
+django-environ==0.11.2  
