@@ -10,21 +10,20 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
-import os
-from pathlib import Path
 import logging
+import os
 import subprocess
+from pathlib import Path
+
 import environ
-
-env = environ.Env()
-env.read_env()
-
-from dotenv import load_dotenv
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-load_dotenv(BASE_DIR / ".env")
+ENV_FILE = os.path.join(BASE_DIR, ".env")
+
+env = environ.Env()
+env.read_env(ENV_FILE)
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
@@ -211,10 +210,12 @@ else:
     DEFAULT_FILE_STORAGE = "django.core.files.storage.FileSystemStorage"
     MEDIA_ROOT = BASE_DIR / "media"
     MEDIA_URL = "/media/"
-CELERY_BROKER_URL = os.getenv(
+
+# Celery configuration
+CELERY_BROKER_URL = env.str(
     "CELERY_BROKER_URL", "amqp://guest:guest@localhost:5672"
 )
-CELERY_RESULT_BACKEND = os.getenv(
+CELERY_RESULT_BACKEND = env.str(
     "CELERY_RESULT_BACKEND", "db+sqlite:///results.sqlite3"
 )
 CELERY_ACCEPT_CONTENT = ["json"]
@@ -222,8 +223,8 @@ CELERY_TASK_SERIALIZER = "json"
 
 # Email configuration
 EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
-EMAIL_HOST = os.getenv("EMAIL_HOST", "smtp.gmail.com")
-EMAIL_USE_TLS = True
-EMAIL_PORT = os.getenv("EMAIL_PORT", 587)
-EMAIL_HOST_USER = os.getenv("EMAIL_HOST_USER")
-EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_PASSWORD")
+EMAIL_HOST = env.str("EMAIL_HOST", "smtp.gmail.com")
+EMAIL_USE_TLS = env.bool('EMAIL_USE_TLS', True)
+EMAIL_PORT = env.int("EMAIL_PORT", 587)
+EMAIL_HOST_USER = env.str("EMAIL_HOST_USER")
+EMAIL_HOST_PASSWORD = env.str("EMAIL_HOST_PASSWORD")

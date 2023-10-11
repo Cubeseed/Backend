@@ -1,7 +1,9 @@
+# Environment file
 .env
-/env/
-.env
+# Hidden directories (includes virtual environments).
 .*/
+env/
+# Miscellaneous
 *.sqlite3
 /media/
 *~
