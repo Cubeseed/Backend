@@ -36,6 +36,7 @@ def room(request, slug):
     messages = Message.objects.filter(room=room)[0:25]
     return render(request, "room/room.html", {"room": room, "messages": messages})
 
+
 class MessagesApi(APIView):
     permission_classes = (IsAuthenticated,)
     serializer_class = MessageSerializer
@@ -51,7 +52,10 @@ class MessagesApi(APIView):
             Room.objects.create(slug=room_name, name=room_name)
 
         room = Room.objects.get(Q(slug=room_name) | Q(slug=reverse_room_name))
+
         serializer = MessageSerializer(Message.objects.filter(room=room), 
                                        many=True,
                                        context={'request': request})
+        # print("Printing serializer data: ", serializer.data)
         return JsonResponse({"messages": serializer.data})
+        # return JsonResponse({"messages": "Reached this point"})
