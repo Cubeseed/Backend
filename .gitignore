@@ -13,3 +13,4 @@ redis-env/
 authtoken-env/
 # To avoid envs
 *env
+improved-chat/

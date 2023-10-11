@@ -76,8 +76,10 @@ class ChatConsumer(AsyncWebsocketConsumer):
             self.room_group_name,
             {
                 'type': 'chat_message',
-                'message': MessageSerializer(saved_message, context={'request': self.scope['request']}).data,
-                'username': self.user.username,
+                # 'message': MessageSerializer(saved_message, context={'request': self.scope['request']}).data,
+                # 'message': MessageSerializer(saved_message).data,
+                'message': saved_message.content,
+                'from_user': {'username': self.user.username},
                 'room': room
             }
         )
@@ -85,13 +87,15 @@ class ChatConsumer(AsyncWebsocketConsumer):
     # Receive message from room group
     async def chat_message(self, event):
         message = event['message']
-        username = event['username']
+        # username = event['username']
+        from_user= event['from_user']
         room = event['room']
 
         # Send message to WebSocket
         await self.send(text_data=json.dumps({
             'message': message,
-            'username': username,
+            # 'username': username,
+            'from_user': from_user,
             'room': room,
         }))
     
