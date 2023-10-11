@@ -43,6 +43,7 @@ from cubeseed.course_verification.urls import register_routes as register_course
 
 from cubeseed.purchase_orders.urls import register_routes as register_purchase_orders_routes
 from cubeseed.farm_planner.urls import register_routes as register_farm_planner_routes
+from cubeseed.card_transaction.urls import register_routes as register_card_transaction_routes
 
 
 SchemaView = get_schema_view(
@@ -69,6 +70,7 @@ register_course_routes(router)
 register_course_verification_routes(router)
 register_purchase_orders_routes(router)
 register_farm_planner_routes(router)
+register_card_transaction_routes(router)
 
 
 router.register(r"address", AddressViewSet)

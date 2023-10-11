@@ -76,6 +76,7 @@ INSTALLED_APPS = [
     "cubeseed.farm_planner",
     "drf_yasg",
     "corsheaders",
+    "cubeseed.card_transaction",
 ]
 
 # configuring the unit testing python runner tool installed
