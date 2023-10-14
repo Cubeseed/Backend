@@ -44,6 +44,8 @@ from cubeseed.course_verification.urls import register_routes as register_course
 from cubeseed.purchase_orders.urls import register_routes as register_purchase_orders_routes
 from cubeseed.farm_planner.urls import register_routes as register_farm_planner_routes
 
+# from cubeseed.room.urls import register_routes as register_conversations_route
+
 # from cubeseed.room.urls import register_routes as register_room_routes
 from cubeseed.room import views
 
@@ -78,6 +80,8 @@ router.register(r"address", AddressViewSet)
 register_cluster_routes(router)
 router.register(r"farm", FarmViewSet, basename="farm")
 
+# register_conversations_route(router)
+
 # register_room_routes(router)
 
 # Nested Routes for farms in a cluster
@@ -99,4 +103,5 @@ urlpatterns = [
     path("api/", include(cluster_router.urls)),
     path("api/version", VersionView.as_view()),
     path("api/rooms/", include("cubeseed.room.urls")),
+    path("api/conversations", views.ConversationViewSet.as_view({'get': 'list'})),
 ]

@@ -11,7 +11,9 @@ from django.http import JsonResponse
 from rest_framework.views import APIView
 from .serializer import MessageSerializer
 # from rest_framework.response import Response
-
+from rest_framework.mixins import ListModelMixin, RetrieveModelMixin
+from rest_framework.viewsets import GenericViewSet
+from .serializer import ConversationSerializer
 
 
 # Create your views here.
@@ -59,3 +61,20 @@ class MessagesApi(APIView):
         # print("Printing serializer data: ", serializer.data)
         return JsonResponse({"messages": serializer.data})
         # return JsonResponse({"messages": "Reached this point"})
+
+class ConversationViewSet(ListModelMixin, RetrieveModelMixin, GenericViewSet):
+    serializer_class = ConversationSerializer
+    queryset = Room.objects.none()
+    lookup_field = "name"
+
+    def get_queryset(self):
+        queryset = Room.objects.filter(
+            name__contains=self.request.user.username
+        )
+        return queryset
+    
+    def get_serializer_context(self):
+        return {"request": self.request, "user": self.request.user}
+    
+
+
