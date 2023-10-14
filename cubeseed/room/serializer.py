@@ -6,6 +6,7 @@ from cubeseed.userauth.serializers import UserSerializer
 class MessageSerializer(serializers.Serializer):
         from_user = UserSerializer()
         to_user = UserSerializer()
+        date_added = serializers.DateTimeField()
         content = serializers.CharField(max_length=2000)
 
 # class MessageSerializer(serializers.ModelSerializer):

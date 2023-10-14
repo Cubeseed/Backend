@@ -11,6 +11,8 @@ from django.db.models import Q
 
 from .serializer import MessageSerializer
 
+import datetime
+
 # We need this when serializing UUID
 # I believe something similar is required when
 # serializing Date objects
@@ -21,6 +23,11 @@ from .serializer import MessageSerializer
 #             # if the obj is uuid, we simply return the value of uuid
 #             return obj.hex
 #         return json.JSONEncoder.default(self, obj)
+
+def serialize_datetime(obj):
+    if isinstance(obj, datetime.datetime):
+        return obj.isoformat()
+    raise TypeError("Type not serializable")
 
 class ChatConsumer(AsyncWebsocketConsumer):
 
@@ -79,6 +86,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
                 # 'message': MessageSerializer(saved_message, context={'request': self.scope['request']}).data,
                 # 'message': MessageSerializer(saved_message).data,
                 'message': saved_message.content,
+                'date_added': json.dumps(saved_message.date_added, default=serialize_datetime),
                 'from_user': {'username': self.user.username},
                 'room': room
             }
@@ -90,6 +98,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
         # username = event['username']
         from_user= event['from_user']
         room = event['room']
+        date_added = event['date_added']
 
         # Send message to WebSocket
         await self.send(text_data=json.dumps({
@@ -97,6 +106,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
             # 'username': username,
             'from_user': from_user,
             'room': room,
+            'date_added': date_added
         }))
     
     @sync_to_async
