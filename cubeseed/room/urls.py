@@ -4,10 +4,10 @@ from .views import MessagesApi
 from cubeseed.room import views
 
 urlpatterns = [
-    # path('conversations', views.ConversationViewSet.as_view({'get'})),
     path('', views.rooms, name="rooms"),
     path('<slug:slug>/', views.room, name="room"),
-    path('<slug:slug>/messages', MessagesApi.as_view(), name="room"), 
+    path('<slug:slug>/messages', MessagesApi.as_view(), name="room"),
+    # path('conversations/<name>/', views.ConversationViewSet.as_view({'get': 'retrieve'}), name="conversation"),
 ]
 
 

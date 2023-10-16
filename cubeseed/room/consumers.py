@@ -1,7 +1,7 @@
 import json
 
 from channels.generic.websocket import AsyncWebsocketConsumer
-from asgiref.sync import sync_to_async
+from asgiref.sync import sync_to_async, async_to_sync
 
 from django.contrib.auth.models import User
 
@@ -12,6 +12,8 @@ from django.db.models import Q
 from .serializer import MessageSerializer
 
 import datetime
+
+from channels.db import database_sync_to_async
 
 # We need this when serializing UUID
 # I believe something similar is required when
@@ -47,7 +49,6 @@ class ChatConsumer(AsyncWebsocketConsumer):
         # but when testing with a backend rendered template uncomment and use the
         # second line, comment out the first line
         self.room_name = await self.get_or_create_room(self.scope['url_route']['kwargs']['room_name'], self.scope['user'])
-        print("Printing room name: ", self.room_name)
         # self.room_name = self.scope['url_route']['kwargs']['room_name']
 
         self.room_group_name = 'chat_%s' % self.room_name
@@ -56,14 +57,51 @@ class ChatConsumer(AsyncWebsocketConsumer):
             self.room_group_name,
             self.channel_name
         )
-        
+
         await self.accept()
 
-    async def disconnect(self):
+        online_users = await sync_to_async(list)(self.room.online.all())
+
+        await self.send(text_data=json.dumps({
+            "type": "online_user_list",
+            # "users": [user.username for user in self.room.online.all()],
+            "users": [user.username for user in online_users],
+        }))
+
+        await self.channel_layer.group_send(
+            self.room_group_name,
+                {
+                    "type": "user_join",
+                    "user": self.user.username,
+                },
+            )
+
+        await sync_to_async(self.room.online.add)(self.user)
+
+
+
+    async def disconnect(self, code):
+
+        if self.user.is_authenticated: # send the leave event to the room
+            await self.channel_layer.group_send(
+                self.room_group_name,
+                    {
+                        "type": "user_leave",
+                        "user": self.user.username,
+                    },
+            )
+            await sync_to_async(self.room.online.remove)(self.user)
+            # online_users = await sync_to_async(list)(self.room.online.all())
+
         await self.channel_layer.group_discard(
             self.room_group_name,
             self.channel_name
         )
+        return super().disconnect(code)
+
+
+
+
 
     # Receive message from WebSocket
     async def receive(self, text_data):
@@ -135,8 +173,16 @@ class ChatConsumer(AsyncWebsocketConsumer):
             Room.objects.create(slug=room_name, name=room_name)
         
         room = Room.objects.get(Q(slug=room_name) | Q(slug=reverse_room_name))
+        # Saving the room in self
+        self.room = room
         return room.slug
 
     # @classmethod
     # def encode_json(cls, content):
     #     return json.dumps(content, cls=UUIDEncoder)
+
+    async def user_join(self, event):
+        await self.send(text_data=json.dumps(event))
+
+    async def user_leave(self, event):
+        await self.send(text_data=json.dumps(event))

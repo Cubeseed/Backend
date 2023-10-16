@@ -76,5 +76,16 @@ class ConversationViewSet(ListModelMixin, RetrieveModelMixin, GenericViewSet):
     def get_serializer_context(self):
         return {"request": self.request, "user": self.request.user}
     
+    def retrieve(self, request, name=None):
+        user = self.request.user
+        room_name = "{}-{}".format(name, user)
+        reverse_room_name = "{}-{}".format(user, name)
+
+        room = Room.objects.get(Q(slug=room_name) | Q(slug=reverse_room_name))
+
+        serializer = ConversationSerializer(room, context={"request": request, "user": user})
+        return JsonResponse({"room": serializer.data})
+
+    
 
 
