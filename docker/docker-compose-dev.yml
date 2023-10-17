@@ -5,7 +5,7 @@ services:
     container_name: cubeseed-backend-dev
     image: cubeseed
     build:
-      dockerfile: docker/Dockerfile.local
+      dockerfile: docker/Dockerfile
       context: ..
       args:
         - DJANGO_SETTINGS_MODULE=cubeseed.settings
@@ -24,7 +24,7 @@ services:
     container_name: cubeseed-backend-migration-dev
     image: cubeseed
     build:
-      dockerfile: docker/Dockerfile.local
+      dockerfile: docker/Dockerfile
       context: ..
       args:
         - DJANGO_SETTINGS_MODULE=cubeseed.settings
