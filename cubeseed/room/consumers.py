@@ -140,6 +140,17 @@ class ChatConsumer(AsyncWebsocketConsumer):
                 'room': room
             }
         )
+
+        notification_group_name = self.scope['url_route']['kwargs']['room_name'] + "__notifications"
+        await self.channel_layer.group_send(
+            notification_group_name,
+            {
+                "type": "new_message_notification",
+                "name": self.user.username,
+                # "message": MessageSerializer(message).data,
+            },
+        )
+
     
     # Receive message from room group
     async def chat_message(self, event):
@@ -201,6 +212,9 @@ class ChatConsumer(AsyncWebsocketConsumer):
     async def typing(self, event):
         await self.send(text_data=json.dumps(event))
 
+    async def new_message_notification(self, event):
+        await self.send(text_data=json.dumps(event))
+
 
 
 class NotificationConsumer(AsyncWebsocketConsumer):
@@ -210,15 +224,35 @@ class NotificationConsumer(AsyncWebsocketConsumer):
     #     print("Notifications init called")
  
     async def connect(self):
+        # The line below must be added to init
+        self.notification_group_name = None
+
         self.user = self.scope.get("user")
         if not self.user or not self.user.is_authenticated:
             await self.close()
             return
 
         await self.accept()
+
+        # private notification group
+        self.notification_group_name = self.user.username + "__notifications"
+        await self.channel_layer.group_add(
+            self.notification_group_name,
+            self.channel_name,
+        )
+        
         unread_count = await sync_to_async(Message.objects.filter(to_user=self.user, read=False).count)()
         await self.send(text_data=json.dumps({
             "type": "unread_count",
             "unread_count": unread_count,   
         }))
 
+    async def disconnect(self, code):
+        await self.channel_layer.group_discard(
+            self.notification_group_name,
+            self.channel_name,
+        )
+        return super().disconnect(code)
+    
+    async def new_message_notification(self, event):
+        await self.send(text_data=json.dumps(event))
