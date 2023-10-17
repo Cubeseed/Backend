@@ -108,6 +108,17 @@ class ChatConsumer(AsyncWebsocketConsumer):
         data = json.loads(text_data)
         message = data['message']
         room = data['room']
+        # type = data['type']
+
+        # if type == "typing":
+        #     await self.channel_layer.group_send(
+        #         self.room_group_name,
+        #         {
+        #             "type": "typing",
+        #             "user": self.user.username,
+        #             "typing": "typing"
+        #         },
+        #     )
 
         # self.room_name represents to_user
         saved_message = await self.save_message(
@@ -186,3 +197,28 @@ class ChatConsumer(AsyncWebsocketConsumer):
 
     async def user_leave(self, event):
         await self.send(text_data=json.dumps(event))
+
+    async def typing(self, event):
+        await self.send(text_data=json.dumps(event))
+
+
+
+class NotificationConsumer(AsyncWebsocketConsumer):
+    # def __init__(self, *args, **kwargs):
+    #     # super().__init__(args, kwargs)
+    #     # self.user = None
+    #     print("Notifications init called")
+ 
+    async def connect(self):
+        self.user = self.scope.get("user")
+        if not self.user or not self.user.is_authenticated:
+            await self.close()
+            return
+
+        await self.accept()
+        unread_count = await sync_to_async(Message.objects.filter(to_user=self.user, read=False).count)()
+        await self.send(text_data=json.dumps({
+            "type": "unread_count",
+            "unread_count": unread_count,   
+        }))
+
