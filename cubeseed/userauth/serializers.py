@@ -21,7 +21,7 @@ class GroupSerializer(serializers.HyperlinkedModelSerializer):
         fields = ["url", "name"]
 
 
-class RegisterUserSerializer(serializers.HyperlinkedModelSerializer):
+class RegisterUserSerializer(serializers.ModelSerializer):
     """
         serializer for creating a new user
     """
@@ -30,6 +30,12 @@ class RegisterUserSerializer(serializers.HyperlinkedModelSerializer):
         fields = ["url", "username", "email", "groups", "password", "is_active"]
         read_only_fields = ["url", "is_active"]
         extra_kwargs = {"password": {"write_only": True, "min_length": 8}}
+
+    def validate_email(self, value):
+        # Check for duplicate email
+        if get_user_model().objects.filter(email=value).exists():
+            raise serializers.ValidationError("Email is already in use")
+        return value
 
     def create(self, validated_data):
         user = get_user_model().objects.create_user(
