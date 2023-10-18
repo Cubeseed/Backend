@@ -106,50 +106,70 @@ class ChatConsumer(AsyncWebsocketConsumer):
     # Receive message from WebSocket
     async def receive(self, text_data):
         data = json.loads(text_data)
-        message = data['message']
-        room = data['room']
-        # type = data['type']
+        if (data.get('message')):
+            message = data['message']
+        if (data.get('room')):
+            room = data['room']
+        if (data.get('type')):
+            type = data['type']
 
-        # if type == "typing":
-        #     await self.channel_layer.group_send(
-        #         self.room_group_name,
-        #         {
-        #             "type": "typing",
-        #             "user": self.user.username,
-        #             "typing": "typing"
-        #         },
-        #     )
-
-        # self.room_name represents to_user
-        saved_message = await self.save_message(
-            from_user=self.user.username, 
-            to_user=self.scope['url_route']['kwargs']['room_name'],
-            room=room,
-            content=message
-        )
+        if type == "read_messages":
+            print("In here")
+            messages_to_me = await sync_to_async(self.room.messages.filter)(to_user=self.user)
+            await sync_to_async(messages_to_me.update)(read=True)
         
-        await self.channel_layer.group_send(
-            self.room_group_name,
-            {
-                'type': 'chat_message',
-                # 'message': MessageSerializer(saved_message, context={'request': self.scope['request']}).data,
-                # 'message': MessageSerializer(saved_message).data,
-                'message': saved_message.content,
-                'date_added': json.dumps(saved_message.date_added, default=serialize_datetime),
-                'from_user': {'username': self.user.username},
-                'room': room
-            }
-        )
+            # Update the unread message count
+            unread_count = await sync_to_async(Message.objects.filter(to_user=self.user, read=False).count)()
+            print("unread count: ", unread_count)
+            await self.channel_layer.group_send(
+                self.user.username + "__notifications",
+                {
+                    "type": "unread_count",
+                    "unread_count": unread_count,
+                },
+            )
 
-        notification_group_name = self.scope['url_route']['kwargs']['room_name'] + "__notifications"
-        await self.channel_layer.group_send(
-            notification_group_name,
-            {
-                "type": "new_message_notification",
-                "name": self.user.username,
-                # "message": MessageSerializer(message).data,
-            },
-        )
+            # if type == "typing":
+            #     await self.channel_layer.group_send(
+            #         self.room_group_name,
+            #         {
+            #             "type": "typing",
+            #             "user": self.user.username,
+            #             "typing": "typing"
+            #         },
+            #     )
+
+            # self.room_name represents to_user
+        else:
+            saved_message = await self.save_message(
+                from_user=self.user.username, 
+                to_user=self.scope['url_route']['kwargs']['room_name'],
+                room=room,
+                content=message
+            )
+            
+            await self.channel_layer.group_send(
+                self.room_group_name,
+                {
+                    'type': 'chat_message',
+                    # 'message': MessageSerializer(saved_message, context={'request': self.scope['request']}).data,
+                    # 'message': MessageSerializer(saved_message).data,
+                    'message': saved_message.content,
+                    'date_added': json.dumps(saved_message.date_added, default=serialize_datetime),
+                    'from_user': {'username': self.user.username},
+                    'room': room
+                }
+            )
+
+            notification_group_name = self.scope['url_route']['kwargs']['room_name'] + "__notifications"
+            await self.channel_layer.group_send(
+                notification_group_name,
+                {
+                    "type": "new_message_notification",
+                    "name": self.user.username,
+                    # "message": MessageSerializer(message).data,
+                },
+            )
 
     
     # Receive message from room group
@@ -215,6 +235,9 @@ class ChatConsumer(AsyncWebsocketConsumer):
     async def new_message_notification(self, event):
         await self.send(text_data=json.dumps(event))
 
+    async def unread_count(self, event):
+        await self.send(text_data=json.dumps(event))
+
 
 
 class NotificationConsumer(AsyncWebsocketConsumer):
@@ -255,4 +278,7 @@ class NotificationConsumer(AsyncWebsocketConsumer):
         return super().disconnect(code)
     
     async def new_message_notification(self, event):
+        await self.send(text_data=json.dumps(event))
+
+    async def unread_count(self, event):
         await self.send(text_data=json.dumps(event))
