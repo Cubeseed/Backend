@@ -17,6 +17,6 @@ COPY . /app
 RUN pip install --upgrade pip
 RUN pip install -r requirements.txt
 
-ENTRYPOINT ["python3"]
+ENTRYPOINT ["/bin/sh", "-c"]
 
 EXPOSE 8000
