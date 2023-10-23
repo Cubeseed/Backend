@@ -10,32 +10,6 @@ class MessageSerializer(serializers.Serializer):
         date_added = serializers.DateTimeField()
         content = serializers.CharField(max_length=2000)
 
-# class MessageSerializer(serializers.ModelSerializer):
-#     from_user = serializers.SerializerMethodField()
-#     to_user = serializers.SerializerMethodField()
-#     room = serializers.SerializerMethodField()
-
-#     class Meta:
-#         model = Message
-#         fields = (
-#             "id",
-#             "room",
-#             "from_user",
-#             "to_user",
-#             "content",
-#             "date_added",
-#             "read",
-#         )
-
-#     def get_room(self, obj):
-#         return str(obj.room.id)
-    
-#     def get_from_user(self, obj):
-#         return UserSerializer(obj.from_user).data
-    
-#     def get_to_user(self, obj):
-#         return UserSerializer(obj.to_user).data
-
 User = get_user_model()
 
 class ConversationSerializer(serializers.ModelSerializer):
@@ -60,5 +34,4 @@ class ConversationSerializer(serializers.ModelSerializer):
                         if username != self.context['user'].username:
                                 # This is the other participant
                                 other_user = User.objects.get(username=username)
-                                # return UserSerializer(other_user, context=context).data
                                 return UserSerializer(other_user, context=self.context).data

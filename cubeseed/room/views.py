@@ -10,7 +10,6 @@ from django.contrib.auth.models import User
 from django.http import JsonResponse
 from rest_framework.views import APIView
 from .serializer import MessageSerializer
-# from rest_framework.response import Response
 from rest_framework.mixins import ListModelMixin, RetrieveModelMixin
 from rest_framework.viewsets import GenericViewSet
 from .serializer import ConversationSerializer
@@ -58,9 +57,8 @@ class MessagesApi(APIView):
         serializer = MessageSerializer(Message.objects.filter(room=room), 
                                        many=True,
                                        context={'request': request})
-        # print("Printing serializer data: ", serializer.data)
         return JsonResponse({"messages": serializer.data})
-        # return JsonResponse({"messages": "Reached this point"})
+
 
 class ConversationViewSet(ListModelMixin, RetrieveModelMixin, GenericViewSet):
     serializer_class = ConversationSerializer

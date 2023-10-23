@@ -15,16 +15,6 @@ import datetime
 
 from channels.db import database_sync_to_async
 
-# We need this when serializing UUID
-# I believe something similar is required when
-# serializing Date objects
-
-# class UUIDEncoder(json.JSONEncoder):
-#     def default(self, obj):
-#         if isinstance(obj, UUID):
-#             # if the obj is uuid, we simply return the value of uuid
-#             return obj.hex
-#         return json.JSONEncoder.default(self, obj)
 
 def serialize_datetime(obj):
     if isinstance(obj, datetime.datetime):
@@ -33,23 +23,13 @@ def serialize_datetime(obj):
 
 class ChatConsumer(AsyncWebsocketConsumer):
 
-    # async def __init__(self, *args, **kwargs):
-    #     super().__init__(args, kwargs)
-    #     self.user = None
-    #     self.room_name = None
-    #     self.room = None
-
     async def connect(self):
         self.user = self.scope["user"]
         if not self.user.is_authenticated:
             print("not authenticated")
             return 
         
-        # Use the following first line when connecting from a separate frontend
-        # but when testing with a backend rendered template uncomment and use the
-        # second line, comment out the first line
         self.room_name = await self.get_or_create_room(self.scope['url_route']['kwargs']['room_name'], self.scope['user'])
-        # self.room_name = self.scope['url_route']['kwargs']['room_name']
 
         self.room_group_name = 'chat_%s' % self.room_name
 
@@ -64,7 +44,6 @@ class ChatConsumer(AsyncWebsocketConsumer):
 
         await self.send(text_data=json.dumps({
             "type": "online_user_list",
-            # "users": [user.username for user in self.room.online.all()],
             "users": [user.username for user in online_users],
         }))
 
@@ -82,7 +61,8 @@ class ChatConsumer(AsyncWebsocketConsumer):
 
     async def disconnect(self, code):
 
-        if self.user.is_authenticated: # send the leave event to the room
+        if self.user.is_authenticated: 
+            # send the leave event to the room
             await self.channel_layer.group_send(
                 self.room_group_name,
                     {
@@ -91,16 +71,12 @@ class ChatConsumer(AsyncWebsocketConsumer):
                     },
             )
             await sync_to_async(self.room.online.remove)(self.user)
-            # online_users = await sync_to_async(list)(self.room.online.all())
 
         await self.channel_layer.group_discard(
             self.room_group_name,
             self.channel_name
         )
         return super().disconnect(code)
-
-
-
 
 
     # Receive message from WebSocket
@@ -129,17 +105,6 @@ class ChatConsumer(AsyncWebsocketConsumer):
                 },
             )
 
-            # if type == "typing":
-            #     await self.channel_layer.group_send(
-            #         self.room_group_name,
-            #         {
-            #             "type": "typing",
-            #             "user": self.user.username,
-            #             "typing": "typing"
-            #         },
-            #     )
-
-            # self.room_name represents to_user
         else:
             saved_message = await self.save_message(
                 from_user=self.user.username, 
@@ -152,8 +117,6 @@ class ChatConsumer(AsyncWebsocketConsumer):
                 self.room_group_name,
                 {
                     'type': 'chat_message',
-                    # 'message': MessageSerializer(saved_message, context={'request': self.scope['request']}).data,
-                    # 'message': MessageSerializer(saved_message).data,
                     'message': saved_message.content,
                     'date_added': json.dumps(saved_message.date_added, default=serialize_datetime),
                     'from_user': {'username': self.user.username},
@@ -167,7 +130,6 @@ class ChatConsumer(AsyncWebsocketConsumer):
                 {
                     "type": "new_message_notification",
                     "name": self.user.username,
-                    # "message": MessageSerializer(message).data,
                 },
             )
 
@@ -175,7 +137,6 @@ class ChatConsumer(AsyncWebsocketConsumer):
     # Receive message from room group
     async def chat_message(self, event):
         message = event['message']
-        # username = event['username']
         from_user= event['from_user']
         room = event['room']
         date_added = event['date_added']
@@ -183,14 +144,12 @@ class ChatConsumer(AsyncWebsocketConsumer):
         # Send message to WebSocket
         await self.send(text_data=json.dumps({
             'message': message,
-            # 'username': username,
             'from_user': from_user,
             'room': room,
             'date_added': date_added
         }))
     
     @sync_to_async
-    # def save_message(self, username, room, message):
     def save_message(self, from_user, to_user, room, content):
         from_user = User.objects.get(username=from_user)
         to_user = User.objects.get(username=to_user)
@@ -219,10 +178,6 @@ class ChatConsumer(AsyncWebsocketConsumer):
         self.room = room
         return room.slug
 
-    # @classmethod
-    # def encode_json(cls, content):
-    #     return json.dumps(content, cls=UUIDEncoder)
-
     async def user_join(self, event):
         await self.send(text_data=json.dumps(event))
 
@@ -241,10 +196,6 @@ class ChatConsumer(AsyncWebsocketConsumer):
 
 
 class NotificationConsumer(AsyncWebsocketConsumer):
-    # def __init__(self, *args, **kwargs):
-    #     # super().__init__(args, kwargs)
-    #     # self.user = None
-    #     print("Notifications init called")
  
     async def connect(self):
         # The line below must be added to init
