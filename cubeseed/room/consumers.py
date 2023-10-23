@@ -90,7 +90,6 @@ class ChatConsumer(AsyncWebsocketConsumer):
             type = data['type']
 
         if type == "read_messages":
-            print("In here")
             messages_to_me = await sync_to_async(self.room.messages.filter)(to_user=self.user)
             await sync_to_async(messages_to_me.update)(read=True)
         
@@ -105,7 +104,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
                 },
             )
 
-        else:
+        if type == "chat_message":
             saved_message = await self.save_message(
                 from_user=self.user.username, 
                 to_user=self.scope['url_route']['kwargs']['room_name'],
