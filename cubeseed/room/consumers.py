@@ -132,21 +132,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
                 },
             )
 
-    
-    # Receive message from room group
-    async def chat_message(self, event):
-        message = event['message']
-        from_user= event['from_user']
-        room = event['room']
-        date_added = event['date_added']
-
-        # Send message to WebSocket
-        await self.send(text_data=json.dumps({
-            'message': message,
-            'from_user': from_user,
-            'room': room,
-            'date_added': date_added
-        }))
+            
     
     @sync_to_async
     def save_message(self, from_user, to_user, room, content):
@@ -176,6 +162,10 @@ class ChatConsumer(AsyncWebsocketConsumer):
         # Saving the room in self
         self.room = room
         return room.slug
+    
+
+    async def chat_message(self, event):
+        await self.send(text_data=json.dumps(event))
 
     async def user_join(self, event):
         await self.send(text_data=json.dumps(event))
