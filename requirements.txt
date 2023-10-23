@@ -33,7 +33,7 @@ pylint-plugin-utils==0.8.2
 pyrsistent==0.19.3
 python-magic==0.4.27
 pytz==2023.3
-PyYAML==6.0
+PyYAML==6.0.1
 requests==2.31.0
 redgreenunittest==0.1.1
 simplejson==3.19.1

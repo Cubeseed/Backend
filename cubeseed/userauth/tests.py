@@ -47,7 +47,7 @@ class UserAuthAPITest(APITestCase):
         data = {
             "username": "user2",
             "email": "user2@example.com",
-            "groups": ['http://testserver/api/userauth/groups/3/'],
+            "groups": [2],
             "password": "stringst",
             'is_active': True
         }
