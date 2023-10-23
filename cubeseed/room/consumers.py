@@ -29,9 +29,9 @@ class ChatConsumer(AsyncWebsocketConsumer):
             print("not authenticated")
             return 
         
-        self.room_name = await self.get_or_create_room(self.scope['url_route']['kwargs']['room_name'], self.scope['user'])
+        self.both_users_joined_room_name = await self.get_or_create_room(self.scope['url_route']['kwargs']['room_name'], self.scope['user'])
 
-        self.room_group_name = 'chat_%s' % self.room_name
+        self.room_group_name = 'chat_%s' % self.both_users_joined_room_name
 
         await self.channel_layer.group_add(
             self.room_group_name,
@@ -153,7 +153,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
     def save_message(self, from_user, to_user, room, content):
         from_user = User.objects.get(username=from_user)
         to_user = User.objects.get(username=to_user)
-        room = Room.objects.get(slug=self.room_name)
+        room = Room.objects.get(slug=self.both_users_joined_room_name)
 
         saved_message = Message.objects.create(
             room=room,
