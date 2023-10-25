@@ -76,6 +76,7 @@ INSTALLED_APPS = [
     "cubeseed.farm_planner",
     "drf_yasg",
     "corsheaders",
+    "cubeseed.invoice_waybill_receipt",
 ]
 
 # configuring the unit testing python runner tool installed
@@ -205,3 +206,11 @@ else:
     DEFAULT_FILE_STORAGE = "django.core.files.storage.FileSystemStorage"
     MEDIA_ROOT = BASE_DIR / "media"
     MEDIA_URL = "/media/"
+
+# EMAIL CONFIGURATION For sending emails
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'cubeseed_smtp_server.com'
+EMAIL_PORT = 587  # gmail's smtp port
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = 'cubeseed_smtp_username'
+EMAIL_HOST_PASSWORD = 'cubeseed_smtp_password'
