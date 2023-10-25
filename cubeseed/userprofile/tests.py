@@ -46,6 +46,7 @@ class UserProfileAPITestCase(APITestCase):
         # Create a UserProfile associated with the user
         self.user_profile = UserProfile.objects.create(
             full_name = "testuserprofile",
+            email = "example@gmail.com",
             phone_number = "1234567890",
             address = self.address,
             about_me = "testing-0987689",
@@ -72,6 +73,7 @@ class UserProfileAPITestCase(APITestCase):
         url = reverse("userprofile-list")
         data = {
             "full_name": "testuserprofile-2",
+            "email": "example2@gmail.com",
             "phone_number": "1234567890",
             "address": self.address.id,
             "about_me": "testing-0987689",
@@ -83,7 +85,6 @@ class UserProfileAPITestCase(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(UserProfile.objects.count(), 2)
         user_profile = UserProfile.objects.get(full_name="testuserprofile-2")
-        print(user_profile)
         self.assertEqual(user_profile.full_name, "testuserprofile-2")
         self.assertEqual(user_profile.phone_number, "1234567890")
         self.assertEqual(user_profile.address, self.address)

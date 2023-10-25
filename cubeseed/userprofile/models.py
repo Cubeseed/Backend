@@ -8,6 +8,7 @@ from cubeseed.address.models import Address
 class UserProfile(models.Model):
     full_name = models.CharField(max_length=100)
     phone_number = models.CharField(max_length=20)
+    email = models.EmailField(blank=True, null=False, unique=True, default="someuser@gmail.com")
     address = models.ForeignKey(Address, on_delete=models.CASCADE)
     about_me = models.TextField(blank=True)
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
