@@ -15,6 +15,7 @@ import datetime
 
 from channels.db import database_sync_to_async
 
+from django.contrib.auth import get_user_model
 
 def serialize_datetime(obj):
     if isinstance(obj, datetime.datetime):
@@ -25,9 +26,9 @@ class ChatConsumer(AsyncWebsocketConsumer):
 
     async def connect(self):
         self.user = self.scope["user"]
-        if not self.user.is_authenticated:
-            print("not authenticated")
-            return 
+        if not self.user or not self.user.is_authenticated:
+            await self.close()
+            return
         
         self.both_users_joined_room_name = await self.get_or_create_room(self.scope['url_route']['kwargs']['room_name'], self.scope['user'])
 
@@ -132,8 +133,20 @@ class ChatConsumer(AsyncWebsocketConsumer):
                 },
             )
 
-            
-    
+            single_conversation_notification_group_name = self.user.username + saved_message.to_user.username + "__conversation_notifications"
+            print("single_conversation_notification_group_name: ", single_conversation_notification_group_name)
+            # self.from_user = self.scope['url_route']['kwargs']['other_user']
+            # private notification group
+            # self.conversation_notification_group_name = self.user.username + self.from_user + "__conversation_notifications"
+            await self.channel_layer.group_send(
+                single_conversation_notification_group_name,
+                {
+                    "type": "single_conversation_new_message_notification",
+                    "name": self.user.username,
+                },
+            )
+
+
     @sync_to_async
     def save_message(self, from_user, to_user, room, content):
         from_user = User.objects.get(username=from_user)
@@ -179,6 +192,9 @@ class ChatConsumer(AsyncWebsocketConsumer):
     async def new_message_notification(self, event):
         await self.send(text_data=json.dumps(event))
 
+    async def single_conversation_new_message_notification(self, event):
+        await self.send(text_data=json.dumps(event))
+
     async def unread_count(self, event):
         await self.send(text_data=json.dumps(event))
 
@@ -204,11 +220,13 @@ class NotificationConsumer(AsyncWebsocketConsumer):
             self.channel_name,
         )
         
+        # All the unread messages a user has
         unread_count = await sync_to_async(Message.objects.filter(to_user=self.user, read=False).count)()
         await self.send(text_data=json.dumps({
             "type": "unread_count",
             "unread_count": unread_count,   
         }))
+    
 
     async def disconnect(self, code):
         await self.channel_layer.group_discard(
@@ -221,4 +239,52 @@ class NotificationConsumer(AsyncWebsocketConsumer):
         await self.send(text_data=json.dumps(event))
 
     async def unread_count(self, event):
+        await self.send(text_data=json.dumps(event))
+
+
+class ConversationNotificationConsumer(AsyncWebsocketConsumer):
+     
+    async def connect(self):
+        # The line below must be added to init
+        self.conversation_notification_group_name = None
+
+        self.user = self.scope.get("user")
+        if not self.user or not self.user.is_authenticated:
+            await self.close()
+            return
+
+        await self.accept()
+        self.from_user = self.scope['url_route']['kwargs']['other_user']
+        # private notification group
+        self.conversation_notification_group_name = self.from_user + self.user.username + "__conversation_notifications"
+        print("Initial self.conversation_notification_group_name: ", self.conversation_notification_group_name)
+        await self.channel_layer.group_add(
+            self.conversation_notification_group_name,
+            self.channel_name,
+        )
+        
+        # Getting the user model
+        from_user_model = await sync_to_async(get_user_model().objects.get)(username=self.from_user)
+        # All the unread messages a user has
+        unread_count = await sync_to_async(Message.objects.filter(to_user=self.user, from_user=from_user_model, read=False).count)()
+        await self.send(text_data=json.dumps({
+            "type": "single_conversation_unread_count",
+            "unread_count": unread_count,   
+        }))
+    
+
+    async def disconnect(self, code):
+        await self.channel_layer.group_discard(
+            self.conversation_notification_group_name,
+            self.channel_name,
+        )
+        return super().disconnect(code)
+    
+    # async def new_message_notification(self, event):
+    #     await self.send(text_data=json.dumps(event))
+    async def single_conversation_new_message_notification(self, event):
+        await self.send(text_data=json.dumps(event))
+
+
+    async def single_conversation_unread_count(self, event):
         await self.send(text_data=json.dumps(event))
