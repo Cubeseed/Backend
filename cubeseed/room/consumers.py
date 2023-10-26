@@ -134,10 +134,6 @@ class ChatConsumer(AsyncWebsocketConsumer):
             )
 
             single_conversation_notification_group_name = self.user.username + saved_message.to_user.username + "__conversation_notifications"
-            print("single_conversation_notification_group_name: ", single_conversation_notification_group_name)
-            # self.from_user = self.scope['url_route']['kwargs']['other_user']
-            # private notification group
-            # self.conversation_notification_group_name = self.user.username + self.from_user + "__conversation_notifications"
             await self.channel_layer.group_send(
                 single_conversation_notification_group_name,
                 {
