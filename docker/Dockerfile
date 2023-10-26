@@ -14,9 +14,10 @@ LABEL org.opencontainers.image.version=${VERSION}
 
 WORKDIR /app
 COPY . /app
+RUN chmod 755 docker/runner.sh
 RUN pip install --upgrade pip
 RUN pip install -r requirements.txt
 
-ENTRYPOINT ["/bin/sh", "-c"]
+ENTRYPOINT ["docker/runner.sh"]
 
 EXPOSE 8000
