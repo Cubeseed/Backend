@@ -280,11 +280,8 @@ class ConversationNotificationConsumer(AsyncWebsocketConsumer):
         )
         return super().disconnect(code)
     
-    # async def new_message_notification(self, event):
-    #     await self.send(text_data=json.dumps(event))
     async def single_conversation_new_message_notification(self, event):
         await self.send(text_data=json.dumps(event))
-
 
     async def single_conversation_unread_count(self, event):
         await self.send(text_data=json.dumps(event))
