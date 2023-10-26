@@ -43,7 +43,7 @@ pylint-plugin-utils==0.8.2
 pyrsistent==0.19.3
 python-dateutil==2.8.2
 python-magic==0.4.27
-pytz==2023.3.post1
+pytz==2023.3
 PyYAML==6.0.1
 redgreenunittest==0.1.1
 referencing==0.30.2
