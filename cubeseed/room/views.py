@@ -66,8 +66,12 @@ class ConversationViewSet(ListModelMixin, RetrieveModelMixin, GenericViewSet):
     lookup_field = "name"
 
     def get_queryset(self):
+        # Getting all active conversations
         queryset = Room.objects.filter(
             name__contains=self.request.user.username
+        ).exclude(
+            # Exclude conversation with self
+            name__contains="{}-{}".format(self.request.user.username, self.request.user.username)    
         )
         return queryset
     

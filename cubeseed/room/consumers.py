@@ -96,7 +96,6 @@ class ChatConsumer(AsyncWebsocketConsumer):
         
             # Update the unread message count
             unread_count = await sync_to_async(Message.objects.filter(to_user=self.user, read=False).count)()
-            print("unread count: ", unread_count)
             await self.channel_layer.group_send(
                 self.user.username + "__notifications",
                 {
@@ -253,7 +252,6 @@ class ConversationNotificationConsumer(AsyncWebsocketConsumer):
         self.from_user = self.scope['url_route']['kwargs']['other_user']
         # private notification group
         self.conversation_notification_group_name = self.from_user + self.user.username + "__conversation_notifications"
-        print("Initial self.conversation_notification_group_name: ", self.conversation_notification_group_name)
         await self.channel_layer.group_add(
             self.conversation_notification_group_name,
             self.channel_name,
