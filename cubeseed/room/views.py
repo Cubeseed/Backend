@@ -13,6 +13,10 @@ from .serializer import MessageSerializer
 from rest_framework.mixins import ListModelMixin, RetrieveModelMixin
 from rest_framework.viewsets import GenericViewSet
 from .serializer import ConversationSerializer
+from rest_framework.parsers import MultiPartParser
+from django.conf import settings
+import os
+from django.core.files.storage import default_storage
 
 
 # Create your views here.
@@ -88,6 +92,14 @@ class ConversationViewSet(ListModelMixin, RetrieveModelMixin, GenericViewSet):
         serializer = ConversationSerializer(room, context={"request": request, "user": user})
         return JsonResponse({"room": serializer.data})
 
-    
+class UploadEndpoint(APIView):
+    parser_classes = (MultiPartParser,)
 
+    def post(self, request):
+        file = request.FILES['myFile']
+        # Save the file to the default storage location
+        file_path = default_storage.save(file.name, file)
 
+        # Return the file location link
+        file_location = default_storage.url(file_path)
+        return JsonResponse({'file_location': file_location})

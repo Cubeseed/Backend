@@ -49,6 +49,9 @@ from cubeseed.farm_planner.urls import register_routes as register_farm_planner_
 # from cubeseed.room.urls import register_routes as register_room_routes
 from cubeseed.room import views
 
+from django.conf import settings
+from django.conf.urls.static import static
+
 
 SchemaView = get_schema_view(
     openapi.Info(
@@ -105,4 +108,4 @@ urlpatterns = [
     path("api/rooms/", include("cubeseed.room.urls")),
     path("api/conversations/<str:name>/", views.ConversationViewSet.as_view({'get': 'retrieve'}), name="conversation"),
     path("api/conversations", views.ConversationViewSet.as_view({'get': 'list'})),
-]
+]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
