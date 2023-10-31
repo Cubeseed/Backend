@@ -82,6 +82,8 @@ class ChatConsumer(AsyncWebsocketConsumer):
             room = data['room']
         if (data.get('type')):
             type = data['type']
+        # if (data.get('multimedia_url')):
+        #     multimedia_url = data['multimedia_url']
 
         if type == "read_messages":
             messages_to_me = await sync_to_async(self.room.messages.filter)(to_user=self.user)
@@ -98,11 +100,14 @@ class ChatConsumer(AsyncWebsocketConsumer):
             )
 
         if type == "chat_message":
+            # If the multimedia_url does not exist None will be saved
+            # to the database, since the multimedia_url field is nullable
             saved_message = await self.save_message(
                 from_user=self.user.username, 
                 to_user=self.scope['url_route']['kwargs']['room_name'],
                 room=room,
-                content=message
+                content=message,
+                multimedia_url=data.get('multimedia_url')
             )
             
             await self.channel_layer.group_send(
@@ -110,6 +115,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
                 {
                     'type': 'chat_message',
                     'message': saved_message.content,
+                    'multimedia_url': saved_message.multimedia_url,
                     'date_added': json.dumps(saved_message.date_added, default=serialize_datetime),
                     'from_user': {'username': self.user.username},
                     'room': room
@@ -136,7 +142,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
 
 
     @sync_to_async
-    def save_message(self, from_user, to_user, room, content):
+    def save_message(self, from_user, to_user, room, content, multimedia_url):
         from_user = User.objects.get(username=from_user)
         to_user = User.objects.get(username=to_user)
         room = Room.objects.get(slug=self.both_users_joined_room_name)
@@ -145,7 +151,8 @@ class ChatConsumer(AsyncWebsocketConsumer):
             room=room,
             from_user=from_user, 
             to_user=to_user, 
-            content=content
+            content=content,
+            multimedia_url=multimedia_url
         )
         return saved_message
     

@@ -9,6 +9,7 @@ class MessageSerializer(serializers.Serializer):
         to_user = UserSerializer()
         date_added = serializers.DateTimeField()
         content = serializers.CharField(max_length=2000)
+        multimedia_url = serializers.CharField(max_length=2000, allow_blank=True, allow_null=True)
 
 User = get_user_model()
 
