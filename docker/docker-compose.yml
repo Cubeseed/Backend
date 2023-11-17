@@ -14,7 +14,7 @@ services:
       - DB_USER=${DB_USER}
       - DB_PASS=${DB_PASS}
       - DB_HOST=db
-    command: gunicorn -w 5 -b 0.0.0.0:8000 cubeseed.wsgi
+    command: python3 manage.py runserver 0.0.0.0:8000
     ports:
       - "8000:8000"
     depends_on:
