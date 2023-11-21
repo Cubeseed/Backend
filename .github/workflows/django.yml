@@ -30,17 +30,19 @@ jobs:
         pip install -r requirements.txt
     - name: Check
       run: |
-        python manage.py check -v 3
+        DJANGO_SETTINGS_MODULE=cubeseed.settings_test python manage.py check -v 3
+        DJANGO_SETTINGS_MODULE=cubeseed.settings_prod python manage.py check -v 3
+        DJANGO_SETTINGS_MODULE=cubeseed.settings python manage.py check -v 3
     - name: Check for missing migrations
       run: |
-        python manage.py makemigrations --check -v 3
+        DJANGO_SETTINGS_MODULE=cubeseed.settings_test python manage.py makemigrations --check -v 3
     - name: Run Tests
       run: |
-        python manage.py test
+        DJANGO_SETTINGS_MODULE=cubeseed.settings_test python manage.py test
     - name: Get tests coverage
       run: |
         python -m pip install coverage
-        coverage run --source='.' manage.py test cubeseed
+        DJANGO_SETTINGS_MODULE=cubeseed.settings_test coverage run --source='.' manage.py test cubeseed
         coverage report --fail-under=74
         coverage html
     - name: upload coverage

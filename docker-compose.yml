@@ -1,0 +1,22 @@
+version: "3.9"
+
+services:
+  cubeseed:
+    container_name: cubeseed-backend-dev
+    image: cubeseed
+    build:
+      dockerfile: docker/Dockerfile
+      context: .
+      args:
+        - DJANGO_SETTINGS_MODULE=cubeseed.settings
+    environment:
+      - DB_NAME=${DB_NAME}
+      - DB_USER=${DB_USER}
+      - DB_PASS=${DB_PASS}
+      - DB_HOST=db
+    command: python3 manage.py runserver 0.0.0.0:8000
+    ports:
+      - "8000:8000"
+
+volumes:
+  pgdata: {}
