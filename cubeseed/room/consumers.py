@@ -9,6 +9,10 @@ from .serializer import MessageSerializer
 import datetime
 from channels.db import database_sync_to_async
 from django.contrib.auth import get_user_model
+import environ
+
+env = environ.Env()
+env.read_env()
 
 def serialize_datetime(obj):
     if isinstance(obj, datetime.datetime):
@@ -102,18 +106,32 @@ class ChatConsumer(AsyncWebsocketConsumer):
         if type == "chat_message":
             # If the multimedia_url does not exist None will be saved
             # to the database, since the multimedia_url field is nullable
+           
+            if data.get('multimedia_url') is not None and env.bool("USE_S3")==True:
+                print("in s3")
+                multimedia_save_location='s3'
+            elif data.get('multimedia_url') is not None and env.bool("USE_S3")==False:
+                print("In local")
+                multimedia_save_location='local'
+            else:
+                multimedia_save_location=None
+
             saved_message = await self.save_message(
                 from_user=self.user.username, 
                 to_user=self.scope['url_route']['kwargs']['room_name'],
                 room=room,
                 content=message,
-                multimedia_url=data.get('multimedia_url')
+                multimedia_url=data.get('multimedia_url'),
+                multimedia_save_location=multimedia_save_location,
+                file_identifier=data.get('file_identifier'),
+                multimedia_url_expiration=data.get('multimedia_url_expiration')
             )
             
             await self.channel_layer.group_send(
                 self.room_group_name,
                 {
                     'type': 'chat_message',
+                    'id': saved_message.id,
                     'message': saved_message.content,
                     'multimedia_url': saved_message.multimedia_url,
                     'date_added': json.dumps(saved_message.date_added, default=serialize_datetime),
@@ -136,13 +154,13 @@ class ChatConsumer(AsyncWebsocketConsumer):
                 single_conversation_notification_group_name,
                 {
                     "type": "single_conversation_new_message_notification",
-                    "name": self.user.username,
+                    # "name": self.user.username,
                 },
             )
 
 
     @sync_to_async
-    def save_message(self, from_user, to_user, room, content, multimedia_url):
+    def save_message(self, from_user, to_user, room, content, multimedia_url, multimedia_save_location, file_identifier, multimedia_url_expiration):
         from_user = User.objects.get(username=from_user)
         to_user = User.objects.get(username=to_user)
         room = Room.objects.get(slug=self.both_users_joined_room_name)
@@ -152,7 +170,10 @@ class ChatConsumer(AsyncWebsocketConsumer):
             from_user=from_user, 
             to_user=to_user, 
             content=content,
-            multimedia_url=multimedia_url
+            multimedia_url=multimedia_url,
+            multimedia_save_location=multimedia_save_location,
+            file_identifier=file_identifier,
+            multimedia_url_expiration=multimedia_url_expiration
         )
         return saved_message
     

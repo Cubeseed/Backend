@@ -108,4 +108,5 @@ urlpatterns = [
     path("api/rooms/", include("cubeseed.room.urls")),
     path("api/conversations/<str:name>/", views.ConversationViewSet.as_view({'get': 'retrieve'}), name="conversation"),
     path("api/conversations", views.ConversationViewSet.as_view({'get': 'list'})),
-]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+# ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+]

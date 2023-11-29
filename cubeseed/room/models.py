@@ -27,6 +27,9 @@ class Message(models.Model):
     to_user = models.ForeignKey(User, related_name='messages_to_me', on_delete=models.CASCADE, null=True)
     content = models.TextField()
     multimedia_url = models.TextField(null=True, blank=True, default=None)
+    multimedia_save_location = models.TextField(null=True, blank=True, default=None)
+    file_identifier = models.TextField(null=True, blank=True, default=None)
+    multimedia_url_expiration = models.TextField(null=True, blank=True, default=None)
     date_added = models.DateTimeField(auto_now_add=True)
     read = models.BooleanField(default=False)
 

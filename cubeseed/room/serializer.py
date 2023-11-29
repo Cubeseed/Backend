@@ -5,6 +5,7 @@ from django.contrib.auth import get_user_model
 from .models import Room
 
 class MessageSerializer(serializers.Serializer):
+        id = serializers.IntegerField(read_only=True)
         from_user = UserSerializer()
         to_user = UserSerializer()
         date_added = serializers.DateTimeField()
