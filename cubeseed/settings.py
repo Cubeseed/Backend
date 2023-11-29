@@ -80,6 +80,7 @@ INSTALLED_APPS = [
     "channels",
     "cubeseed.room",
     'rest_framework.authtoken',
+    "cubeseed.media_app"
 ]
 
 # configuring the unit testing python runner tool installed

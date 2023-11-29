@@ -94,6 +94,7 @@ cluster_router.register(r"farm", FarmInClusterViewSet, basename="cluster-farm")
 
 
 urlpatterns = [
+    path('chat-media/', include('cubeseed.media_app.urls')),
     path("admin/", admin.site.urls),
     re_path(r"^swagger(?P<format>\.json|\.yaml)$", SchemaView.without_ui(cache_timeout=0), name="schema-json"),
     re_path(r"^swagger/$", SchemaView.with_ui("swagger", cache_timeout=0), name="schema-swagger-ui"),

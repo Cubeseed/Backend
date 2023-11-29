@@ -126,14 +126,21 @@ class ChatConsumer(AsyncWebsocketConsumer):
                 file_identifier=data.get('file_identifier'),
                 multimedia_url_expiration=data.get('multimedia_url_expiration')
             )
-            
+
+            # Generating a working link for the multimedia_url if it is a local link
+            if saved_message.multimedia_save_location == 'local':
+                multimedia_url = generate_working_link_for_local_multimedia(saved_message.multimedia_url)
+            else:
+                # it is an s3 link, no changes required
+                multimedia_url = saved_message.multimedia_url
             await self.channel_layer.group_send(
                 self.room_group_name,
                 {
                     'type': 'chat_message',
                     'id': saved_message.id,
                     'message': saved_message.content,
-                    'multimedia_url': saved_message.multimedia_url,
+                    # 'multimedia_url': saved_message.multimedia_url,
+                    'multimedia_url': multimedia_url,
                     'date_added': json.dumps(saved_message.date_added, default=serialize_datetime),
                     'from_user': {'username': self.user.username},
                     'room': room
@@ -300,3 +307,10 @@ class ConversationNotificationConsumer(AsyncWebsocketConsumer):
 
     async def single_conversation_unread_count(self, event):
         await self.send(text_data=json.dumps(event))
+
+
+# For development purposes only
+def generate_working_link_for_local_multimedia(multimedia_url):
+    # Generating a working link for the multimedia_url if it is a local link
+    multimedia_url = "http://{}:{}/chat-media/".format(env("HOST"), env("PORT")) + multimedia_url
+    return multimedia_url
