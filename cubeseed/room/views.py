@@ -112,8 +112,8 @@ class UploadEndpoint(APIView):
         print("original file_path", file_path)
         print("original file_identifier", file_identifier)
         # Custom Expiration time (1 day)
-        # expiration_time = datetime.now() + timedelta(days=1)
-        expiration_time = datetime.now() + timedelta(seconds=10)
+        expiration_time = datetime.now() + timedelta(days=1)
+        # expiration_time = datetime.now() + timedelta(seconds=10)
 
         # Return the file location link
         # file_location = default_storage.url(file_path)
@@ -144,7 +144,8 @@ class RefreshURLView(APIView):
         message_object = Message.objects.get(id=message_id)
         print("message_object: ", message_object.id)
         print("message_object_file_identifier: ", message_object.file_identifier)
-        expiration_time = datetime.now() + timedelta(seconds=10)
+        # expiration_time = datetime.now() + timedelta(seconds=10)
+        expiration_time = datetime.now() + timedelta(days=1)
 
         # Generate a new presigned URL with the updated expiration time
         try:
