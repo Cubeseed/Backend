@@ -1,5 +1,3 @@
-.env
-delete-env/
 /env/
 /media/
 /db.sqlite3

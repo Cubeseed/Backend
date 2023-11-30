@@ -36,14 +36,25 @@ jobs:
         uses: docker/metadata-action@v4
         with:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
-      - name: Build and push Docker image
+      - name: Build and push Docker production image
         uses: docker/build-push-action@v4
         with:
           context: .
           file: ./docker/Dockerfile
           build-args: |
             BUILD_BRANCH=${{ github.head_ref || github.ref_name }}
-            ALLOWED_HOSTS='ec2-16-171-43-115.eu-north-1.compute.amazonaws.com','localhost'
             VERSION=${{ github.ref_name }}.${{ github.run_id }}.${{ github.run_number }}.${{ github.run_attempt }}
+            DJANGO_SETTINGS_MODULE=cubeseed.settings_prod
           push: true
           tags: ${{ steps.meta.outputs.tags }}
+      - name: Build and push Docker development image
+        uses: docker/build-push-action@v4
+        with:
+          context: .
+          file: ./docker/Dockerfile
+          build-args: |
+            BUILD_BRANCH=${{ github.head_ref || github.ref_name }}
+            VERSION=${{ github.ref_name }}.${{ github.run_id }}.${{ github.run_number }}.${{ github.run_attempt }}-dev
+            DJANGO_SETTINGS_MODULE=cubeseed.settings
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}-dev
