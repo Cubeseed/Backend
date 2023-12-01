@@ -5,6 +5,7 @@ set -o allexport
 set +o allexport
 
 python3 manage.py migrate
+python3 manage.py runscript populate-db
 
 exec $@
 
