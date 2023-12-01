@@ -10,6 +10,7 @@ import datetime
 from channels.db import database_sync_to_async
 from django.contrib.auth import get_user_model
 import environ
+from django.conf import settings
 
 env = environ.Env()
 env.read_env()
@@ -107,10 +108,12 @@ class ChatConsumer(AsyncWebsocketConsumer):
             # If the multimedia_url does not exist None will be saved
             # to the database, since the multimedia_url field is nullable
            
-            if data.get('multimedia_url') is not None and env.bool("USE_S3")==True:
+            # if data.get('multimedia_url') is not None and env.bool("USE_S3")==True:
+            if data.get('multimedia_url') is not None and settings.DEBUG==False:
                 print("in s3")
                 multimedia_save_location='s3'
-            elif data.get('multimedia_url') is not None and env.bool("USE_S3")==False:
+            # elif data.get('multimedia_url') is not None and env.bool("USE_S3")==False:
+            elif data.get('multimedia_url') is not None and settings.DEBUG==True:
                 print("In local")
                 multimedia_save_location='local'
             else:
@@ -128,10 +131,10 @@ class ChatConsumer(AsyncWebsocketConsumer):
             )
 
             # Generating a working link for the multimedia_url if it is a local link
-            if saved_message.multimedia_save_location == 'local':
+            if saved_message.multimedia_url and saved_message.multimedia_save_location == 'local':
                 multimedia_url = generate_working_link_for_local_multimedia(saved_message.multimedia_url)
             else:
-                # it is an s3 link, no changes required
+                # it is an s3 link or there is no multimedi, no changes required
                 multimedia_url = saved_message.multimedia_url
             await self.channel_layer.group_send(
                 self.room_group_name,

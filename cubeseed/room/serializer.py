@@ -16,7 +16,7 @@ class MessageSerializer(serializers.Serializer):
         content = serializers.CharField(max_length=2000)
         # multimedia_save_location = serializers.CharField(max_length=2000, allow_blank=True, allow_null=True)
         # multimedia_url = serializers.CharField(max_length=2000, allow_blank=True, allow_null=True)
-        multimedia_url = serializers.SerializerMethodField()
+        # multimedia_url = serializers.SerializerMethodField()
 
         def get_multimedia_url(self, obj):
                 # if multimedia is stored locally
@@ -33,6 +33,14 @@ class MessageSerializer(serializers.Serializer):
                 # Generating a working link for the multimedia_url if it is a local link
                 multimedia_url = "http://{}:{}/chat-media/".format(env("HOST"), env("PORT")) + multimedia_url
                 return multimedia_url
+        
+        def to_representation(self, obj):
+                ret = super().to_representation(obj)
+
+                # Check if multimedia_url is not None before adding it to the representation
+                if obj.multimedia_url:
+                        ret['multimedia_url'] = self.get_multimedia_url(obj)
+                return ret
 
 User = get_user_model()
 

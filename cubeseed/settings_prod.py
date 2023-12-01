@@ -39,12 +39,12 @@ INSTALLED_APPS = [
     "cubeseed.course_verification",
     "cubeseed.purchase_orders",
     "cubeseed.farm_planner",
-    "drf_yasg",
     "corsheaders",
     "channels",
     "cubeseed.room",
     'rest_framework.authtoken',
-    "cubeseed.media_app"
+    "cubeseed.media_app",
+    "django_extensions",
 ]
 
 MIDDLEWARE = [
@@ -83,8 +83,6 @@ ASGI_APPLICATION = "cubeseed.asgi.application"
 # Setup channel layers
 CHANNEL_LAYERS = {
     'default': {
-        # For development
-        # 'BACKEND': 'channels.layers.InMemoryChannelLayer'
         # For production
         # Use redis
         'BACKEND': 'channels_redis.core.RedisChannelLayer',

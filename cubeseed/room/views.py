@@ -22,6 +22,7 @@ from botocore.exceptions import NoCredentialsError
 import environ
 import boto3
 from .models import Message
+from django.conf import settings
 
 env = environ.Env()
 env.read_env()
@@ -120,7 +121,9 @@ class UploadEndpoint(APIView):
         # file_location = default_storage.url(file_path, expiration=expiration_time)
 
         # If storage method is s3
-        if env.bool("USE_S3")==True:
+        # if env.bool("USE_S3")==True:
+        if settings.DEBUG == False:
+            # Production mode
             presigned_url = generate_presigned_url(file_path, expiration_time)
 
             return JsonResponse({'file_location': presigned_url,
