@@ -31,7 +31,8 @@
 
 #### **Connection Establishment**
 
-Client initiates a WebSocket connection to a specific chat room
+Client initiates a WebSocket connection to a specific chat room.
+The variable ${room} is the username of the person to chat with.
 
 #### **Events: Consumer Emitted Events**
 
