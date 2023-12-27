@@ -1,10 +1,3 @@
-<!-- Add this style block at the top of your README -->
-<style>
-  a {
-    text-decoration: none;
-  }
-</style>
-
 # Chat Documentation
 
 ## Table of Contents
