@@ -87,7 +87,7 @@ CHANNEL_LAYERS = {
         # Use redis
         'BACKEND': 'channels_redis.core.RedisChannelLayer',
         'CONFIG': {
-            'hosts': [(env('REDIS_HOST'), env.int('REDIS_PORT'))],
+            'hosts': [(env('REDIS_HOST', 'localhost'), env.int('REDIS_PORT', 6379))],
         },
     }
 }
