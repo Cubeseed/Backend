@@ -107,11 +107,8 @@ class UploadEndpoint(APIView):
         file = request.FILES['myFile']
         # Save the file to the default storage location
         file_path = default_storage.save(file.name, file)
-
         # A unique file identifier
         file_identifier = file_path
-        print("original file_path", file_path)
-        print("original file_identifier", file_identifier)
         # Custom Expiration time (1 day)
         expiration_time = datetime.now() + timedelta(days=1)
         # expiration_time = datetime.now() + timedelta(seconds=10)
@@ -123,6 +120,7 @@ class UploadEndpoint(APIView):
         # If storage method is s3
         # if env.bool("USE_S3")==True:
         if settings.DEBUG == False:
+            print("In prod mode")
             # Production mode
             presigned_url = generate_presigned_url(file_path, expiration_time)
 
@@ -139,21 +137,16 @@ class UploadEndpoint(APIView):
     
 class RefreshURLView(APIView):
     def get(self, request):
-        print("in request.get of refreshurlview")
         message_id = request.GET.get('message_id')
-        print("printing message_id: ", message_id)
 
         # Get the message object from the database
         message_object = Message.objects.get(id=message_id)
-        print("message_object: ", message_object.id)
-        print("message_object_file_identifier: ", message_object.file_identifier)
         # expiration_time = datetime.now() + timedelta(seconds=10)
         expiration_time = datetime.now() + timedelta(days=1)
 
         # Generate a new presigned URL with the updated expiration time
         try:
             refreshed_url = generate_presigned_url(message_object.file_identifier, expiration_time)
-            print("refreshed_url: ", refreshed_url)
             message_object.multimedia_url = refreshed_url
             message_object.multimedia_url_expiration = expiration_time.isoformat()
             message_object.save()
@@ -180,7 +173,6 @@ class CheckURLView(APIView):
                 return JsonResponse({'refresh_url': True})
             else:
                 # If the media url has not expired, return False
-                print("message.multimedia_url_expiration > datetime.now()")
                 return JsonResponse({'refresh_url': False})
         
 
