@@ -87,19 +87,32 @@ class ChatConsumer(AsyncWebsocketConsumer):
             room = data['room']
         if (data.get('type')):
             type = data['type']
-        # if (data.get('multimedia_url')):
-        #     multimedia_url = data['multimedia_url']
 
         if type == "read_messages":
             messages_to_me = await sync_to_async(self.room.messages.filter)(to_user=self.user)
             await sync_to_async(messages_to_me.update)(read=True)
         
             # Update the unread message count
+            # Message notification group
             unread_count = await sync_to_async(Message.objects.filter(to_user=self.user, read=False).count)()
             await self.channel_layer.group_send(
                 self.user.username + "__notifications",
                 {
                     "type": "unread_count",
+                    "unread_count": unread_count,
+                },
+            )
+
+            # Message per conversation notification group
+            self.from_user = self.scope['url_route']['kwargs']['room_name']
+            # Getting the user model
+            from_user_model = await sync_to_async(get_user_model().objects.get)(username=self.from_user)
+            # All the unread messages a user has
+            unread_count = await sync_to_async(Message.objects.filter(to_user=self.user, from_user=from_user_model, read=False).count)()
+            await self.channel_layer.group_send(
+                self.from_user + self.user.username + "__conversation_notifications",
+                {
+                    "type": "single_conversation_unread_count",
                     "unread_count": unread_count,
                 },
             )
@@ -136,6 +149,8 @@ class ChatConsumer(AsyncWebsocketConsumer):
             else:
                 # it is an s3 link or there is no multimedi, no changes required
                 multimedia_url = saved_message.multimedia_url
+            # import pdb
+            # pdb.set_trace()
             await self.channel_layer.group_send(
                 self.room_group_name,
                 {
@@ -155,7 +170,6 @@ class ChatConsumer(AsyncWebsocketConsumer):
                 notification_group_name,
                 {
                     "type": "new_message_notification",
-                    "name": self.user.username,
                 },
             )
 
@@ -164,7 +178,6 @@ class ChatConsumer(AsyncWebsocketConsumer):
                 single_conversation_notification_group_name,
                 {
                     "type": "single_conversation_new_message_notification",
-                    # "name": self.user.username,
                 },
             )
 
@@ -250,7 +263,7 @@ class NotificationConsumer(AsyncWebsocketConsumer):
         unread_count = await sync_to_async(Message.objects.filter(to_user=self.user, read=False).count)()
         await self.send(text_data=json.dumps({
             "type": "unread_count",
-            "unread_count": unread_count,   
+            "unread_count": unread_count,
         }))
     
 
