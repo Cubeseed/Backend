@@ -8,7 +8,7 @@ from django.contrib.auth.models import AnonymousUser
 from rest_framework_simplejwt.exceptions import InvalidToken, TokenError
 from rest_framework_simplejwt.tokens import UntypedToken
 from rest_framework_simplejwt.authentication import JWTTokenUserAuthentication
-from django.contrib.auth.models import User
+# from django.contrib.auth.models import User
 from channels.middleware import BaseMiddleware
 from channels.auth import AuthMiddlewareStack
 from django.db import close_old_connections
@@ -16,6 +16,7 @@ from urllib.parse import parse_qs
 from jwt import decode as jwt_decode
 from django.conf import settings
 
+User = get_user_model()
 
 @database_sync_to_async
 def get_user(validated_token):
