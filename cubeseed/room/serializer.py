@@ -75,8 +75,6 @@ class MessageSerializer(serializers.Serializer):
                 ret = super().to_representation(obj)
                 # Check if multimedia_url is not None before adding it to the representation
                 if obj.multimedia_url:
-                        import pdb
-                        pdb.set_trace()
                         ret['multimedia_url'] = self.get_multimedia_url(obj)
                 return ret
 
