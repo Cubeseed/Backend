@@ -1,5 +1,5 @@
+"""Room Consumers"""
 import json
-
 from channels.generic.websocket import AsyncWebsocketConsumer
 from asgiref.sync import sync_to_async, async_to_sync
 # from django.contrib.auth.models import User
@@ -96,8 +96,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
         disconnect method, finalizing the disconnection process.
 
         Parameters:
-        code:
-        Integer
+        code: Integer
             Represents the WebSocket close code, indicating the reason for 
             closing the WebSocket connection
         """
@@ -431,8 +430,7 @@ class NotificationConsumer(AsyncWebsocketConsumer):
         finalizing the disconnection process.
 
         Parameters:
-        code:
-        Integer
+        code: Integer
             Represents the WebSocket close code, indicating the reason for 
             closing the WebSocket connection
         """
@@ -508,8 +506,7 @@ class ConversationNotificationConsumer(AsyncWebsocketConsumer):
         finalizing the disconnection process.
 
         Parameters:
-        code:
-        Integer
+        code: Integer
             Represents the WebSocket close code, indicating the reason for 
             closing the WebSocket connection
         """

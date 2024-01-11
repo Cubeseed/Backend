@@ -1,3 +1,4 @@
+"""Register models for admin site"""
 from django.contrib import admin
 from .models import Room, Message
 # from .models import Conversation

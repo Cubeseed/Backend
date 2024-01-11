@@ -1,3 +1,4 @@
+"""Room Tests"""
 from channels.layers import get_channel_layer
 from channels.testing import ChannelsLiveServerTestCase, WebsocketCommunicator
 from django.contrib.auth import get_user_model
