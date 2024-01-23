@@ -14,6 +14,7 @@
 [Single Conversation Based Notification Endpoint](#single-conversation-based-notification-endpoint)  
   - [Consumer Emitted Single Conversation Unread Count Event](#1-consumer-emitted-single-conversation-unread-count-event)
   - [Consumer Emitted Single Conversation New Message Notification Event](#2-consumer-emitted-single-conversation-new-message-notification-event)
+  - [Consumer Emitted Single Conversation Last Message Event](#3-consumer-emitted-single-conversation-last-message-event)  
 
 [All conversations based notification endpoint](all-conversations-based-notification-endpoint)
   - [Consumer Emitted All Conversations Unread Count Event](#1-consumer-emitted-all-conversations-unread-count-event)  
@@ -168,6 +169,20 @@ event is sent in two cases:
 ```json
 {
     "type": "single_conversation_new_message_notification",
+}
+```
+
+#### 3. **Consumer Emitted Single Conversation Last Message Event**
+- **Event Name**: `single_conversation_last_message`
+- **Description**: Contains the details of the last message in the conversation, 
+  it is sent when a new message is recieved; when a [chat_message event](#6-client-emitted-send-message-event) 
+  is recieved from the client.
+- **Payload**
+```json
+{
+    "type": "single_conversation_last_message",
+    "last_message": "content of last message",
+    "last_datetime": "2024-01-23T20:02:53.627323+00:00"
 }
 ```
 
