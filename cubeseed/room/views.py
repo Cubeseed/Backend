@@ -92,8 +92,6 @@ class MessagesApi(APIView):
                                        context={'request': request})
         return JsonResponse({"messages": serializer.data})
 
-
-# class ConversationViewSet(ListModelMixin, RetrieveModelMixin, GenericViewSet):
 class ConversationViewSet(ListModelMixin, GenericViewSet):
     """
     Viewset for getting all conversations a user
@@ -101,7 +99,6 @@ class ConversationViewSet(ListModelMixin, GenericViewSet):
     """
     serializer_class = ConversationSerializer
     queryset = Room.objects.none()
-    # lookup_field = "name"
 
     def get_queryset(self):
         """
@@ -138,16 +135,6 @@ class ConversationViewSet(ListModelMixin, GenericViewSet):
         # in the serializer context. Add `context={'request': request}` 
         # when instantiating the serializer.
         return {"request": self.request, "user": self.request.user}
-    
-    # def retrieve(self, request, name=None):
-    #     user = self.request.user
-    #     room_name = "{}-{}".format(name, user)
-    #     reverse_room_name = "{}-{}".format(user, name)
-
-    #     room = Room.objects.get(Q(slug=room_name) | Q(slug=reverse_room_name))
-
-    #     serializer = ConversationSerializer(room, context={"request": request, "user": user})
-    #     return JsonResponse({"room": serializer.data})
 
 class UploadEndpoint(APIView):
     """
