@@ -25,22 +25,31 @@ class ChatConsumerTest(ChannelsLiveServerTestCase):
 
     async def create_setup_communicator(self):
         """
-        Sets up communicators, user, and a room_name.
-        Three communicators are created:
-        1. communicator - for testing the ChatConsumer
-        2. communicator_notifications - for testing the NotificationConsumer
-        3. communicator_conversation_notification - for testing the per ConversationNotificationConsumer
+        Sets up communicators and users.
+        Six communicators are created:
+        1. communicator - for testing the ChatConsumer (user)
+        2. communicator_2 - for testing the ChatConsumer (user_2)
+        3. communicator_notifications - for testing the NotificationConsumer (user)
+        4. communicator_notifications_2 - for testing the NotificationConsumer (user_2)
+        5. communicator_conversation_notification - for testing the per ConversationNotificationConsumer (user)
+        6. communicator_conversation_notification_2 - for testing the per ConversationNotificationConsumer (user_2)
         """
-        # Create a test user
-        user = await sync_to_async(get_user_model().objects.create_user)(username="testuser", password="testpassword", is_active=True)
-        user = await sync_to_async(get_user_model().objects.create_user)(username="testuser_2", password="testpassword_2", is_active=True)
 
-        # Setup the chat communicator
-        communicator = WebsocketCommunicator(ChatConsumer.as_asgi(), "/ws/testuser/")
+        # Create test users
+        user = await sync_to_async(get_user_model().objects.create_user)(username="testuser", password="testpassword", is_active=True)
+        user_2 = await sync_to_async(get_user_model().objects.create_user)(username="testuser_2", password="testpassword_2", is_active=True)
+
+        # Setup chat communicators
+        communicator = WebsocketCommunicator(ChatConsumer.as_asgi(), "/ws/testuser_2/")
+        communicator_2 = WebsocketCommunicator(ChatConsumer.as_asgi(), "/ws/testuser/")
+
         # Setup the all conversations notification communicator
         communicator_notifications = WebsocketCommunicator(NotificationConsumer.as_asgi(), "/ws/notifications/")
+        communicator_notifications_2 = WebsocketCommunicator(NotificationConsumer.as_asgi(), "/ws/notifications/")
+        
         # Setup the per conversation notification communicator
-        communicator_conversation_notification = WebsocketCommunicator(ConversationNotificationConsumer.as_asgi(), "/ws/notifications/testuser_notification/")
+        communicator_conversation_notification = WebsocketCommunicator(ConversationNotificationConsumer.as_asgi(), "/ws/notifications/testuser_2/")
+        communicator_conversation_notification_2 = WebsocketCommunicator(ConversationNotificationConsumer.as_asgi(), "/ws/notifications/testuser/")
 
         # Adding user and url_route to the communicators scope
         # The steps below are required because this data is 
@@ -48,18 +57,37 @@ class ChatConsumerTest(ChannelsLiveServerTestCase):
 
         # Adding to the communicator scope
         communicator.scope['user'] = user 
+        # communicator will be communicating with communicator_2
         communicator.scope['url_route'] = {'kwargs': {'room_name': 'testuser_2'}}
+
+        # Adding to the communicator_2 scope
+        communicator_2.scope['user'] = user_2
+        # communicator_2 will be communicating with communicator
+        communicator_2.scope['url_route'] = {'kwargs': {'room_name': 'testuser'}}
+
         # Adding to the notification communicator scope
         communicator_notifications.scope['user'] = user 
-        # Adding to the the conversation communicator scope
+        # communicator_notifications.scope['url_route'] = {'kwargs': {'room_name': 'testuser_2'}}
+
+        communicator_notifications_2.scope['user'] = user_2
+        # communicator_notifications_2.scope['url_route'] = {'kwargs': {'room_name': 'testuser'}}
+
+        # Adding to the the per conversation notification communicator scope
         communicator_conversation_notification.scope['user'] = user 
         communicator_conversation_notification.scope['url_route'] = {'kwargs': {'other_user': 'testuser_2'}}
+
+        communicator_conversation_notification_2.scope['user'] = user_2
+        communicator_conversation_notification_2.scope['url_route'] = {'kwargs': {'other_user': 'testuser'}}
+
 
         return {
             'user':user,
             'communicator':communicator, 
+            'communicator_2':communicator_2,
             'communicator_notifications':communicator_notifications,
-            'communicator_conversation_notification':communicator_conversation_notification
+            'communicator_notifications_2':communicator_notifications_2,
+            'communicator_conversation_notification':communicator_conversation_notification,
+            'communicator_conversation_notification_2': communicator_conversation_notification_2
         }
     
     async def disconnect(self, communicator):
@@ -163,14 +191,15 @@ class ChatConsumerTest(ChannelsLiveServerTestCase):
             except Exception as e:
                 print("printing send exception: ", e)
 
-            # Check if the ChatConsumer has sent the appropriate response
+            # Check if the ChatConsumer has sent the appropriate response (unread_count)
             # to the notifications webscoket connection
             response = await communicator_notifications.receive_json_from()
             self.assertEqual(response["type"], "unread_count")
             self.assertEqual(response["unread_count"], 0)
 
-            # Check if the ChatConsumer has sent the appropriate response
-            # to the per conversation notifications websocket connection
+            # Check if the ChatConsumer has sent the appropriate response 
+            # (single_conversation_unread_count) to the per conversation 
+            # notifications websocket connection
             response = await communicator_conversation_notification.receive_json_from()
             self.assertEqual(response["type"], "single_conversation_unread_count")
             self.assertEqual(response["unread_count"], 0)
@@ -187,20 +216,23 @@ class ChatConsumerTest(ChannelsLiveServerTestCase):
         """
         communicator_setup = await self.create_setup_communicator()
         communicator = communicator_setup['communicator']
+        communicator_2 = communicator_setup['communicator_2']
         try:
             try:
                 connected, _ = await communicator.connect()
+                connected, _ = await communicator_2.connect()
 
                 # The following two events have to be retrieved
                 # first inorder to get access to the chat_message
                 # event
                  
                 # This response gets the online_user_list event
-                response = await communicator.receive_json_from()
+                response = await communicator_2.receive_json_from()
                 # This response get the user_join event
-                response = await communicator.receive_json_from()
+                response = await communicator_2.receive_json_from()
             except Exception as e:
                 print("printing connect exception: ", e)
+            # communicator sending a chat message to communicator_2
             try:
                 await communicator.send_json_to({
                     "type": "chat_message",
@@ -208,16 +240,17 @@ class ChatConsumerTest(ChannelsLiveServerTestCase):
                     "multimedia_url": "multimedia url link",
                     "file_identifier": "",
                     "multimedia_url_expiration": "",
-                    "room": "testuser",
                 })
             except Exception as e:
                 print("printing send exception: ", e)
 
-            # Checking if the message has been recieved successfully
-            response = await communicator.receive_json_from()
+            # Checking if communicator_2 has successfully recieved the
+            # chat_message
+            response = await communicator_2.receive_json_from()
             self.assertEqual(response["message"], "Hello, world!")
         finally:
             await self.disconnect(communicator)
+            await self.disconnect(communicator_2)
 
 
     # Testing if a new message notification will be sent
@@ -228,34 +261,38 @@ class ChatConsumerTest(ChannelsLiveServerTestCase):
         when a chat_message event is recieved 
         """
         communicator_setup = await self.create_setup_communicator()
-        communicator_notifications = communicator_setup['communicator_notifications']
+        communicator_notifications_2 = communicator_setup['communicator_notifications_2']
         communicator = communicator_setup['communicator']
 
         try:
             try:
                 connected, _ = await communicator.connect()
-                connected, _ = await communicator_notifications.connect()
+                connected, _ = await communicator_notifications_2.connect()
             except Exception as e:
                 print("printing connect exception: ", e)
+
+            # communicator sending a chat message to communicator_2
             await communicator.send_json_to({
                 "type": "chat_message",
                 "message": "Hello, world!",
                 "multimedia_url": "multimedia url link",
                 "file_identifier": "",
                 "multimedia_url_expiration": "",
-                "room": "testuser",
             })
+
+            # Checking if user_2 has recieved the new_message_notification         
+
             # This response gets the unread_count event sent by the
             # notification consumer, it has to be retrieved first 
             # in order to get access to the new_message_notification
             # event
-            response = await communicator_notifications.receive_json_from()
+            response = await communicator_notifications_2.receive_json_from()
             # This response gets the new_message_notification event
-            response = await communicator_notifications.receive_json_from()
+            response = await communicator_notifications_2.receive_json_from()
             self.assertEqual(response["type"], "new_message_notification")
         finally:
             await self.disconnect(communicator)
-            await self.disconnect(communicator_notifications)
+            await self.disconnect(communicator_notifications_2)
 
 
     # Testing if a per conversation new message notification 
@@ -267,11 +304,11 @@ class ChatConsumerTest(ChannelsLiveServerTestCase):
         """
         communicator_setup = await self.create_setup_communicator()
         communicator = communicator_setup['communicator']
-        communicator_conversation_notification = communicator_setup['communicator_conversation_notification']
+        communicator_conversation_notification_2 = communicator_setup['communicator_conversation_notification_2']
         try:
             try:
                 connected, _ = await communicator.connect()
-                connected, _ = await communicator_conversation_notification.connect()
+                connected, _ = await communicator_conversation_notification_2.connect()
             except Exception as e:
                 print("printing connect exception: ", e)
             
@@ -286,13 +323,13 @@ class ChatConsumerTest(ChannelsLiveServerTestCase):
             # This response gets the single_conversation_unread_count event
             # It has to be retrieved first in order to get access to the 
             # single_conversation_new_message_notification event
-            response = await communicator_conversation_notification.receive_json_from()
+            response = await communicator_conversation_notification_2.receive_json_from()
             # This response gets the single_conversation_notification event
-            response = await communicator_conversation_notification.receive_json_from()
+            response = await communicator_conversation_notification_2.receive_json_from()
             self.assertEqual(response["type"], "single_conversation_new_message_notification")
         finally:
             await self.disconnect(communicator)
-            await self.disconnect(communicator_conversation_notification)
+            await self.disconnect(communicator_conversation_notification_2)
 
 
 # Testing the notification consumer
