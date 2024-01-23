@@ -11,6 +11,7 @@ from channels.db import database_sync_to_async
 from django.contrib.auth import get_user_model
 import environ
 from django.conf import settings
+from rest_framework import serializers
 
 env = environ.Env()
 env.read_env()
@@ -243,6 +244,15 @@ class ChatConsumer(AsyncWebsocketConsumer):
                 {
                     "type": "single_conversation_new_message_notification",
                 },
+            )
+
+            await self.channel_layer.group_send(
+                single_conversation_notification_group_name,
+                {
+                    "type": "single_conversation_last_message",
+                    "last_message": saved_message.content,
+                    "last_datetime": json.dumps(saved_message.date_added, default=serialize_datetime)
+                }
             )
 
 
@@ -529,6 +539,16 @@ class ConversationNotificationConsumer(AsyncWebsocketConsumer):
         """
         Sends a WebSocket 'single_conversation_unread_count' 
         event data back to the connected client.
+
+        Parameters:
+        - event (dict): WebSocket event data to be sent to the client.
+        """
+        await self.send(text_data=json.dumps(event))
+
+    async def single_conversation_last_message(self, event):
+        """
+        Sends a WebSocket 'last_message' event data back to 
+        the connected client.
 
         Parameters:
         - event (dict): WebSocket event data to be sent to the client.
