@@ -147,7 +147,10 @@ Connection to get all unread message notifications for a single conversation
 
 #### 1. **Consumer Emitted Single Conversation Unread Count Event**
 - **Event Name**: `single_conversation_unread_count`
-- **Description**: Sends the number of unread messages in a conversation
+- **Description**: Sends the number of unread messages in a conversation. This 
+event is sent in two cases:  
+      Case 1: When a [read_message event](#5-client-emitted-messages-read-event) is recieved from the client  
+      Case 2: When a connection is made to the Sigle Conversation Based Notification endpoint (ws://127.0.0.1:8000/ws/notifications/${username_of_other_person_in_conversation}/)
 - **Payload**
 ```json
 {
@@ -160,7 +163,7 @@ Connection to get all unread message notifications for a single conversation
 
 #### 2. **Consumer Emitted Single Conversation New Message Notification Event**
 - **Event Name**: `single_conversation_new_message_notification`
-- **Description**: Sent when a new message is recieved in a conversation
+- **Description**: Sent when a new message is recieved; when a [chat_message event](#6-client-emitted-send-message-event) is recieved from the client.
 - **Payload**
 ```json
 {
@@ -180,7 +183,10 @@ Connection to get all unread messages from all the converstaions
 
 #### 1. **Consumer Emitted All Conversations Unread Count Event**
 - **Event Name**: `unread_count`
-- **Description**: Sends the total number of unread messages a user has
+- **Description**: Sends the total number of unread messages a user has. This 
+event is sent in two cases:  
+      Case 1: When a [read_message event](#5-client-emitted-messages-read-event) is revieved from the client  
+      Case 2: When a connection is made to the All Conversation Based Notification endpoint (ws://127.0.0.1:8000/ws/notifications)
 - **Payload**
 ```json
 {
@@ -194,7 +200,7 @@ Connection to get all unread messages from all the converstaions
 
 #### 2. **Consumer Emitted All Conversations New Message Notification Event**
 - **Event Name**: `new_message_notification`
-- **Description**: Sent when a user recieves a new message
+- **Description**:  Sent when a new message is recieved; when a [chat_message event](#6-client-emitted-send-message-event) is recieved from the client.
 - **Payload**
 ```json
 {
