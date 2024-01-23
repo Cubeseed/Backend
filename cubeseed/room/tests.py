@@ -324,13 +324,52 @@ class ChatConsumerTest(ChannelsLiveServerTestCase):
             # It has to be retrieved first in order to get access to the 
             # single_conversation_new_message_notification event
             response = await communicator_conversation_notification_2.receive_json_from()
-            # This response gets the single_conversation_notification event
+            # This response gets the single_conversation_new_message_notification event
             response = await communicator_conversation_notification_2.receive_json_from()
             self.assertEqual(response["type"], "single_conversation_new_message_notification")
         finally:
             await self.disconnect(communicator)
             await self.disconnect(communicator_conversation_notification_2)
 
+
+    # Testing if the details of the last message in a conversation 
+    # are sent when a chat_message event is recieved  
+    async def test_chat_consumer_chat_message_event_last_message_conversation_notification(self):
+        """
+        Testing if the details of the last message in a conversation 
+        are sent when a chat_message event is recieved  
+        """
+        communicator_setup = await self.create_setup_communicator()
+        communicator = communicator_setup['communicator']
+        communicator_conversation_notification_2 = communicator_setup['communicator_conversation_notification_2']
+        try:
+            try:
+                connected, _ = await communicator.connect()
+                connected, _ = await communicator_conversation_notification_2.connect()
+            except Exception as e:
+                print("printing connect exception: ", e)
+            
+            await communicator.send_json_to({
+                "type": "chat_message",
+                "message": "Hello, world!",
+                "multimedia_url": "multimedia url link",
+                "file_identifier": "",
+                "multimedia_url_expiration": "",
+                "room": "testuser",
+            })
+            # These responses gets the single_conversation_unread_count event
+            # and the single_conversation_new_message_notification event
+            # They have to be retrieved first in order to get access to the 
+            # single_conversation_last_message event
+            response = await communicator_conversation_notification_2.receive_json_from()
+            response = await communicator_conversation_notification_2.receive_json_from()
+            # This response gets the single_conversation_last_message event
+            response = await communicator_conversation_notification_2.receive_json_from()
+            self.assertEqual(response["type"], "single_conversation_last_message")
+            self.assertEqual(response["last_message"], "Hello, world!")
+        finally:
+            await self.disconnect(communicator)
+            await self.disconnect(communicator_conversation_notification_2)
 
 # Testing the notification consumer
 class NotificationConsumerTest(ChannelsLiveServerTestCase):
