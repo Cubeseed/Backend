@@ -199,7 +199,6 @@ Connection to get all unread messages from all the converstaions
 ```json
 {
     "type": "new_message_notification",
-    "unread_count": 8,   
 }
 ```
 
