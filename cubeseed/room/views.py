@@ -128,7 +128,7 @@ class ConversationViewSet(ListModelMixin, GenericViewSet):
         associated with the request to the serializer class.
 
         Returns:
-        Disctionary
+        Dictionary
             Returns a dictionary containing the request and user
             associated with the request
         """
