@@ -47,11 +47,11 @@ The variable `room` is the username of the person to chat with.
   ```json
   {
     "type": "chat_message",
+    "id": 1,
     "message": "Hello, world!",
     "multimedia_url": "multimedia url link",
     "date_added": "2023-11-10T19:10:30.866848Z",
     "from_user": {"username": "username"},
-    "room": "room",
   }
 
 [Back to Table of Contents](#table-of-contents)
