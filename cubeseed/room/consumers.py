@@ -199,10 +199,12 @@ class ChatConsumer(AsyncWebsocketConsumer):
                 multimedia_save_location=None
 
             # Saving the message to the database
+            # import pdb
+            # pdb.set_trace()
             saved_message = await self.save_message(
                 from_user=self.user.username, 
                 to_user=self.scope['url_route']['kwargs']['room_name'],
-                room=room,
+                # room=room,
                 content=message,
                 multimedia_url=data.get('multimedia_url'),
                 multimedia_save_location=multimedia_save_location,
@@ -227,7 +229,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
                     'multimedia_url': multimedia_url,
                     'date_added': json.dumps(saved_message.date_added, default=serialize_datetime),
                     'from_user': {'username': self.user.username},
-                    'room': room
+                    # 'room': room
                 }
             )
 
@@ -251,7 +253,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
 
 
     @sync_to_async
-    def save_message(self, from_user, to_user, room, content, multimedia_url, multimedia_save_location, file_identifier, multimedia_url_expiration):
+    def save_message(self, from_user, to_user, content, multimedia_url, multimedia_save_location, file_identifier, multimedia_url_expiration):
         """
         Saves a message to the database
 
