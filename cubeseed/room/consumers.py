@@ -188,12 +188,10 @@ class ChatConsumer(AsyncWebsocketConsumer):
             if data.get('multimedia_url') is not None and settings.DEBUG==False:
                 # This indicates that the server is running in production mode
                 # and the multimedia_url is an s3 link
-                print("in s3")
                 multimedia_save_location='s3'
             elif data.get('multimedia_url') is not None and settings.DEBUG==True:
                 # This indicates that the server is running in development mode
                 # and the multimedia_url is a local link
-                print("In local")
                 multimedia_save_location='local'
             else:
                 multimedia_save_location=None

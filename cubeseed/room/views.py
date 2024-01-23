@@ -183,7 +183,6 @@ class UploadEndpoint(APIView):
         expiration_time = datetime.now() + timedelta(days=1)
         if settings.DEBUG == False:
             # The server is in production mode
-            print("In prod mode")
             # Generate an AWS presigned URL for the file
             presigned_url = generate_presigned_url(file_path, expiration_time)
 
