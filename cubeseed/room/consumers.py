@@ -364,38 +364,6 @@ class ChatConsumer(AsyncWebsocketConsumer):
         """
         await self.send(text_data=json.dumps(event))
 
-    async def new_message_notification(self, event):
-        """
-        Sends a WebSocket 'new_message_notification' event data back to the 
-        connected client.
-
-        Parameters:
-        - event (dict): WebSocket event data to be sent to the client.
-        """
-        await self.send(text_data=json.dumps(event))
-
-    async def single_conversation_new_message_notification(self, event):
-        """
-        Sends a WebSocket 'single_conversation_new_message_notification' 
-        event data back to the connected client.
-
-        Parameters:
-        - event (dict): WebSocket event data to be sent to the client.
-        """
-        await self.send(text_data=json.dumps(event))
-
-    async def unread_count(self, event):
-        """
-        Sends a WebSocket 'unread_count' event data
-        back to the connected client.
-
-        Parameters:
-        - event (dict): WebSocket event data to be sent to the client.    
-        """
-        await self.send(text_data=json.dumps(event))
-
-
-
 class NotificationConsumer(AsyncWebsocketConsumer):
  
     async def connect(self):
