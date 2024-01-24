@@ -1,4 +1,9 @@
-"""Room Tests"""
+"""
+Room Tests
+
+These tests run successfully when settings.py or 
+settings_test.py are used as the settings file
+"""
 from channels.layers import get_channel_layer
 from channels.testing import ChannelsLiveServerTestCase, WebsocketCommunicator
 from django.contrib.auth import get_user_model
