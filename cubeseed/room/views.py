@@ -7,7 +7,6 @@ from rest_framework_simplejwt.authentication import JWTAuthentication
 from rest_framework.authentication import SessionAuthentication, BasicAuthentication
 from rest_framework.permissions import IsAuthenticated
 from django.db.models import Q
-# from django.contrib.auth.models import User
 from django.http import JsonResponse
 from rest_framework.views import APIView
 from .serializer import MessageSerializer
