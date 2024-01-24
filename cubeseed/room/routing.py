@@ -1,7 +1,5 @@
 """Room Websocket Routing"""
 from django.urls import path, re_path
-
-# from . import consumers
 from cubeseed.room.consumers import ChatConsumer
 from cubeseed.room.consumers import NotificationConsumer, ConversationNotificationConsumer
 from channels.auth import AuthMiddlewareStack

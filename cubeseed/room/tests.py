@@ -67,10 +67,7 @@ class ChatConsumerTest(ChannelsLiveServerTestCase):
 
         # Adding to the notification communicator scope
         communicator_notifications.scope['user'] = user 
-        # communicator_notifications.scope['url_route'] = {'kwargs': {'room_name': 'testuser_2'}}
-
         communicator_notifications_2.scope['user'] = user_2
-        # communicator_notifications_2.scope['url_route'] = {'kwargs': {'room_name': 'testuser'}}
 
         # Adding to the the per conversation notification communicator scope
         communicator_conversation_notification.scope['user'] = user 
