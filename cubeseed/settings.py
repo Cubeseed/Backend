@@ -18,12 +18,37 @@ from .settings_prod import *
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
+
+## FIXME: this is good for development unacceptable for production
+ALLOWED_HOSTS = ["*"]
+
+# CORS_ORIGIN_WHITELIST = [
+#     'http://localhost:3000',
+# ]
+
+CORS_ALLOWED_ORIGINS = [
+    'http://localhost:3000',
+]
+# FIXME: this is good for development unacceptable for production
+
+# CORS_ALLOW_ALL_ORIGINS = True
+
+CORS_ORIGIN_ALLOW_ALL = True
+
+# CORS_ALLOW_CREDENTIALS = True
+# CORS_ALLOWED_ORIGIN_REGEXES = [
+#     'http://localhost:3000',
+# ]
+
+# Application definition
 ALLOWED_HOSTS = ["localhost", "127.0.0.1"]
 
 INSTALLED_APPS.append("drf_yasg")
 
+
 # configuring the unit testing python runner tool installed
 TEST_RUNNER = "redgreenunittest.django.runner.RedGreenDiscoverRunner"
+
 
 TEMPLATES[0]["OPTIONS"]["context_processors"].append("django.template.context_processors.debug")
 
@@ -33,6 +58,9 @@ DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.sqlite3",
         "NAME": BASE_DIR / "db.sqlite3",
+        "TEST": {
+            "NAME": BASE_DIR / "test_db.sqlite3",
+        },
     }
 }
 
@@ -51,6 +79,21 @@ REST_FRAMEWORK["TEST_REQUEST_RENDERER_CLASSES"] = [
 CSRF_COOKIE_SECURE = False
 SESSION_COOKIE_SECURE = False
 
+
 DEFAULT_FILE_STORAGE = "django.core.files.storage.FileSystemStorage"
 MEDIA_ROOT = BASE_DIR / "media"
 MEDIA_URL = "/media/"
+
+# Setup channel layers
+CHANNEL_LAYERS = {
+    'default': {
+        # For development
+        'BACKEND': 'channels.layers.InMemoryChannelLayer'
+        # For production
+        # Use redis
+        # 'BACKEND': 'channels_redis.core.RedisChannelLayer',
+        # 'CONFIG': {
+        #     'hosts': [(env('REDIS_HOST'), env.int('REDIS_PORT'))],
+        # },
+    }
+}

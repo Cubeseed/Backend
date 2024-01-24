@@ -5,3 +5,10 @@
 **/__pycache__/
 logs/
 thunder-tests
+
+redis-env/
+*.swp
+authtoken-env/
+# To avoid envs
+*env
+improved-chat/

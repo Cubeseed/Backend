@@ -19,6 +19,7 @@ CORS_ORIGIN_ALLOW_ALL = True
 DEBUG = False
 
 INSTALLED_APPS = [
+    "daphne",
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
@@ -39,6 +40,11 @@ INSTALLED_APPS = [
     "cubeseed.purchase_orders",
     "cubeseed.farm_planner",
     "corsheaders",
+    "channels",
+    "cubeseed.room",
+    'rest_framework.authtoken',
+    "cubeseed.media_app",
+    "django_extensions",
 ]
 
 MIDDLEWARE = [
@@ -71,7 +77,20 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = "cubeseed.wsgi.application"
+ASGI_APPLICATION = "cubeseed.asgi.application"
 
+
+# Setup channel layers
+CHANNEL_LAYERS = {
+    'default': {
+        # For production
+        # Use redis
+        'BACKEND': 'channels_redis.core.RedisChannelLayer',
+        'CONFIG': {
+            'hosts': [(env.str('REDIS_HOST', 'localhost'), env.int('REDIS_PORT', 6379))],
+        },
+    }
+}
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
