@@ -31,29 +31,6 @@ env.read_env()
 
 User = get_user_model()
 
-# # Create your views here.
-# @permission_classes([IsAuthenticated])
-# def rooms(request):
-#     rooms = User.objects.all()
-#     return render(request, "room/rooms.html", {"rooms": rooms})
-
-# @permission_classes([IsAuthenticated])
-# def room(request, slug):
-#     # Get username
-#     username = request.user.username
-
-#     room_name = "{}-{}".format(slug, username)
-#     reverse_room_name = "{}-{}".format(username, slug)
-
-#     # Create the Room if it does not exist
-#     if not Room.objects.filter(Q(slug=room_name) | Q(slug=reverse_room_name)).exists():
-#         Room.objects.create(slug=room_name, name=room_name)
-
-#     room = Room.objects.get(Q(slug=room_name) | Q(slug=reverse_room_name))
-#     messages = Message.objects.filter(room=room)[0:25]
-#     return render(request, "room/room.html", {"room": room, "messages": messages})
-
-
 class MessagesApi(APIView):
     """
     View for getting all messages in a room
