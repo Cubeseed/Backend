@@ -2,7 +2,6 @@
 import json
 from channels.generic.websocket import AsyncWebsocketConsumer
 from asgiref.sync import sync_to_async, async_to_sync
-# from django.contrib.auth.models import User
 from .models import Message, Room
 from django.db.models import Q
 from .serializer import MessageSerializer
