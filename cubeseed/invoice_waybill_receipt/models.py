@@ -1,8 +1,10 @@
 from django.db import models
-from django.contrib.auth.models import User
+# from django.contrib.auth.models import User
+from django.contrib.auth import get_user_model
 # import userprofile model
 from cubeseed.userprofile.models import UserProfile
 
+User = get_user_model()
 
 class Invoice(models.Model):
     payment_due_date = models.DateField()
