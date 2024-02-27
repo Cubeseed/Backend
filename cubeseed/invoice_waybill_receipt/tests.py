@@ -9,10 +9,35 @@ from PIL import Image
 import io
 from cubeseed.userprofile.models import UserProfile
 from cubeseed.address.models import Address
+from unittest.mock import Mock
+from unittest.mock import patch
 
+# Create a Mock of the resolve_location method found
+# in the Address model.
+# This prevents the geocode function from being 
+# called multiple times.
+mock_resolve_location = Mock()
+
+def side_effect(address):
+    class Location:
+        def __init__(self, latitude, longitude):
+            self.longitude = longitude
+            self.latitude = latitude
+    if address == "979 Saka Jojo Street, Victoria, Lagos, ":
+        location = Location(6.4275875, 3.4126698)
+        return location
+    elif address == "2 Walter Carrington Crescent, Victoria Island, Lagos, ":
+        location = Location(6.44069015, 3.4066570357293076)
+        return location
+    elif address == "1075 Diplomatic Drive, Central District Area, Abuja, 900103":
+        location = Location(9.0403859, 7.4768889)
+        return location
+    else:
+        return None
 
 class InvoiceAPITestCase(APITestCase):
-    def setUp(self):
+    @patch.object(Address, "resolve_location", side_effect=side_effect)
+    def setUp(self, mock_resolve_location):
         User = get_user_model()
         self.user = User.objects.create_user(username="testuser", password="testpassword")
 
@@ -22,15 +47,15 @@ class InvoiceAPITestCase(APITestCase):
         self.auth_header = f"Bearer {self.token_value}"
 
         self.address = Address.objects.create(
-            address="testing 1234",
-            locality="Testville",
-            administrative_area="Testland",
+            address="979 Saka Jojo Street",
+            locality="Victoria",
+            administrative_area="Lagos",
             country="NG",
             postal_code="12345",
             osm_checked=True,
             osm_latitude=0.0,
             osm_longitude=0.0,
-            local_government_area="testing",
+            local_government_area="Eti Osa",
             updated_at="2023-08-27T12:41:06.021393Z",
             created_at="2023-08-27T12:41:06.021348Z"
 
@@ -329,7 +354,7 @@ class ReceiptAPITestCase(APITestCase):
         url = reverse("receipt-detail", args=[self.receipt.id])
         data = {
             "amount": "1000.00",
-            "payment_date": "2023-08-27",
+            "payment_date": "2023-08-28",
             "payment_method": "testing4",
             "payment_notes": "testing4",
             "date": "2023-08-2",
@@ -343,7 +368,7 @@ class ReceiptAPITestCase(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(Receipt.objects.get().payment_method, "testing4")
         self.assertEqual(Receipt.objects.get().payment_notes, "testing4")
-        self.assertEqual(Receipt.objects.get().date.strftime("%Y-%m-%d"), "2023-10-19")
+        self.assertEqual(Receipt.objects.get().payment_date.strftime("%Y-%m-%d"), "2023-08-28")
 
     # Test patch route
     def test_patch_receipt(self):
