@@ -41,7 +41,7 @@ class ClusterAPITest(APITestCase):
                 commodity=self.commodity_maize
         )
         self.cluster_eti_osa_maize.save()
-        
+
     def authenticate(self):
         token_response = self.client.post(
             reverse("token_obtain_pair"), {"username": "testuser", "password": "testpassword"}
@@ -78,7 +78,7 @@ class ClusterAPITest(APITestCase):
                 msg=f"Failed to create cluster: ${response.data} : ${self.user} : for cluster: ${cluster}",
             )
 
-        
+
 
     # Test if a cluster fails to be created successfully
     # using an unauthenticated user
@@ -107,7 +107,7 @@ class ClusterAPITest(APITestCase):
                 status.HTTP_401_UNAUTHORIZED,
                 msg=f"Unauthenticated user is not recieving a 401 status when creating a cluster",
             )
-        
+
 
     # Tests if a cluster can be updated successfully
     # using put and an authenticated user
@@ -121,10 +121,10 @@ class ClusterAPITest(APITestCase):
                 "local_government_name": "Aba North",
                 "commodity": 2
             }
-        
+
         self.authenticate()
         response = self.client.put(reverse("cluster-detail", kwargs={"pk": self.cluster_eti_osa_maize.id}), format="json", data=updated_cluster)
-        
+
         self.assertEqual(
             response.status_code,
             status.HTTP_200_OK,
@@ -148,15 +148,15 @@ class ClusterAPITest(APITestCase):
                 "local_government_name": "Aba North",
                 "commodity": 2
             }
-        
+
         response = self.client.put(reverse("cluster-detail", kwargs={"pk": self.cluster_eti_osa_maize.id}), format="json", data=updated_cluster)
-        
+
         self.assertEqual(
             response.status_code,
             status.HTTP_401_UNAUTHORIZED,
             msg=f"Unauthenticated user is not recieving a 401 status when updating a cluster using put",
         )
-      
+
     # Tests if a cluster can be updated successfully
     # using patch and an authenticated user
     def test_successful_cluster_update_using_patch_and_auth_user(self):
@@ -168,10 +168,10 @@ class ClusterAPITest(APITestCase):
                 "cluster_name": "Aba North Maize Cluster",
                 "commodity": 1
             }
-        
+
         self.authenticate()
         response = self.client.patch(reverse("cluster-detail", kwargs={"pk": self.cluster_eti_osa_maize.id}), format="json", data=updated_cluster)
-        
+
         self.assertEqual(
             response.status_code,
             status.HTTP_200_OK,
@@ -193,9 +193,9 @@ class ClusterAPITest(APITestCase):
                 "cluster_name": "Aba North Maize Cluster",
                 "commodity": 1
             }
-        
+
         response = self.client.patch(reverse("cluster-detail", kwargs={"pk": self.cluster_eti_osa_maize.id}), format="json", data=updated_cluster)
-        
+
         self.assertEqual(
             response.status_code,
             status.HTTP_401_UNAUTHORIZED,
@@ -212,7 +212,7 @@ class ClusterAPITest(APITestCase):
         """
         self.authenticate()
         response = self.client.delete(reverse("cluster-detail", kwargs={"pk": self.cluster_eti_osa_maize.id}), format="json")
-        
+
         self.assertEqual(
             response.status_code,
             status.HTTP_204_NO_CONTENT,
@@ -227,7 +227,7 @@ class ClusterAPITest(APITestCase):
         using an unauthenticated user
         """
         response = self.client.delete(reverse("cluster-detail", kwargs={"pk": self.cluster_eti_osa_maize.id}), format="json")
-        
+
         self.assertEqual(
             response.status_code,
             status.HTTP_401_UNAUTHORIZED,
@@ -249,7 +249,7 @@ class ClusterAPITest(APITestCase):
             status.HTTP_200_OK,
             msg=f"Failed to retrieve clusters: ${response.data} : ${self.user}",
         )
-    
+
     # Tests if a list of cluster fails to be retrieved successfully
     # using an unauthenticated user
     def test_unsuccessful_cluster_list_retrieval_using_unauth_user(self):
@@ -278,7 +278,7 @@ class ClusterAPITest(APITestCase):
         self.assertEqual(
             response.status_code,
             status.HTTP_200_OK,
-            msg=f"Failed to retrieve cluster: ${response.data} : ${self.user} : for cluster: ${self.cluster_eti_osa_maize}", 
+            msg=f"Failed to retrieve cluster: ${response.data} : ${self.user} : for cluster: ${self.cluster_eti_osa_maize}",
         )
 
     # Tests if details of a single cluster fails to be retrieved successfully
@@ -293,14 +293,14 @@ class ClusterAPITest(APITestCase):
         self.assertEqual(
             response.status_code,
             status.HTTP_401_UNAUTHORIZED,
-            msg=f"Unauthenticated user is not recieving a 401 status when viewing details of a cluster", 
+            msg=f"Unauthenticated user is not recieving a 401 status when viewing details of a cluster",
         )
 
 
 
 # Create a Mock of the resolve_location method found
 # in the Address model.
-# This prevents the geocode function from being 
+# This prevents the geocode function from being
 # called multiple times.
 mock_resolve_location = Mock()
 
@@ -326,7 +326,7 @@ class FarmsInClusterAPITest(APITestCase):
     """
     Tests for nested routes (farms in a cluster)
     """
-    
+
     @patch.object(Address, "resolve_location", side_effect=side_effect)
     def setUp(self, mock_resolve_location) -> None:
         # Create a user
@@ -375,7 +375,7 @@ class FarmsInClusterAPITest(APITestCase):
             administrative_area="Abuja",
             country="NG",
             postal_code="900103",
-            local_government_area="Municipal Area Council",  
+            local_government_area="Municipal Area Council",
         )
 
         self.address_municipal_area_council.save()
@@ -445,7 +445,7 @@ class FarmsInClusterAPITest(APITestCase):
         #         commodity=self.commodity_cassava
         # )
         # self.cluster_eti_osa_cassava.save()
-        
+
     def authenticate(self):
         token_response = self.client.post(
             reverse("token_obtain_pair"), {"username": "testuser", "password": "testpassword"}
@@ -481,7 +481,7 @@ class FarmsInClusterAPITest(APITestCase):
         # Permission to Add farm
         add_farm_permission = Permission.objects.get(name="Can add farm")
         self.user.user_permissions.add(add_farm_permission)
-        
+
         self.authenticate()
 
         for farm in farms:
@@ -506,7 +506,7 @@ class FarmsInClusterAPITest(APITestCase):
             msg=f"Failed to create farm in the correct cluster",
         )
 
-    
+
     # Test if a farm in cluster fails to be created successfully
     # using an unauthenticated or unauthorized user
     def test_unsuccessful_farm_in_cluster_creation_using_unaauthenticated_or_unauthorized_user(self):
@@ -576,7 +576,7 @@ class FarmsInClusterAPITest(APITestCase):
 
         self.authenticate()
         response = self.client.put(reverse("cluster-farm-detail", kwargs={"cluster_pk": self.cluster_eti_osa_maize.id, "pk": self.farm.id}), format="json", data=updated_farm)
-        
+
         self.assertEqual(
             response.status_code,
             status.HTTP_200_OK,
@@ -615,7 +615,7 @@ class FarmsInClusterAPITest(APITestCase):
         )
         self.authenticate()
         response = self.client.put(reverse("cluster-farm-detail", kwargs={"cluster_pk": self.cluster_eti_osa_maize.id, "pk": self.farm.id}), format="json", data=updated_farm)
-        
+
         self.assertEqual(
             response.status_code,
             status.HTTP_403_FORBIDDEN,
@@ -647,7 +647,7 @@ class FarmsInClusterAPITest(APITestCase):
 
         self.authenticate()
         response = self.client.patch(reverse("cluster-farm-detail", kwargs={"cluster_pk": self.cluster_eti_osa_maize.id, "pk": self.farm.id}), format="json", data=updated_farm)
-        
+
         self.assertEqual(
             response.status_code,
             status.HTTP_200_OK,
@@ -686,7 +686,7 @@ class FarmsInClusterAPITest(APITestCase):
         )
         self.authenticate()
         response = self.client.patch(reverse("cluster-farm-detail", kwargs={"cluster_pk": self.cluster_eti_osa_maize.id, "pk": self.farm.id}), format="json", data=updated_farm)
-        
+
         self.assertEqual(
             response.status_code,
             status.HTTP_403_FORBIDDEN,
@@ -730,7 +730,7 @@ class FarmsInClusterAPITest(APITestCase):
         self.farm.cluster = self.cluster_eti_osa_maize
         self.farm.save()
 
-        
+
         response = self.client.get(reverse("cluster-farm-list", kwargs={"cluster_pk": self.cluster_eti_osa_maize.id}), format="json")
 
         self.assertEqual(
@@ -758,7 +758,7 @@ class FarmsInClusterAPITest(APITestCase):
 
         self.authenticate()
         response = self.client.get(reverse("cluster-farm-detail", kwargs={"cluster_pk": self.cluster_eti_osa_maize.id, "pk": self.farm.id}), format="json")
-        
+
         self.assertEqual(
             response.status_code,
             status.HTTP_200_OK,
@@ -782,7 +782,7 @@ class FarmsInClusterAPITest(APITestCase):
         self.user.user_permissions.add(change_farm_permission)
 
         response = self.client.get(reverse("cluster-farm-detail", kwargs={"cluster_pk": self.cluster_eti_osa_maize.id, "pk": self.farm.id}), format="json")
-        
+
         self.assertEqual(
             response.status_code,
             status.HTTP_401_UNAUTHORIZED,

@@ -15,7 +15,7 @@ class UserProfileAPITestCase(APITestCase):
     def setUp(self):
         User = get_user_model()
         self.user = User.objects.create_user(username="testuser", password="testpassword")
-        
+
         # Add the neessary permissions
         content_type = ContentType.objects.get_for_model(UserProfile)
         add_permission = Permission.objects.get(content_type=content_type, codename="add_userprofile")
@@ -28,7 +28,7 @@ class UserProfileAPITestCase(APITestCase):
         refresh = RefreshToken.for_user(self.user)
         self.token_value = str(refresh.access_token)
         self.auth_header = f"Bearer {self.token_value}"
-        
+
         # Create an Address instance
         self.address = Address.objects.create(
             address="testing 1234",

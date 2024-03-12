@@ -15,7 +15,7 @@ from unittest.mock import patch
 
 # Create a Mock of the resolve_location function
 # found in the Address Model.
-# This prevents the geocode function from being 
+# This prevents the geocode function from being
 # called multiple times.
 mock_resolve_location = Mock()
 
@@ -55,7 +55,7 @@ class FarmAPITest(APITestCase):
 
         self.commodity_cassava = Commodity.objects.create(commodity_name="Cassava")
         self.commodity_cassava.save()
-        
+
         # Create Address
         self.address_eti_osa = Address.objects.create(
                 address="979 Saka Jojo Street",
@@ -88,7 +88,7 @@ class FarmAPITest(APITestCase):
             administrative_area="Abuja",
             country="NG",
             postal_code="900103",
-            local_government_area="Municipal Area Council",  
+            local_government_area="Municipal Area Council",
         )
 
         self.address_municipal_area_council.save()
@@ -132,7 +132,7 @@ class FarmAPITest(APITestCase):
             document_type="TIN",
         )
         self.johns_business_profile.save()
-    
+
         # Create Farm
         self.farm = Farm.objects.create(
             business_profile=self.johns_business_profile,
@@ -181,7 +181,7 @@ class FarmAPITest(APITestCase):
         # Permission to Add farm
         add_farm_permission = Permission.objects.get(name="Can add farm")
         self.user.user_permissions.add(add_farm_permission)
-        
+
         self.authenticate()
 
         for farm in farms:
@@ -237,7 +237,7 @@ class FarmAPITest(APITestCase):
     # using put and an authenticated and authorized user
     def test_successful_farm_update_using_put_authenticated_and_authorized_user(self):
         """
-        Tests that a farm can be updated successfully 
+        Tests that a farm can be updated successfully
         using put and an authenticated and authorized user
         """
         updated_farm = {
@@ -256,7 +256,7 @@ class FarmAPITest(APITestCase):
 
         self.authenticate()
         response = self.client.put(reverse("farm-detail", kwargs={"pk": self.farm.id}), format="json", data=updated_farm)
-        
+
         self.assertEqual(
             response.status_code,
             status.HTTP_200_OK,
@@ -283,7 +283,7 @@ class FarmAPITest(APITestCase):
             }
 
         response = self.client.put(reverse("farm-detail", kwargs={"pk": self.farm.id}), format="json", data=updated_farm)
-        
+
         self.assertEqual(
             response.status_code,
             status.HTTP_401_UNAUTHORIZED,
@@ -293,7 +293,7 @@ class FarmAPITest(APITestCase):
         # Authenticate the user but don't give them permission to change farm
         self.authenticate()
         response = self.client.put(reverse("farm-detail", kwargs={"pk": self.farm.id}), format="json", data=updated_farm)
-        
+
         self.assertEqual(
             response.status_code,
             status.HTTP_403_FORBIDDEN,
@@ -319,7 +319,7 @@ class FarmAPITest(APITestCase):
 
         self.authenticate()
         response = self.client.patch(reverse("farm-detail", kwargs={"pk": self.farm.id}), format="json", data=updated_farm)
-        
+
         self.assertEqual(
             response.status_code,
             status.HTTP_200_OK,
@@ -343,7 +343,7 @@ class FarmAPITest(APITestCase):
         }
 
         response = self.client.patch(reverse("farm-detail", kwargs={"pk": self.farm.id}), format="json", data=updated_farm)
-        
+
         self.assertEqual(
             response.status_code,
             status.HTTP_401_UNAUTHORIZED,
@@ -353,7 +353,7 @@ class FarmAPITest(APITestCase):
         # Authenticate the user but don't give them permission to change farm
         self.authenticate()
         response = self.client.patch(reverse("farm-detail", kwargs={"pk": self.farm.id}), format="json", data=updated_farm)
-        
+
         self.assertEqual(
             response.status_code,
             status.HTTP_403_FORBIDDEN,
@@ -382,13 +382,13 @@ class FarmAPITest(APITestCase):
             msg=f"The number of farms retrieved is incorrect",
         )
 
-    # Test if a list of farms fails to be retrieved 
+    # Test if a list of farms fails to be retrieved
     # successfully using an unauthenticated user
-    # unauthorized users are not checked since any 
+    # unauthorized users are not checked since any
     # authenticated user can view a list of farms
     def test_unsuccessful_farm_list_retrieval_using_unauthenticated_user(self):
         """
-        Test if a list of farms fails to be retrieved 
+        Test if a list of farms fails to be retrieved
         successfully using an unauthenticated user
         """
         response = self.client.get(reverse("farm-list"), format="json")
@@ -413,7 +413,7 @@ class FarmAPITest(APITestCase):
         self.assertEqual(
             response.status_code,
             status.HTTP_200_OK,
-            msg=f"Failed to retrieve farm: ${response.data} : ${self.user} : for farm: ${self.farm}", 
+            msg=f"Failed to retrieve farm: ${response.data} : ${self.user} : for farm: ${self.farm}",
         )
 
     # Test if details of a single farm fails to be
@@ -428,7 +428,7 @@ class FarmAPITest(APITestCase):
         self.assertEqual(
             response.status_code,
             status.HTTP_401_UNAUTHORIZED,
-            msg=f"Unauthenticated user is not recieving a 401 status when viewing details of a farm", 
+            msg=f"Unauthenticated user is not recieving a 401 status when viewing details of a farm",
         )
 
     # Test if a farm can successfully be assigned to new a cluster using
@@ -437,7 +437,7 @@ class FarmAPITest(APITestCase):
         """
         Test if a farm can successfully be assigned to a new cluster
         using an auth user.
-        The cluster has to be created based on the details (farm and 
+        The cluster has to be created based on the details (farm and
         local goverment area) of the farm
         """
         # Make sure the cluster does not exist initially
@@ -459,7 +459,7 @@ class FarmAPITest(APITestCase):
         self.assertEqual(
             response.status_code,
             status.HTTP_200_OK,
-            msg=f"Failed to assign farm to cluster ${response}", 
+            msg=f"Failed to assign farm to cluster ${response}",
         )
         self.farm.refresh_from_db()
         self.assertEqual(
@@ -500,7 +500,7 @@ class FarmAPITest(APITestCase):
         self.assertEqual(
             response.status_code,
             status.HTTP_401_UNAUTHORIZED,
-            msg=f"Unauthenticated user is not recieving a 401 status when assigning a farm to a cluster", 
+            msg=f"Unauthenticated user is not recieving a 401 status when assigning a farm to a cluster",
         )
 
     # Test if a farm can successfully be assigned to an existing cluster
@@ -524,7 +524,7 @@ class FarmAPITest(APITestCase):
         self.assertEqual(
             response.status_code,
             status.HTTP_200_OK,
-            msg=f"Failed to assign farm to cluster ${response}", 
+            msg=f"Failed to assign farm to cluster ${response}",
         )
         self.farm.refresh_from_db()
         self.assertEqual(
@@ -553,5 +553,5 @@ class FarmAPITest(APITestCase):
         self.assertEqual(
             response.status_code,
             status.HTTP_401_UNAUTHORIZED,
-            msg=f"Unauthenticated user is not recieving a 401 status when assigning a farm to a cluster", 
+            msg=f"Unauthenticated user is not recieving a 401 status when assigning a farm to a cluster",
         )
