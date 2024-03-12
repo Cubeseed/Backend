@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     "cubeseed.purchase_orders",
     "cubeseed.farm_planner",
     "corsheaders",
+    "cubeseed.invoice_waybill_receipt",
 ]
 
 MIDDLEWARE = [
