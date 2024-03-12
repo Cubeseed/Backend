@@ -14,10 +14,18 @@ from email.mime.text import MIMEText
 from email.mime.application import MIMEApplication
 from django.conf import settings
 
+from rest_framework.exceptions import ValidationError
+
+import environ
+
+env = environ.Env()
+env.read_env()
+
+
 # generate invoice as pdf
-def generate_invoice_as_pdf(request):
+def generate_invoice_as_pdf(invoice):
     #get the invoice instance
-    invoice = Invoice()
+    # invoice = Invoice()
 
     # create a buffer to reciewve PDF data
     buffer = BytesIO()
@@ -78,10 +86,10 @@ class InvoiceViewSet(viewsets.ModelViewSet):
         pdf_attachment.add_header('Content-Disposition', 'attachment', filename='invoice.pdf')
         msg.attach(pdf_attachment)
 
-        # send the emial using SMTP
+        # send the email using SMTP
         smpt_server = smtplib.SMTP('smtp.gmail.com', 587)
         smtp_username = settings.EMAIL_HOST_USER
-        smtp_password = settings.EMAIL_HOST_PASSWORD
+        smtp_password = env.str("EMAIL_HOST_PASSWORD", "")
         smpt_server.starttls()
         smpt_server.login(smtp_username, smtp_password)
         smpt_server.sendmail(msg['From'], msg['To'], msg.as_string())
@@ -100,7 +108,8 @@ class WaybillViewSet(viewsets.ModelViewSet):
     @action(detail=True, methods=['post'])
     def send_waybill(self, request, pk=None):
         waybill = self.get_object()
-        # implement the loginc to send an waybill
+        # To Do
+        # implement the logic to send an waybill
         waybill.sent = True
         waybill.save()
         return Response({'status': 'waybill sent successfully'})
@@ -113,7 +122,8 @@ class ReceiptViewSet(viewsets.ModelViewSet):
     @action(detail=True, methods=['post'])
     def send_receipt(self, request, pk=None):
         receipt = self.get_object()
-        # implement the loginc to send an receipt
+        # To Do
+        # implement the logic to send an receipt
         receipt.sent = True
         receipt.save()
         return Response({'status': 'receipt sent successfully'})
