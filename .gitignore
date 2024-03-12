@@ -1,7 +1,8 @@
-/env/
+/cubeenv/
 /media/
 /db.sqlite3
 *~
 **/__pycache__/
 logs/
 thunder-tests
+requirements__.txt

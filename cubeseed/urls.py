@@ -44,6 +44,9 @@ from cubeseed.course_verification.urls import register_routes as register_course
 from cubeseed.purchase_orders.urls import register_routes as register_purchase_orders_routes
 from cubeseed.farm_planner.urls import register_routes as register_farm_planner_routes
 
+# from cubeseed.process_storage.urls import register_routes as register_process_storage_routes
+
+from cubeseed.process_storage.views import ProcessStorageViewSet, DispatchedStorageViewSet
 
 SchemaView = get_schema_view(
     openapi.Info(
@@ -69,7 +72,10 @@ register_course_routes(router)
 register_course_verification_routes(router)
 register_purchase_orders_routes(router)
 register_farm_planner_routes(router)
+# register_process_storage_routes(router)
 
+router.register(r"process-storage", ProcessStorageViewSet)
+router.register(r"dispatched-storage", DispatchedStorageViewSet)
 
 router.register(r"address", AddressViewSet)
 register_cluster_routes(router)

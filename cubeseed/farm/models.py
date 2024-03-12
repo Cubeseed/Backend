@@ -16,8 +16,7 @@ class Farm(models.Model):
     # and a farm can only have one address
     farm_address = models.OneToOneField(Address, on_delete=models.CASCADE, null=True)
     # A farm is assigned to a cluster after approval
-    # hence it should initally be able to exist without 
+    # hence it should initally be able to exist without
     # a cluster
     cluster = models.ForeignKey(Cluster, on_delete=models.SET_NULL, null=True, related_name="farms", default=None)
     commodity = models.ForeignKey(Commodity, on_delete=models.CASCADE, related_name="farms")
-

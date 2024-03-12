@@ -11,8 +11,8 @@ class ClusterSerializer(serializers.ModelSerializer):
         model = Cluster
         fields = [
             'id',
-            'cluster_name', 
-            'local_government_name', 
-            'commodity', 
+            'cluster_name',
+            'local_government_name',
+            'commodity',
             'farms',
         ]
