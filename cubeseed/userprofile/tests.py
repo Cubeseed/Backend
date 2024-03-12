@@ -46,7 +46,6 @@ class UserProfileAPITestCase(APITestCase):
         # Create a UserProfile associated with the user
         self.user_profile = UserProfile.objects.create(
             full_name = "testuserprofile",
-            email = "example@gmail.com",
             phone_number = "1234567890",
             address = self.address,
             about_me = "testing-0987689",
@@ -73,7 +72,6 @@ class UserProfileAPITestCase(APITestCase):
         url = reverse("userprofile-list")
         data = {
             "full_name": "testuserprofile-2",
-            "email": "example2@gmail.com",
             "phone_number": "1234567890",
             "address": self.address.id,
             "about_me": "testing-0987689",
